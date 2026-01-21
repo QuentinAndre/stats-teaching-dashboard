@@ -43,3 +43,7 @@ CLAUDE.local.md
 
 # Claude Code temp files
 tmpclaude-*
+
+# Vite temp files
+vite.config.ts.timestamp-*.mjs
+nul

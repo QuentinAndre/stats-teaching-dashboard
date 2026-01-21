@@ -1,0 +1,211 @@
+/* ==========================================================================
+   Navigation Pane - Desktop (always visible)
+   ========================================================================== */
+
+.navigation-pane {
+  position: fixed;
+  right: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 170px;
+  background: var(--surface);
+  border-radius: var(--border-radius-lg);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  padding: var(--spacing-sm);
+  z-index: 100;
+}
+
+.navigation-pane ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.navigation-pane li {
+  margin-bottom: 2px;
+}
+
+.navigation-pane li:last-child {
+  margin-bottom: 0;
+}
+
+.navigation-pane button {
+  width: 100%;
+  text-align: left;
+  background: transparent;
+  border: none;
+  padding: var(--spacing-xs) var(--spacing-sm);
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  transition: background-color 0.15s, color 0.15s;
+  line-height: 1.3;
+}
+
+.navigation-pane button:hover {
+  background: var(--background);
+  color: var(--text-primary);
+}
+
+.navigation-pane button.active {
+  background: var(--primary);
+  color: white;
+  font-weight: 500;
+}
+
+.navigation-pane button:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+/* ==========================================================================
+   Toggle Button - Hidden on large screens
+   ========================================================================== */
+
+.nav-toggle {
+  display: none;
+  position: fixed;
+  right: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 44px;
+  height: 44px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--border-radius-lg);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  z-index: 101;
+  padding: 0;
+  transition: background-color 0.15s, transform 0.15s;
+}
+
+.nav-toggle:hover {
+  background: var(--background);
+}
+
+.nav-toggle:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+/* Hamburger icon */
+.nav-toggle-icon {
+  display: block;
+  position: relative;
+  width: 20px;
+  height: 2px;
+  background: var(--text-secondary);
+  margin: 0 auto;
+  transition: background-color 0.15s;
+}
+
+.nav-toggle-icon::before,
+.nav-toggle-icon::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  width: 20px;
+  height: 2px;
+  background: var(--text-secondary);
+  transition: transform 0.2s ease;
+}
+
+.nav-toggle-icon::before {
+  top: -6px;
+}
+
+.nav-toggle-icon::after {
+  top: 6px;
+}
+
+/* Transform to X when open */
+.nav-toggle.open .nav-toggle-icon {
+  background: transparent;
+}
+
+.nav-toggle.open .nav-toggle-icon::before {
+  transform: translateY(6px) rotate(45deg);
+}
+
+.nav-toggle.open .nav-toggle-icon::after {
+  transform: translateY(-6px) rotate(-45deg);
+}
+
+/* ==========================================================================
+   Overlay Backdrop
+   ========================================================================== */
+
+.nav-overlay-backdrop {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.3);
+  z-index: 99;
+}
+
+/* ==========================================================================
+   Responsive: Medium screens (1200px and below) - Collapsible overlay
+   ========================================================================== */
+
+@media (max-width: 1200px) {
+  .nav-toggle {
+    display: block;
+  }
+
+  .nav-overlay-backdrop {
+    display: block;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease;
+  }
+
+  .navigation-pane.open + .nav-overlay-backdrop,
+  .nav-toggle.open ~ .nav-overlay-backdrop {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .navigation-pane {
+    right: -220px;
+    width: 200px;
+    padding: var(--spacing-md);
+    transition: right 0.25s ease;
+  }
+
+  .navigation-pane.open {
+    right: 1rem;
+  }
+
+  .navigation-pane button {
+    font-size: var(--font-size-sm);
+    padding: var(--spacing-sm) var(--spacing-md);
+  }
+}
+
+/* ==========================================================================
+   Responsive: Small screens - Adjust toggle position
+   ========================================================================== */
+
+@media (max-width: 600px) {
+  .nav-toggle {
+    right: 0.75rem;
+    width: 40px;
+    height: 40px;
+  }
+
+  .navigation-pane {
+    width: 180px;
+    padding: var(--spacing-sm);
+  }
+
+  .navigation-pane.open {
+    right: 0.75rem;
+  }
+
+  .navigation-pane button {
+    font-size: 0.8rem;
+    padding: var(--spacing-xs) var(--spacing-sm);
+  }
+}

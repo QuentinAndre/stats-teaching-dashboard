@@ -9,7 +9,7 @@ import { useState, useEffect, useRef, RefObject } from 'react';
  *
  * @returns [ref to attach to scroll container, progress value 0-1]
  */
-export function useScrollProgress<T extends HTMLElement>(): [RefObject<T | null>, number] {
+export function useScrollProgress<T extends HTMLElement>(): [RefObject<T>, number] {
   const ref = useRef<T>(null);
   const [progress, setProgress] = useState(0);
 

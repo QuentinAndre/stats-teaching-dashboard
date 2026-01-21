@@ -2,12 +2,12 @@ import { useState, useEffect, useMemo, useRef, useCallback } from 'react';
 import * as d3 from 'd3';
 import { generatePopulation, drawSampleIndices, mean } from '../../../utils/statistics';
 
-interface SamplingDistributionSectionProps {
+interface SkewedSamplingSectionProps {
   sampleSize?: number;
   numberOfSamples?: number;
 }
 
-// Population parameters
+// Population parameters for skewed distribution (same mean and SD as normal)
 const POPULATION_SIZE = 500;
 const POPULATION_MEAN = 50;
 const POPULATION_STD = 10;
@@ -22,10 +22,10 @@ interface AnimationState {
   targetMean: number | null;
 }
 
-export default function SamplingDistributionSection({
-  sampleSize = 25,
-  numberOfSamples = 200,
-}: SamplingDistributionSectionProps) {
+export default function SkewedSamplingSection({
+  sampleSize = 15,
+  numberOfSamples = 500,
+}: SkewedSamplingSectionProps) {
   const topSvgRef = useRef<SVGSVGElement>(null);
   const bottomSvgRef = useRef<SVGSVGElement>(null);
   const animationFrameRef = useRef<number | null>(null);
@@ -41,12 +41,12 @@ export default function SamplingDistributionSection({
     targetMean: null,
   });
 
-  // Generate population data once
+  // Generate SKEWED population data once (same mean and SD as the normal distribution)
   const populationData = useMemo(() => {
-    return generatePopulation('normal', POPULATION_MEAN, POPULATION_STD, POPULATION_SIZE);
+    return generatePopulation('skewed', POPULATION_MEAN, POPULATION_STD, POPULATION_SIZE);
   }, []);
 
-  // X-axis domain (shared between top and bottom)
+  // X-axis domain (shared between top and bottom) - same as normal distribution for comparison
   const xDomain = useMemo(() => {
     const buffer = POPULATION_STD * 4;
     return { min: POPULATION_MEAN - buffer, max: POPULATION_MEAN + buffer };
@@ -69,15 +69,15 @@ export default function SamplingDistributionSection({
 
   // Dot positions for population histogram
   const dotPositions = useMemo(() => {
-    const binWidth = (xDomain.max - xDomain.min) / 40;
+    const binWidth = (xDomain.max - xDomain.min) / 50;
     const dotRadius = 2;
-    const dotsPerRow = Math.floor((innerWidth / 40 - 2) / (dotRadius * 2));
+    const dotsPerRow = Math.floor((innerWidth / 50 - 2) / (dotRadius * 2));
 
-    const binIndices: number[][] = Array.from({ length: 40 }, () => []);
+    const binIndices: number[][] = Array.from({ length: 50 }, () => []);
     populationData.forEach((value, index) => {
       if (value >= xDomain.min && value < xDomain.max) {
         const binIndex = Math.floor((value - xDomain.min) / binWidth);
-        if (binIndex >= 0 && binIndex < 40) {
+        if (binIndex >= 0 && binIndex < 50) {
           binIndices[binIndex].push(index);
         }
       }
@@ -230,7 +230,7 @@ export default function SamplingDistributionSection({
     }
   }, [isRunning, animationState.phase, sampleMeans.length, numberOfSamples, runSample]);
 
-  // Draw top histogram (population)
+  // Draw top histogram (bimodal population)
   useEffect(() => {
     if (!topSvgRef.current || dotPositions.length === 0) return;
 
@@ -299,15 +299,15 @@ export default function SamplingDistributionSection({
       .attr('stroke-dasharray', '5,5');
   }, [dotPositions, xScale, topInnerHeight, animationState]);
 
-  // Draw bottom histogram of sample means (red squares)
+  // Draw bottom histogram of sample means
   useEffect(() => {
     if (!bottomSvgRef.current) return;
 
     const svg = d3.select(bottomSvgRef.current);
-    const g = svg.select<SVGGElement>('.rugplot-content');
+    const g = svg.select<SVGGElement>('.sampling-content');
     g.selectAll('*').remove();
 
-    // Rectangle size for histogram (short and wide to fit more in view)
+    // Rectangle size for histogram
     const rectHeight = 1.5;
     const rectWidth = 8;
     const rectGap = 0.5;
@@ -369,12 +369,9 @@ export default function SamplingDistributionSection({
     // Draw theoretical sampling distribution curve (t-distribution) when animation is complete
     if (sampleMeans.length >= numberOfSamples) {
       const standardError = POPULATION_STD / Math.sqrt(sampleSize);
-      const df = sampleSize - 1; // degrees of freedom for t-distribution
+      const df = sampleSize - 1;
 
-      // t-distribution PDF formula
-      // f(t) = Γ((ν+1)/2) / (√(νπ) * Γ(ν/2)) * (1 + t²/ν)^(-(ν+1)/2)
       const gammaLn = (z: number): number => {
-        // Lanczos approximation for ln(Gamma(z))
         const g = 7;
         const c = [
           0.99999999999980993, 676.5203681218851, -1259.1392167224028,
@@ -408,20 +405,18 @@ export default function SamplingDistributionSection({
       // Scale factor: curve peak should match expected max bin count
       const scaleFactor = expectedMaxBinCount / peakPdfValue;
 
-      // Generate points for the t-distribution curve
       const curvePoints: [number, number][] = [];
       const numPoints = 200;
 
       for (let i = 0; i <= numPoints; i++) {
         const x = xDomain.min + (i / numPoints) * (xDomain.max - xDomain.min);
         const t = (x - POPULATION_MEAN) / standardError;
-        const pdf = tPdf(t, df) / standardError; // Scale by 1/SE to convert to x-scale
+        const pdf = tPdf(t, df) / standardError;
         const scaledCount = pdf * scaleFactor;
         const y = bottomInnerHeight - scaledCount * (rectHeight + rectGap);
         curvePoints.push([xScale(x), y]);
       }
 
-      // Draw the curve as a dashed line
       const line = d3.line<[number, number]>()
         .x(d => d[0])
         .y(d => d[1])
@@ -473,7 +468,6 @@ export default function SamplingDistributionSection({
   // Start/Reset handlers
   const handleStart = () => {
     if (sampleMeans.length >= numberOfSamples) {
-      // Reset
       setSampleMeans([]);
       setAnimationState({ phase: 'idle', progress: 0, currentSampleIndices: [], targetMean: null });
     }
@@ -488,25 +482,26 @@ export default function SamplingDistributionSection({
   };
 
   return (
-    <section className="narrative-section sampling-distribution-section">
+    <section className="narrative-section skewed-sampling-section">
       <div className="section-intro">
-        <h2>The Sampling Distribution</h2>
+        <h2>Sampling from Non-Normal Distributions</h2>
 
         <p className="intro-text">
-          What happens if we repeat this sampling process many times? Each time we draw a new
-          sample, we get a different sample mean. The distribution of all these sample means is
-          called the <strong>sampling distribution</strong>.
+          First, what do you think would happen if we repeatedly sampled means from a non-normal
+          distribution, like a <strong>skewed distribution</strong>?
         </p>
 
         <p className="intro-text">
-          Click the button below to watch as we take {numberOfSamples} samples of size {sampleSize}.
-          Each sample's mean will drop down as a red square on the bottom histogram.
+          The population below is right-skewed (similar to a log-normal distribution), but it has
+          the <strong>same mean (μ = {POPULATION_MEAN}) and standard deviation (σ = {POPULATION_STD})</strong> as
+          the normal distribution above. Let's see what happens when we take {numberOfSamples} samples
+          of size {sampleSize} from this population.
         </p>
       </div>
 
       <div className="sampling-distribution-viz">
         <div className="viz-container">
-          {/* Population histogram (top) */}
+          {/* Skewed population histogram (top) */}
           <svg
             ref={topSvgRef}
             width={width}
@@ -514,7 +509,7 @@ export default function SamplingDistributionSection({
             className="population-display"
           >
             <text x={width / 2} y={15} textAnchor="middle" fontSize="14" fontWeight="bold">
-              Population Distribution
+              Skewed Population Distribution
             </text>
             <g className="population-content" transform={`translate(${margin.left}, ${margin.top})`} />
           </svg>
@@ -529,7 +524,7 @@ export default function SamplingDistributionSection({
             <text x={width / 2} y={15} textAnchor="middle" fontSize="14" fontWeight="bold">
               Sample Means
             </text>
-            <g className="rugplot-content" transform={`translate(${margin.left}, ${margin.top})`} />
+            <g className="sampling-content" transform={`translate(${margin.left}, ${margin.top})`} />
           </svg>
         </div>
 
@@ -559,9 +554,14 @@ export default function SamplingDistributionSection({
       {sampleMeans.length >= numberOfSamples && (
         <div className="section-conclusion">
           <p className="completion-text">
-            You can see that this sampling procedure converges to a bell-shaped distribution centered
-            around the population mean (μ = {POPULATION_MEAN}). Let's review some of the interesting
-            properties of this sampling distribution.
+            It might be surprising, but the sampling distribution of means sampled from a non-normal
+            distribution still forms... a bell-shaped distribution. This is the <strong>"Central Limit
+            Theorem"</strong> in action: regardless of the population's shape, the distribution of sample
+            means approaches a normal distribution as the sample size increases.
+          </p>
+          <p className="completion-text" style={{ marginTop: '1rem' }}>
+            So if the sampling distribution of the means doesn't depend on the shape of the population
+            the means are calculated from, what <em>does</em> it depend on?
           </p>
         </div>
       )}

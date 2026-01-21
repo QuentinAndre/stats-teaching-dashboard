@@ -3,7 +3,7 @@ import ScrollingNarrative from './components/ScrollingNarrative';
 function App() {
   return (
     <div className="app">
-      <ScrollingNarrative sampleSize={25} />
+      <ScrollingNarrative sampleSize={15} />
     </div>
   );
 }

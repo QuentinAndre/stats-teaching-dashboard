@@ -1,0 +1,149 @@
+.sampling-summary {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: var(--spacing-xl);
+}
+
+.sampling-summary h2 {
+  text-align: center;
+  color: var(--text-primary);
+  margin-bottom: var(--spacing-lg);
+  font-size: 1.8rem;
+}
+
+.sampling-summary h3 {
+  color: var(--primary);
+  margin-bottom: var(--spacing-sm);
+  font-size: 1.2rem;
+}
+
+.summary-content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-lg);
+}
+
+.key-insight {
+  font-size: 1.15rem;
+  line-height: 1.6;
+  text-align: center;
+  padding: var(--spacing-md);
+  background: linear-gradient(135deg, var(--background) 0%, #e9ecef 100%);
+  border-radius: var(--border-radius-lg);
+  border-left: 4px solid var(--primary);
+}
+
+.convergence-box,
+.formula-box,
+.clt-box {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--border-radius-lg);
+  padding: var(--spacing-lg);
+}
+
+.convergence-box ul {
+  margin: 0.75rem 0;
+  padding-left: var(--spacing-lg);
+}
+
+.convergence-box li {
+  margin-bottom: var(--spacing-sm);
+  line-height: 1.5;
+}
+
+.formula {
+  text-align: center;
+  padding: var(--spacing-lg);
+  margin: var(--spacing-md) 0;
+  background: var(--background);
+  border-radius: var(--border-radius-lg);
+}
+
+.formula-main {
+  font-size: 2rem;
+  font-family: 'Times New Roman', Georgia, serif;
+  font-style: italic;
+  color: var(--text-primary);
+}
+
+.formula-parts {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+  margin-top: var(--spacing-md);
+}
+
+.formula-part {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--spacing-md);
+  padding: var(--spacing-sm);
+  background: var(--background);
+  border-radius: var(--border-radius);
+}
+
+.formula-part .symbol {
+  font-family: 'Times New Roman', Georgia, serif;
+  font-style: italic;
+  font-size: 1.4rem;
+  color: var(--primary);
+  min-width: 40px;
+  text-align: center;
+  font-weight: bold;
+}
+
+.formula-part .explanation {
+  flex: 1;
+  line-height: 1.5;
+  color: var(--text-secondary);
+}
+
+.formula-part .explanation strong {
+  color: var(--text-primary);
+}
+
+
+/* Central Limit Theorem box */
+.clt-box .theorem-statement {
+  background: linear-gradient(135deg, var(--background) 0%, #e9ecef 100%);
+  border-radius: var(--border-radius-lg);
+  padding: var(--spacing-md);
+  margin: var(--spacing-md) 0;
+}
+
+.clt-box .theorem-statement p {
+  margin: 0 0 var(--spacing-sm) 0;
+  line-height: 1.6;
+}
+
+.clt-box .math {
+  font-family: 'Times New Roman', Georgia, serif;
+  font-style: italic;
+}
+
+.clt-box .formula {
+  margin: var(--spacing-sm) 0;
+  padding: var(--spacing-md);
+}
+
+.clt-box .formula .formula-main {
+  font-size: 1.5rem;
+}
+
+.clt-box .clt-implications h4 {
+  color: var(--primary);
+  margin: var(--spacing-md) 0 var(--spacing-sm) 0;
+  font-size: 1rem;
+}
+
+.clt-box .clt-implications ul {
+  margin: var(--spacing-sm) 0;
+  padding-left: var(--spacing-lg);
+}
+
+.clt-box .clt-implications li {
+  margin-bottom: var(--spacing-sm);
+  line-height: 1.5;
+}
+
