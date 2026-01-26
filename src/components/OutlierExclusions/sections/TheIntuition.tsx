@@ -103,7 +103,9 @@ export default function TheIntuition() {
         is based on the sample mean. As a consequence, the high values in Group A
         become outliers, while the high values in Group B do not. Conversely, the
         low values in Group B become outliers, but the low values in Group A do not.
-        After exclusion, the groups diverge further.
+        After exclusion, the groups diverge further. As you can see by adjusting the
+        threshold using the slider below, the more observations you exclude, the more
+        the groups diverge.
       </p>
 
       <div className="outlier-viz-container">

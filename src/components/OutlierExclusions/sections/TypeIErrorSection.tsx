@@ -46,7 +46,7 @@ export default function TypeIErrorSection() {
     const withinFiltered2 = removeAtIndices(group2, withinOut2);
     const withinTest = welchTTest(withinFiltered1, withinFiltered2);
 
-    // Across-condition exclusion (Median ± 1.5*IQR)
+    // Across-conditions exclusion (Median ± 1.5*IQR)
     const [acrossOut1, acrossOut2] = getOutlierIndicesAcrossMedianIQR(group1, group2, 1.5);
     const acrossFiltered1 = removeAtIndices(group1, acrossOut1);
     const acrossFiltered2 = removeAtIndices(group2, acrossOut2);
@@ -336,7 +336,7 @@ export default function TypeIErrorSection() {
                     fill="var(--accent)"
                     opacity={0.7}
                   />
-                  {/* Across-condition t-stat */}
+                  {/* Across-conditions t-stat */}
                   <circle
                     cx={xScale(Math.max(tMin, Math.min(tMax, stat.across)))}
                     cy={acrossY}
@@ -375,7 +375,7 @@ export default function TypeIErrorSection() {
               </text>
               <circle cx={120} cy={0} r={4} fill="var(--primary)" />
               <text x={130} y={4} fontSize={11} fill="var(--text-secondary)">
-                Across-condition
+                Across-conditions
               </text>
             </g>
           </g>
@@ -394,7 +394,7 @@ export default function TypeIErrorSection() {
             </div>
           </div>
           <div className="result-card">
-            <div className="result-label">Across-Condition</div>
+            <div className="result-label">Across-Conditions</div>
             <div className="result-value">
               {acrossFP} / {tStatistics.length}
             </div>
@@ -417,7 +417,7 @@ export default function TypeIErrorSection() {
           <p style={{ marginTop: 'var(--spacing-xl)', lineHeight: 1.7 }}>
             Notice how the <strong style={{ color: 'var(--accent)' }}>red dots</strong> (within-condition)
             plot a wider distribution than the{' '}
-            <strong style={{ color: 'var(--primary)' }}>blue dots</strong> (across-condition).
+            <strong style={{ color: 'var(--primary)' }}>blue dots</strong> (across-conditions).
             This visual pattern shows why within-condition exclusion inflates
             false positive rates: it produces more extreme t-statistics when
             the null hypothesis is actually true. The graph below directly compares
@@ -428,7 +428,7 @@ export default function TypeIErrorSection() {
           {/* Scatter plot: Original vs Within-condition t-statistics */}
           <div className="outlier-viz-container" style={{ marginTop: 'var(--spacing-xl)' }}>
             <h4 style={{ textAlign: 'center', marginBottom: 'var(--spacing-md)' }}>
-              Within-Condition vs. Across-Condition Exclusion
+              Within-Condition vs. Across-Conditions Exclusion
             </h4>
             {(() => {
               const scatterMargin = { top: 40, right: 40, bottom: 60, left: 70 };
@@ -618,7 +618,7 @@ export default function TypeIErrorSection() {
                         fontSize={12}
                         fill="var(--text-primary)"
                       >
-                        |t| with across-condition exclusion
+                        |t| with across-conditions exclusion
                       </text>
 
                       {/* Y-axis labels */}
@@ -678,6 +678,25 @@ export default function TypeIErrorSection() {
               );
             })()}
           </div>
+
+          <p style={{ marginTop: 'var(--spacing-xl)', lineHeight: 1.7 }}>
+            As you can see, most of the dots are above the 45-degree line: It means that
+            shifting from across-conditions exclusions to within-condition exclusions leads
+            to more extreme t-values.
+          </p>
+
+          <p style={{ marginTop: 'var(--spacing-md)', lineHeight: 1.7 }}>
+            In particular, you can see many dots in the <strong style={{ color: 'var(--accent)' }}>red area</strong> of
+            the graph: It means this exclusion procedure has generated many significant results
+            that would not be significant with across-conditions exclusions. Remember, the null
+            is true, so these results are false-positives!
+          </p>
+
+          <p style={{ marginTop: 'var(--spacing-md)', lineHeight: 1.7 }}>
+            That is why you must <em>never, ever</em> exclude observations within conditions.
+            By doing so, you <em>assume</em> the null to be false... and therefore greatly
+            increase the odds of false-positive results.
+          </p>
         </>
       )}
 

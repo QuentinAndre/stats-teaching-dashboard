@@ -1,12 +1,9 @@
 import { useState, useMemo, useCallback } from 'react';
 import {
   generateNormalSample,
-  getWithinThresholds,
-  getAcrossThresholds,
-  getOutlierIndicesWithin,
-  getOutlierIndicesAcross,
   welchTTest,
   mean,
+  standardDeviation,
   removeAtIndices,
 } from '../../../utils/statistics';
 
@@ -26,12 +23,49 @@ export default function InteractiveDemo() {
     return { group1: g1, group2: g2 };
   }, [seed]);
 
-  // Compute thresholds and outliers for each method
+  // Compute thresholds and outliers for each method using ±1.5 SD
   const analysis = useMemo(() => {
-    const withinThresh = getWithinThresholds(group1, group2, 'iqr', 1.5);
-    const acrossThresh = getAcrossThresholds(group1, group2, 'iqr', 1.5);
-    const [withinOut1, withinOut2] = getOutlierIndicesWithin(group1, group2, 'iqr', 1.5);
-    const [acrossOut1, acrossOut2] = getOutlierIndicesAcross(group1, group2, 'iqr', 1.5);
+    const threshold = 1.5; // ±1.5 SD from mean
+
+    // Within-condition: each group gets its own thresholds based on its mean/SD
+    const mean1 = mean(group1);
+    const mean2 = mean(group2);
+    const sd1 = standardDeviation(group1, false);
+    const sd2 = standardDeviation(group2, false);
+
+    const withinThresh = {
+      group1: { lower: mean1 - threshold * sd1, upper: mean1 + threshold * sd1 },
+      group2: { lower: mean2 - threshold * sd2, upper: mean2 + threshold * sd2 },
+    };
+
+    // Across-conditions: combine all data for single threshold
+    const combined = [...group1, ...group2];
+    const meanAll = mean(combined);
+    const sdAll = standardDeviation(combined, false);
+    const acrossThresh = {
+      lower: meanAll - threshold * sdAll,
+      upper: meanAll + threshold * sdAll,
+    };
+
+    // Identify outliers for within-condition
+    const withinOut1 = group1
+      .map((v, i) => ({ v, i }))
+      .filter(({ v }) => v < withinThresh.group1.lower || v > withinThresh.group1.upper)
+      .map(({ i }) => i);
+    const withinOut2 = group2
+      .map((v, i) => ({ v, i }))
+      .filter(({ v }) => v < withinThresh.group2.lower || v > withinThresh.group2.upper)
+      .map(({ i }) => i);
+
+    // Identify outliers for across-conditions
+    const acrossOut1 = group1
+      .map((v, i) => ({ v, i }))
+      .filter(({ v }) => v < acrossThresh.lower || v > acrossThresh.upper)
+      .map(({ i }) => i);
+    const acrossOut2 = group2
+      .map((v, i) => ({ v, i }))
+      .filter(({ v }) => v < acrossThresh.lower || v > acrossThresh.upper)
+      .map(({ i }) => i);
 
     // Compute t-tests for each scenario
     const noExclusionTest = welchTTest(group1, group2);
@@ -46,7 +80,7 @@ export default function InteractiveDemo() {
 
     return {
       withinThresholds: withinThresh,
-      acrossThresholds: acrossThresh,
+      acrossThresholds: { group1: acrossThresh, group2: acrossThresh },
       withinOutliers: [withinOut1, withinOut2] as [number[], number[]],
       acrossOutliers: [acrossOut1, acrossOut2] as [number[], number[]],
       tests: {
@@ -82,7 +116,7 @@ export default function InteractiveDemo() {
     method === 'within'
       ? analysis.withinThresholds
       : method === 'across'
-      ? { group1: analysis.acrossThresholds, group2: analysis.acrossThresholds }
+      ? analysis.acrossThresholds
       : null;
 
   const currentTest = analysis.tests[method];
@@ -112,7 +146,8 @@ export default function InteractiveDemo() {
       <p className="intro-text">
         Both groups below are drawn from <strong>the same population</strong> (mean = 50, SD = 10).
         There is no true difference between them. Toggle between exclusion methods
-        to see how they affect the results.
+        to see how they affect the results. For the sake of illustration, we are going
+        to exclude all observations further than 1.5 SD from the mean.
       </p>
 
       <div style={{ textAlign: 'center', marginBottom: 'var(--spacing-md)' }}>
@@ -138,7 +173,7 @@ export default function InteractiveDemo() {
           className={`method-button ${method === 'across' ? 'active' : ''}`}
           onClick={() => setMethod('across')}
         >
-          Across-Condition
+          Across-Conditions
         </button>
       </div>
 
@@ -350,7 +385,7 @@ export default function InteractiveDemo() {
         <ul style={{ marginTop: 'var(--spacing-sm)', paddingLeft: 'var(--spacing-lg)' }}>
           <li>With <strong>no exclusion</strong>, most tests are non-significant (as expected when null is true)</li>
           <li>With <strong>within-condition</strong> exclusion, you may see more significant results - false positives!</li>
-          <li>With <strong>across-condition</strong> exclusion, results are similar to no exclusion</li>
+          <li>With <strong>across-conditions</strong> exclusion, results are similar to no exclusion</li>
         </ul>
       </div>
 
