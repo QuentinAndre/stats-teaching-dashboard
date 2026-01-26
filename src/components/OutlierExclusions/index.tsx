@@ -44,7 +44,7 @@ export default function OutlierExclusions() {
         <p>
           Based on{' '}
           <a
-            href="https://doi.org/10.3758/s13423-021-01961-8"
+            href="https://doi.org/10.1037/xge0001069"
             target="_blank"
             rel="noopener noreferrer"
           >
