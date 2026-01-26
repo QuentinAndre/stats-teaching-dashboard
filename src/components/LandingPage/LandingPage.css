@@ -1,0 +1,173 @@
+/* ==========================================================================
+   Landing Page Styles
+   ========================================================================== */
+
+.landing-page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  padding: var(--spacing-xl);
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+/* ==========================================================================
+   Header
+   ========================================================================== */
+
+.landing-header {
+  text-align: center;
+  padding: var(--spacing-xl) 0;
+  margin-bottom: var(--spacing-xl);
+}
+
+.landing-header h1 {
+  font-size: 2.5rem;
+  margin: 0 0 var(--spacing-sm);
+  color: var(--text-primary);
+}
+
+.landing-header .subtitle {
+  font-size: var(--font-size-lg);
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+/* ==========================================================================
+   Modules Grid
+   ========================================================================== */
+
+.modules-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: var(--spacing-xl);
+  flex: 1;
+}
+
+/* ==========================================================================
+   Module Card
+   ========================================================================== */
+
+.module-card {
+  display: flex;
+  flex-direction: column;
+  background: var(--surface);
+  border-radius: var(--border-radius-lg);
+  padding: var(--spacing-xl);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  text-decoration: none;
+  color: inherit;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.module-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+}
+
+.module-card:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+/* Icon Container */
+.module-icon-container {
+  width: 64px;
+  height: 64px;
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+  border-radius: var(--border-radius-lg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: var(--spacing-lg);
+  color: white;
+}
+
+.module-icon {
+  width: 36px;
+  height: 36px;
+}
+
+/* Title */
+.module-title {
+  font-size: 1.5rem;
+  margin: 0 0 var(--spacing-sm);
+  color: var(--text-primary);
+}
+
+/* Description */
+.module-description {
+  font-size: var(--font-size-md);
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin: 0 0 var(--spacing-lg);
+  flex: 1;
+}
+
+/* Link */
+.module-link {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  font-weight: 600;
+  color: var(--primary);
+  font-size: var(--font-size-md);
+  transition: gap 0.2s ease;
+}
+
+.module-card:hover .module-link {
+  gap: var(--spacing-sm);
+}
+
+.arrow-icon {
+  width: 20px;
+  height: 20px;
+}
+
+/* ==========================================================================
+   Footer
+   ========================================================================== */
+
+.landing-footer {
+  text-align: center;
+  padding: var(--spacing-xl) 0 0;
+  margin-top: var(--spacing-xl);
+  border-top: 1px solid var(--border);
+}
+
+.landing-footer p {
+  color: var(--text-secondary);
+  font-size: var(--font-size-sm);
+  margin: 0;
+}
+
+/* ==========================================================================
+   Responsive
+   ========================================================================== */
+
+@media (max-width: 768px) {
+  .landing-page {
+    padding: var(--spacing-md);
+  }
+
+  .landing-header h1 {
+    font-size: 1.75rem;
+  }
+
+  .landing-header .subtitle {
+    font-size: var(--font-size-md);
+  }
+
+  .modules-grid {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-lg);
+  }
+
+  .module-card {
+    padding: var(--spacing-lg);
+  }
+
+  .module-title {
+    font-size: 1.25rem;
+  }
+}

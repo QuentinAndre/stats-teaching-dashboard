@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import './NavigationPane.css';
 
 interface NavSection {
   id: string;
@@ -8,16 +7,15 @@ interface NavSection {
 }
 
 const sections: NavSection[] = [
-  { id: 'sampling-intro', label: 'What is Sampling?' },
-  { id: 'sampling-distribution', label: 'The Sampling Distribution' },
-  { id: 'skewed-sampling', label: 'Skewed Populations' },
-  { id: 'heterogeneity-comparison', label: 'Population Variability' },
-  { id: 'sample-size-comparison', label: 'Sample Size' },
-  { id: 'sampling-summary', label: 'Putting It Together' },
+  { id: 'outlier-intro', label: 'What Are Outliers?' },
+  { id: 'within-vs-across', label: 'Two Approaches' },
+  { id: 'the-intuition', label: 'Why Does It Matter?' },
+  { id: 'interactive-demo', label: 'Interactive Demo' },
+  { id: 'type-i-error', label: 't-Statistic Distribution' },
 ];
 
 export default function NavigationPane() {
-  const [activeSection, setActiveSection] = useState<string>('sampling-intro');
+  const [activeSection, setActiveSection] = useState<string>('outlier-intro');
   const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {

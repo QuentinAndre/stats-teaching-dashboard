@@ -1,0 +1,354 @@
+/* ==========================================================================
+   Outlier Exclusions Module Styles
+   ========================================================================== */
+
+/* Import shared navigation styles */
+@import '../ScrollingNarrative/NavigationPane.css';
+
+.outlier-exclusions {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: var(--spacing-xl);
+}
+
+.outlier-content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xl);
+}
+
+/* Ensure lists are left-aligned */
+.outlier-content ul,
+.outlier-content ol {
+  text-align: left;
+  padding-left: var(--spacing-xl);
+}
+
+.outlier-content li {
+  margin-bottom: var(--spacing-sm);
+  line-height: 1.6;
+}
+
+/* ==========================================================================
+   Visualization Containers
+   ========================================================================== */
+
+.outlier-viz-container {
+  background: var(--surface);
+  border-radius: var(--border-radius-lg);
+  padding: var(--spacing-lg);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  margin: var(--spacing-lg) 0;
+}
+
+.outlier-viz-container svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  background: var(--background);
+  border-radius: var(--border-radius);
+}
+
+/* ==========================================================================
+   Dot Plot Styles
+   ========================================================================== */
+
+.dot-plot-container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+}
+
+.condition-plot {
+  position: relative;
+}
+
+.condition-label {
+  font-weight: 600;
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
+  margin-bottom: var(--spacing-xs);
+}
+
+.data-dot {
+  transition: fill 0.3s ease, r 0.3s ease, opacity 0.3s ease;
+}
+
+.data-dot.outlier {
+  fill: var(--accent);
+}
+
+.data-dot.excluded {
+  opacity: 0.3;
+}
+
+.threshold-line {
+  stroke-dasharray: 5, 5;
+  stroke-width: 2;
+}
+
+.threshold-line.within {
+  stroke: var(--accent);
+}
+
+.threshold-line.across {
+  stroke: var(--primary);
+}
+
+/* ==========================================================================
+   Controls
+   ========================================================================== */
+
+.method-toggle {
+  display: flex;
+  gap: var(--spacing-sm);
+  justify-content: center;
+  margin: var(--spacing-md) 0;
+}
+
+.method-button {
+  padding: var(--spacing-sm) var(--spacing-lg);
+  border: 2px solid var(--border);
+  background: var(--surface);
+  border-radius: var(--border-radius);
+  font-size: var(--font-size-md);
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.method-button:hover:not(:disabled) {
+  border-color: var(--primary);
+}
+
+.method-button.active {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: white;
+}
+
+.method-button.within.active {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+/* ==========================================================================
+   Simulation Results
+   ========================================================================== */
+
+.simulation-results {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--spacing-md);
+  margin-top: var(--spacing-lg);
+}
+
+.result-card {
+  background: var(--background);
+  border-radius: var(--border-radius);
+  padding: var(--spacing-md);
+  text-align: center;
+}
+
+.result-label {
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
+  margin-bottom: var(--spacing-xs);
+}
+
+.result-value {
+  font-size: 1.5rem;
+  font-weight: 700;
+  font-family: 'SF Mono', Monaco, Consolas, monospace;
+}
+
+.result-value.significant {
+  color: var(--accent);
+}
+
+.result-value.not-significant {
+  color: var(--success);
+}
+
+/* ==========================================================================
+   False Positive Rate Display
+   ========================================================================== */
+
+.fpr-display {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-xl);
+  margin: var(--spacing-lg) 0;
+}
+
+.fpr-gauge {
+  position: relative;
+  width: 150px;
+  height: 150px;
+}
+
+.fpr-value {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 2rem;
+  font-weight: 700;
+  font-family: 'SF Mono', Monaco, Consolas, monospace;
+}
+
+.fpr-label {
+  text-align: center;
+  margin-top: var(--spacing-sm);
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
+}
+
+/* ==========================================================================
+   Comparison Table
+   ========================================================================== */
+
+.comparison-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: var(--spacing-lg) 0;
+}
+
+.comparison-table th,
+.comparison-table td {
+  padding: var(--spacing-sm) var(--spacing-md);
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+}
+
+.comparison-table th {
+  font-weight: 600;
+  color: var(--text-secondary);
+  font-size: var(--font-size-sm);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.comparison-table tr:last-child td {
+  border-bottom: none;
+}
+
+/* ==========================================================================
+   Key Insight Box
+   ========================================================================== */
+
+.key-insight {
+  background: linear-gradient(135deg, rgba(67, 97, 238, 0.1), rgba(67, 97, 238, 0.05));
+  border-left: 4px solid var(--primary);
+  border-radius: var(--border-radius);
+  padding: var(--spacing-lg);
+  margin: var(--spacing-lg) 0;
+}
+
+.key-insight h4 {
+  margin: 0 0 var(--spacing-sm);
+  color: var(--primary);
+  font-size: var(--font-size-md);
+}
+
+.key-insight p {
+  margin: 0;
+  line-height: 1.6;
+}
+
+.warning-box {
+  background: linear-gradient(135deg, rgba(230, 57, 70, 0.1), rgba(230, 57, 70, 0.05));
+  border-left: 4px solid var(--accent);
+}
+
+.warning-box h4 {
+  color: var(--accent);
+}
+
+/* ==========================================================================
+   Recommendations List
+   ========================================================================== */
+
+.recommendations-list {
+  list-style: none;
+  padding: 0;
+  margin: var(--spacing-lg) 0;
+}
+
+.recommendations-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--spacing-md);
+  padding: var(--spacing-md);
+  background: var(--surface);
+  border-radius: var(--border-radius);
+  margin-bottom: var(--spacing-sm);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.recommendation-icon {
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+  color: var(--success);
+}
+
+.recommendation-content h4 {
+  margin: 0 0 var(--spacing-xs);
+  font-size: var(--font-size-md);
+}
+
+.recommendation-content p {
+  margin: 0;
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+/* ==========================================================================
+   Animation Counter
+   ========================================================================== */
+
+.animation-counter {
+  font-size: 3rem;
+  font-weight: 700;
+  font-family: 'SF Mono', Monaco, Consolas, monospace;
+  text-align: center;
+  color: var(--primary);
+  margin: var(--spacing-lg) 0;
+}
+
+.counter-label {
+  font-size: var(--font-size-md);
+  font-weight: normal;
+  color: var(--text-secondary);
+  display: block;
+  margin-top: var(--spacing-xs);
+}
+
+/* ==========================================================================
+   Responsive
+   ========================================================================== */
+
+@media (max-width: 768px) {
+  .outlier-exclusions {
+    padding: var(--spacing-md);
+  }
+
+  .method-toggle {
+    flex-direction: column;
+  }
+
+  .method-button {
+    width: 100%;
+  }
+
+  .fpr-display {
+    flex-direction: column;
+  }
+
+  .simulation-results {
+    grid-template-columns: 1fr;
+  }
+}

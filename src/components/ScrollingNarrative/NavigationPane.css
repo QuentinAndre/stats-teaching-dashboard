@@ -15,6 +15,38 @@
   z-index: 100;
 }
 
+/* Back to Home Link */
+.back-to-home {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  padding: var(--spacing-xs) var(--spacing-sm);
+  margin-bottom: var(--spacing-sm);
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  text-decoration: none;
+  border-radius: var(--border-radius);
+  transition: background-color 0.15s, color 0.15s;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: var(--spacing-sm);
+}
+
+.back-to-home:hover {
+  background: var(--background);
+  color: var(--primary);
+}
+
+.back-to-home:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+.back-icon {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+}
+
 .navigation-pane ul {
   list-style: none;
   margin: 0;
