@@ -12,18 +12,6 @@ export default function ANOVAIntro() {
     return { numComparisons, familywiseError };
   }, [numGroups]);
 
-  // Generate comparison pairs for display
-  const comparisonPairs = useMemo(() => {
-    const pairs: string[] = [];
-    const labels = ['A', 'B', 'C', 'D', 'E', 'F'].slice(0, numGroups);
-    for (let i = 0; i < labels.length; i++) {
-      for (let j = i + 1; j < labels.length; j++) {
-        pairs.push(`${labels[i]} vs ${labels[j]}`);
-      }
-    }
-    return pairs;
-  }, [numGroups]);
-
   // SVG dimensions for circular node graph
   const width = 400;
   const height = 280;

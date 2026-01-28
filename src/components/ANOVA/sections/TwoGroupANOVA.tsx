@@ -1,19 +1,8 @@
-import { useState, useMemo, useCallback, useEffect } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import {
-  generateNormalSample,
-  welchTTest,
-  oneWayANOVA,
-  mean,
   tDistributionPDF,
   fDistributionPDF,
 } from '../../../utils/statistics';
-
-interface TrialResult {
-  id: number;
-  t: number;
-  tSquared: number;
-  f: number;
-}
 
 // Separate component for the folding animation visualization
 function FoldingTransformationViz({
@@ -332,160 +321,9 @@ function FoldingTransformationViz({
 }
 
 export default function TwoGroupANOVA() {
-  const [sampleSize, setSampleSize] = useState(20);
-  const [trials, setTrials] = useState<TrialResult[]>([]);
-  const [currentData, setCurrentData] = useState<{
-    group1: number[];
-    group2: number[];
-  } | null>(null);
-
   // Animation state for the folding visualization
   const [foldProgress, setFoldProgress] = useState(0);
   const [isAnimating, setIsAnimating] = useState(false);
-
-  // Population parameters (null is true: both groups have same mean)
-  const populationMean = 100;
-  const populationSD = 15;
-
-  // Generate new data
-  const generateData = useCallback(() => {
-    const group1 = generateNormalSample(sampleSize, populationMean, populationSD);
-    const group2 = generateNormalSample(sampleSize, populationMean, populationSD);
-    setCurrentData({ group1, group2 });
-
-    // Run both tests
-    const tResult = welchTTest(group1, group2);
-    const anovaResult = oneWayANOVA([group1, group2]);
-
-    // Add to trials
-    const newTrial: TrialResult = {
-      id: trials.length + 1,
-      t: tResult.t,
-      tSquared: tResult.t * tResult.t,
-      f: anovaResult.fStatistic,
-    };
-    setTrials((prev) => [newTrial, ...prev].slice(0, 10)); // Keep last 10
-  }, [sampleSize, trials.length]);
-
-  // Current statistics
-  const currentStats = useMemo(() => {
-    if (!currentData) return null;
-    const tResult = welchTTest(currentData.group1, currentData.group2);
-    const anovaResult = oneWayANOVA([currentData.group1, currentData.group2]);
-    return {
-      mean1: mean(currentData.group1),
-      mean2: mean(currentData.group2),
-      t: tResult.t,
-      tSquared: tResult.t * tResult.t,
-      f: anovaResult.fStatistic,
-      pT: tResult.p,
-      pF: anovaResult.pValue,
-      dfT: tResult.df,
-      dfBetween: anovaResult.dfBetween,
-      dfWithin: anovaResult.dfWithin,
-    };
-  }, [currentData]);
-
-  // SVG dimensions for distributions
-  const width = 320;
-  const height = 160;
-  const margin = { top: 20, right: 20, bottom: 30, left: 30 };
-  const plotWidth = width - margin.left - margin.right;
-  const plotHeight = height - margin.top - margin.bottom;
-
-  // Generate t-distribution curve
-  const tCurve = useMemo(() => {
-    const df = currentStats?.dfT || 38;
-    const points: { x: number; y: number }[] = [];
-    const tMin = -4;
-    const tMax = 4;
-    const steps = 100;
-
-    for (let i = 0; i <= steps; i++) {
-      const x = tMin + (i / steps) * (tMax - tMin);
-      const y = tDistributionPDF(x, df);
-      points.push({ x, y });
-    }
-
-    const maxY = Math.max(...points.map((p) => p.y));
-    const xScale = (x: number) => ((x - tMin) / (tMax - tMin)) * plotWidth;
-    const yScale = (y: number) => plotHeight - (y / maxY) * plotHeight * 0.9;
-
-    const pathD = points
-      .map((p, i) => `${i === 0 ? 'M' : 'L'} ${xScale(p.x)} ${yScale(p.y)}`)
-      .join(' ');
-
-    return { pathD, xScale, yScale, tMin, tMax, df };
-  }, [currentStats?.dfT, plotWidth, plotHeight]);
-
-  // Generate F-distribution curve
-  const fCurve = useMemo(() => {
-    const df1 = currentStats?.dfBetween || 1;
-    const df2 = currentStats?.dfWithin || 38;
-    const points: { x: number; y: number }[] = [];
-    const fMin = 0;
-    const fMax = 8;
-    const steps = 100;
-
-    for (let i = 0; i <= steps; i++) {
-      const x = fMin + (i / steps) * (fMax - fMin);
-      const y = fDistributionPDF(x, df1, df2);
-      points.push({ x, y });
-    }
-
-    const maxY = Math.max(...points.map((p) => p.y));
-    const xScale = (x: number) => ((x - fMin) / (fMax - fMin)) * plotWidth;
-    const yScale = (y: number) => plotHeight - (y / maxY) * plotHeight * 0.9;
-
-    const pathD = points
-      .map((p, i) => `${i === 0 ? 'M' : 'L'} ${xScale(p.x)} ${yScale(p.y)}`)
-      .join(' ');
-
-    return { pathD, xScale, yScale, fMin, fMax, df1, df2 };
-  }, [currentStats?.dfBetween, currentStats?.dfWithin, plotWidth, plotHeight]);
-
-  // Dot plot dimensions
-  const dotPlotWidth = 280;
-  const dotPlotHeight = 180;
-  const dotMargin = { top: 10, right: 20, bottom: 30, left: 40 };
-  const dotPlotInnerWidth = dotPlotWidth - dotMargin.left - dotMargin.right;
-  const dotPlotInnerHeight = dotPlotHeight - dotMargin.top - dotMargin.bottom;
-
-  // Dot plot visualization
-  const dotPlotData = useMemo(() => {
-    if (!currentData) return null;
-
-    const allData = [...currentData.group1, ...currentData.group2];
-    const dataMin = Math.min(...allData);
-    const dataMax = Math.max(...allData);
-    const padding = (dataMax - dataMin) * 0.1;
-    const yMin = dataMin - padding;
-    const yMax = dataMax + padding;
-
-    const yScale = (y: number) =>
-      dotPlotInnerHeight - ((y - yMin) / (yMax - yMin)) * dotPlotInnerHeight;
-
-    // Add jitter to x positions
-    const jitter = () => (Math.random() - 0.5) * 30;
-
-    return {
-      group1Points: currentData.group1.map((v) => ({
-        y: yScale(v),
-        x: dotPlotInnerWidth / 4 + jitter(),
-        value: v,
-      })),
-      group2Points: currentData.group2.map((v) => ({
-        y: yScale(v),
-        x: (3 * dotPlotInnerWidth) / 4 + jitter(),
-        value: v,
-      })),
-      mean1Y: yScale(mean(currentData.group1)),
-      mean2Y: yScale(mean(currentData.group2)),
-      yMin,
-      yMax,
-      yScale,
-    };
-  }, [currentData, dotPlotInnerWidth, dotPlotInnerHeight]);
 
   return (
     <div className="section-intro">
