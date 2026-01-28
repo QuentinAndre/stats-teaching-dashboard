@@ -34,6 +34,98 @@ const modules: ModuleCard[] = [
     ),
   },
   {
+    id: 'nhst',
+    title: 'Null Hypothesis Significance Testing',
+    description:
+      'Understand how sampling distributions enable hypothesis testing. Learn the logic of p-values, t-statistics, and statistical decisions.',
+    path: '/nhst',
+    icon: (
+      <svg viewBox="0 0 48 48" className="module-icon" aria-hidden="true">
+        {/* Bell curve */}
+        <path
+          d="M4 38 Q12 38 16 30 Q20 20 24 12 Q28 20 32 30 Q36 38 44 38"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          opacity="0.6"
+        />
+        {/* Shaded rejection region (right tail) */}
+        <path
+          d="M34 30 Q38 36 44 38 L44 38 L34 38 Z"
+          fill="var(--accent)"
+          opacity="0.4"
+        />
+        {/* Critical line */}
+        <line
+          x1="34"
+          y1="20"
+          x2="34"
+          y2="38"
+          stroke="var(--accent)"
+          strokeWidth="2"
+          strokeDasharray="3,2"
+        />
+        {/* Observed value marker */}
+        <circle cx="38" cy="34" r="4" fill="var(--accent)" />
+        {/* Center line */}
+        <line
+          x1="24"
+          y1="10"
+          x2="24"
+          y2="38"
+          stroke="currentColor"
+          strokeWidth="1"
+          strokeDasharray="2,2"
+          opacity="0.4"
+        />
+      </svg>
+    ),
+  },
+  {
+    id: 'anova',
+    title: 'Analysis of Variance (ANOVA)',
+    description:
+      'Understand ANOVA as a tool for partitioning variance. See how between-group and within-group variability combine to test for group differences.',
+    path: '/anova',
+    icon: (
+      <svg viewBox="0 0 48 48" className="module-icon" aria-hidden="true">
+        {/* Three groups of bars representing variance partitioning */}
+        {/* Group A bars */}
+        <rect x="4" y="20" width="4" height="18" fill="currentColor" opacity="0.5" />
+        <rect x="9" y="24" width="4" height="14" fill="currentColor" opacity="0.5" />
+        <rect x="14" y="22" width="4" height="16" fill="currentColor" opacity="0.5" />
+        {/* Group B bars */}
+        <rect x="20" y="14" width="4" height="24" fill="var(--primary)" opacity="0.7" />
+        <rect x="25" y="18" width="4" height="20" fill="var(--primary)" opacity="0.7" />
+        <rect x="30" y="16" width="4" height="22" fill="var(--primary)" opacity="0.7" />
+        {/* Group C bars */}
+        <rect x="36" y="26" width="4" height="12" fill="var(--accent)" opacity="0.6" />
+        <rect x="41" y="28" width="4" height="10" fill="var(--accent)" opacity="0.6" />
+        {/* Grand mean line */}
+        <line
+          x1="2"
+          y1="28"
+          x2="46"
+          y2="28"
+          stroke="currentColor"
+          strokeWidth="1.5"
+          strokeDasharray="3,2"
+          opacity="0.4"
+        />
+        {/* Baseline */}
+        <line
+          x1="2"
+          y1="38"
+          x2="46"
+          y2="38"
+          stroke="currentColor"
+          strokeWidth="2"
+          opacity="0.3"
+        />
+      </svg>
+    ),
+  },
+  {
     id: 'outlier-exclusions',
     title: 'Outlier Exclusions',
     description:

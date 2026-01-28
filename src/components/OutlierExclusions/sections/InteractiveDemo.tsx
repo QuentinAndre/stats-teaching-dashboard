@@ -377,14 +377,14 @@ export default function InteractiveDemo() {
         </div>
       </div>
 
-      <div className="key-insight" style={{ marginTop: 'var(--spacing-xl)' }}>
-        <h4>What to Observe</h4>
-        <p>
+      <div style={{ background: 'var(--bg-secondary)', padding: 'var(--spacing-lg)', borderRadius: 'var(--border-radius-md)', marginTop: 'var(--spacing-xl)', border: '1px solid var(--border)' }}>
+        <h4 style={{ marginTop: 0, marginBottom: 'var(--spacing-sm)', color: 'var(--text-primary)' }}>What to Observe</h4>
+        <p style={{ margin: 0, lineHeight: 1.7, color: 'var(--text-secondary)' }}>
           Generate several datasets and compare the results. Notice how:
         </p>
-        <ul style={{ marginTop: 'var(--spacing-sm)', paddingLeft: 'var(--spacing-lg)' }}>
+        <ul style={{ marginTop: 'var(--spacing-sm)', paddingLeft: 'var(--spacing-lg)', color: 'var(--text-secondary)', lineHeight: 1.7 }}>
           <li>With <strong>no exclusion</strong>, most tests are non-significant (as expected when null is true)</li>
-          <li>With <strong>within-condition</strong> exclusion, you may see more significant results - false positives!</li>
+          <li>With <strong>within-condition</strong> exclusion, you may see more significant results—false positives</li>
           <li>With <strong>across-conditions</strong> exclusion, results are similar to no exclusion</li>
         </ul>
       </div>

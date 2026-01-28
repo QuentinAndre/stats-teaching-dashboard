@@ -6,8 +6,27 @@ const jStatDist = jStat as unknown as {
   normal: { inv: (p: number, mean: number, std: number) => number; pdf: (x: number, mean: number, std: number) => number };
   uniform: { inv: (p: number, a: number, b: number) => number };
   gamma: { inv: (p: number, shape: number, scale: number) => number };
-  studentt: { cdf: (x: number, df: number) => number };
+  studentt: { cdf: (x: number, df: number) => number; pdf: (x: number, df: number) => number };
+  centralF: { cdf: (x: number, df1: number, df2: number) => number; pdf: (x: number, df1: number, df2: number) => number };
 };
+
+/**
+ * Returns the PDF of a t-distribution at value x with given degrees of freedom.
+ * @param x - The value at which to evaluate the PDF
+ * @param df - Degrees of freedom
+ */
+export function tDistributionPDF(x: number, df: number): number {
+  return jStatDist.studentt.pdf(x, df);
+}
+
+/**
+ * Returns the CDF of a t-distribution at value x with given degrees of freedom.
+ * @param x - The value at which to evaluate the CDF
+ * @param df - Degrees of freedom
+ */
+export function tDistributionCDF(x: number, df: number): number {
+  return jStatDist.studentt.cdf(x, df);
+}
 
 /**
  * Generates a deterministic population that perfectly approximates the theoretical distribution.
@@ -718,4 +737,172 @@ export function generateNormalSample(
 export function removeAtIndices<T>(data: T[], indices: number[]): T[] {
   const indexSet = new Set(indices);
   return data.filter((_, i) => !indexSet.has(i));
+}
+
+/* ==========================================================================
+   ANOVA Functions
+   ========================================================================== */
+
+/**
+ * Returns the PDF of an F-distribution at value x with given degrees of freedom.
+ * @param x - The value at which to evaluate the PDF (must be >= 0)
+ * @param df1 - Numerator degrees of freedom (between-groups)
+ * @param df2 - Denominator degrees of freedom (within-groups)
+ */
+export function fDistributionPDF(x: number, df1: number, df2: number): number {
+  if (x < 0) return 0;
+  return jStatDist.centralF.pdf(x, df1, df2);
+}
+
+/**
+ * Returns the CDF of an F-distribution at value x with given degrees of freedom.
+ * @param x - The value at which to evaluate the CDF
+ * @param df1 - Numerator degrees of freedom (between-groups)
+ * @param df2 - Denominator degrees of freedom (within-groups)
+ */
+export function fDistributionCDF(x: number, df1: number, df2: number): number {
+  if (x < 0) return 0;
+  return jStatDist.centralF.cdf(x, df1, df2);
+}
+
+/**
+ * Calculates group statistics for ANOVA.
+ * @param groups - Array of arrays, each containing observations for one group
+ * @returns Object with means, variances, sample sizes, grand mean, and total N
+ */
+export function calculateGroupStatistics(groups: number[][]): {
+  means: number[];
+  variances: number[];
+  sds: number[];
+  ns: number[];
+  grandMean: number;
+  totalN: number;
+} {
+  const means = groups.map((g) => mean(g));
+  const variances = groups.map((g) => {
+    if (g.length <= 1) return 0;
+    const m = mean(g);
+    return g.reduce((sum, v) => sum + Math.pow(v - m, 2), 0) / (g.length - 1);
+  });
+  const sds = variances.map((v) => Math.sqrt(v));
+  const ns = groups.map((g) => g.length);
+  const totalN = ns.reduce((a, b) => a + b, 0);
+
+  // Grand mean: weighted average of group means, or mean of all data
+  const allData = groups.flat();
+  const grandMean = mean(allData);
+
+  return { means, variances, sds, ns, grandMean, totalN };
+}
+
+/**
+ * Computes sum of squares for ANOVA.
+ * SS_Total = SS_Between + SS_Within (always)
+ *
+ * SS_Total: Sum of squared deviations of all observations from the grand mean
+ * SS_Between: Sum of squared deviations of group means from grand mean, weighted by n
+ * SS_Within: Sum of squared deviations of observations from their group means
+ *
+ * @param groups - Array of arrays, each containing observations for one group
+ * @returns Object with ssTotal, ssBetween, and ssWithin
+ */
+export function computeSumOfSquares(groups: number[][]): {
+  ssTotal: number;
+  ssBetween: number;
+  ssWithin: number;
+} {
+  const { means, grandMean, ns } = calculateGroupStatistics(groups);
+  const allData = groups.flat();
+
+  // SS_Total: deviation of each observation from grand mean
+  const ssTotal = allData.reduce((sum, x) => sum + Math.pow(x - grandMean, 2), 0);
+
+  // SS_Between: weighted sum of squared deviations of group means from grand mean
+  // SS_B = Σ n_j * (X̄_j - X̄..)²
+  const ssBetween = groups.reduce((sum, _group, j) => {
+    return sum + ns[j] * Math.pow(means[j] - grandMean, 2);
+  }, 0);
+
+  // SS_Within: sum of squared deviations within each group
+  // SS_W = Σ Σ (X_ij - X̄_j)²
+  const ssWithin = groups.reduce((sum, group, j) => {
+    return sum + group.reduce((gSum, x) => gSum + Math.pow(x - means[j], 2), 0);
+  }, 0);
+
+  return { ssTotal, ssBetween, ssWithin };
+}
+
+/**
+ * Performs one-way ANOVA.
+ * Tests whether at least one group mean differs from the others.
+ *
+ * @param groups - Array of arrays, each containing observations for one group
+ * @returns Full ANOVA table: SS, df, MS, F, and p-value
+ */
+export function oneWayANOVA(groups: number[][]): {
+  ssTotal: number;
+  ssBetween: number;
+  ssWithin: number;
+  dfBetween: number;
+  dfWithin: number;
+  dfTotal: number;
+  msBetween: number;
+  msWithin: number;
+  fStatistic: number;
+  pValue: number;
+} {
+  const k = groups.length; // number of groups
+  const { totalN } = calculateGroupStatistics(groups);
+  const { ssTotal, ssBetween, ssWithin } = computeSumOfSquares(groups);
+
+  // Degrees of freedom
+  const dfBetween = k - 1;
+  const dfWithin = totalN - k;
+  const dfTotal = totalN - 1;
+
+  // Mean squares
+  const msBetween = dfBetween > 0 ? ssBetween / dfBetween : 0;
+  const msWithin = dfWithin > 0 ? ssWithin / dfWithin : 0;
+
+  // F-statistic
+  const fStatistic = msWithin > 0 ? msBetween / msWithin : 0;
+
+  // P-value (right-tailed test)
+  const pValue = dfBetween > 0 && dfWithin > 0
+    ? 1 - fDistributionCDF(fStatistic, dfBetween, dfWithin)
+    : 1;
+
+  return {
+    ssTotal,
+    ssBetween,
+    ssWithin,
+    dfBetween,
+    dfWithin,
+    dfTotal,
+    msBetween,
+    msWithin,
+    fStatistic,
+    pValue,
+  };
+}
+
+/**
+ * Generates multiple groups of normally distributed data.
+ * Useful for ANOVA demonstrations.
+ *
+ * @param groupMeans - Array of means for each group
+ * @param groupSDs - Array of standard deviations for each group (or single value for all)
+ * @param groupNs - Array of sample sizes for each group (or single value for all)
+ * @returns Array of arrays containing the generated data
+ */
+export function generateANOVAData(
+  groupMeans: number[],
+  groupSDs: number | number[],
+  groupNs: number | number[]
+): number[][] {
+  const k = groupMeans.length;
+  const sds = typeof groupSDs === 'number' ? Array(k).fill(groupSDs) : groupSDs;
+  const ns = typeof groupNs === 'number' ? Array(k).fill(groupNs) : groupNs;
+
+  return groupMeans.map((groupMean, i) => generateNormalSample(ns[i], groupMean, sds[i]));
 }

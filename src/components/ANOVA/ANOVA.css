@@ -1,0 +1,573 @@
+@import '../ScrollingNarrative/NavigationPane.css';
+
+.anova {
+  min-height: 100vh;
+  background: var(--bg-primary);
+}
+
+.anova-header {
+  text-align: center;
+  padding: var(--spacing-3xl) var(--spacing-xl) var(--spacing-xl);
+  background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-primary) 100%);
+  border-bottom: 1px solid var(--border);
+}
+
+.anova-header h1 {
+  font-size: 2.5rem;
+  color: var(--text-primary);
+  margin-bottom: var(--spacing-sm);
+}
+
+.anova-header .subtitle {
+  font-size: 1.125rem;
+  color: var(--text-secondary);
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.anova-content {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: var(--spacing-xl);
+}
+
+.anova-content .narrative-section {
+  margin-bottom: var(--spacing-3xl);
+  padding-bottom: var(--spacing-3xl);
+  border-bottom: 1px solid var(--border);
+}
+
+.anova-content .narrative-section:last-child {
+  border-bottom: none;
+}
+
+/* Section intro styling */
+.anova .section-intro h2 {
+  font-size: 1.75rem;
+  color: var(--text-primary);
+  margin-bottom: var(--spacing-lg);
+}
+
+.anova .section-intro h3 {
+  font-size: 1.25rem;
+  color: var(--text-primary);
+  margin-top: var(--spacing-xl);
+  margin-bottom: var(--spacing-md);
+}
+
+.anova .intro-text {
+  font-size: 1.0625rem;
+  line-height: 1.7;
+  color: var(--text-secondary);
+  margin-bottom: var(--spacing-lg);
+}
+
+/* Visualization containers */
+.anova .viz-container {
+  background: var(--bg-secondary);
+  border-radius: var(--border-radius-lg);
+  padding: var(--spacing-lg);
+  margin: var(--spacing-xl) 0;
+  border: 1px solid var(--border);
+}
+
+.anova .viz-container h4 {
+  text-align: center;
+  margin-bottom: var(--spacing-md);
+  color: var(--text-primary);
+}
+
+/* Key insight boxes */
+.anova .key-insight {
+  background: linear-gradient(135deg, rgba(67, 97, 238, 0.08) 0%, rgba(67, 97, 238, 0.04) 100%);
+  border-left: 4px solid var(--primary);
+  padding: var(--spacing-lg);
+  border-radius: 0 var(--border-radius-md) var(--border-radius-md) 0;
+  margin: var(--spacing-xl) 0;
+}
+
+.anova .key-insight h4 {
+  color: var(--primary);
+  margin-bottom: var(--spacing-sm);
+  font-size: 1rem;
+}
+
+.anova .key-insight p {
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* Formula boxes */
+.anova .formula-box {
+  background: var(--bg-secondary);
+  border-radius: var(--border-radius-lg);
+  padding: var(--spacing-xl);
+  margin: var(--spacing-xl) 0;
+  border: 1px solid var(--border);
+}
+
+.anova .formula-box h3 {
+  margin-top: 0;
+  margin-bottom: var(--spacing-md);
+}
+
+.anova .formula {
+  text-align: center;
+  padding: var(--spacing-lg);
+  background: var(--bg-primary);
+  border-radius: var(--border-radius-md);
+  margin: var(--spacing-md) 0;
+}
+
+.anova .formula-main {
+  font-size: 1.5rem;
+  font-family: 'Times New Roman', serif;
+  font-style: italic;
+  color: var(--text-primary);
+}
+
+.anova .formula-parts {
+  display: grid;
+  gap: var(--spacing-md);
+  margin-top: var(--spacing-lg);
+}
+
+.anova .formula-part {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--spacing-md);
+  padding: var(--spacing-sm) 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.anova .formula-part:last-child {
+  border-bottom: none;
+}
+
+.anova .formula-part .symbol {
+  font-family: 'Times New Roman', serif;
+  font-style: italic;
+  font-size: 1.25rem;
+  min-width: 60px;
+  color: var(--primary);
+}
+
+.anova .formula-part .explanation {
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+/* Interactive controls */
+.anova .controls-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-lg);
+  margin: var(--spacing-lg) 0;
+  padding: var(--spacing-md);
+  background: var(--bg-secondary);
+  border-radius: var(--border-radius-md);
+}
+
+.anova .control-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+  min-width: 140px;
+  flex: 1;
+}
+
+.anova .control-group label {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.anova .control-group input[type="range"] {
+  width: 100%;
+  -webkit-appearance: none;
+  appearance: none;
+  background: transparent;
+  cursor: pointer;
+  height: 20px;
+}
+
+/* Webkit slider track */
+.anova .control-group input[type="range"]::-webkit-slider-runnable-track {
+  background: var(--border);
+  height: 6px;
+  border-radius: 3px;
+}
+
+/* Webkit slider thumb */
+.anova .control-group input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  height: 18px;
+  width: 18px;
+  border-radius: 50%;
+  background: var(--primary);
+  margin-top: -6px;
+  border: 2px solid white;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
+
+/* Firefox slider track */
+.anova .control-group input[type="range"]::-moz-range-track {
+  background: var(--border);
+  height: 6px;
+  border-radius: 3px;
+}
+
+/* Firefox slider thumb */
+.anova .control-group input[type="range"]::-moz-range-thumb {
+  height: 18px;
+  width: 18px;
+  border-radius: 50%;
+  background: var(--primary);
+  border: 2px solid white;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
+
+/* Group-specific slider colors - Webkit (Chrome, Safari, Edge) */
+.anova input[type="range"].slider-group-a::-webkit-slider-thumb {
+  background: #4361ee;
+}
+.anova input[type="range"].slider-group-b::-webkit-slider-thumb {
+  background: #f4a261;
+}
+.anova input[type="range"].slider-group-c::-webkit-slider-thumb {
+  background: #e63946;
+}
+.anova input[type="range"].slider-group-d::-webkit-slider-thumb {
+  background: #2a9d8f;
+}
+
+/* Group-specific slider colors - Firefox */
+.anova input[type="range"].slider-group-a::-moz-range-thumb {
+  background: #4361ee;
+}
+.anova input[type="range"].slider-group-b::-moz-range-thumb {
+  background: #f4a261;
+}
+.anova input[type="range"].slider-group-c::-moz-range-thumb {
+  background: #e63946;
+}
+.anova input[type="range"].slider-group-d::-moz-range-thumb {
+  background: #2a9d8f;
+}
+
+/* Firefox group colors */
+.anova input[type="range"].slider-group-a::-moz-range-thumb {
+  background: #4361ee;
+}
+.anova input[type="range"].slider-group-b::-moz-range-thumb {
+  background: #f4a261;
+}
+.anova input[type="range"].slider-group-c::-moz-range-thumb {
+  background: #e63946;
+}
+.anova input[type="range"].slider-group-d::-moz-range-thumb {
+  background: #2a9d8f;
+}
+
+.anova .control-value {
+  font-size: 0.875rem;
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+/* Results display */
+.anova .results-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-md);
+  justify-content: center;
+  margin: var(--spacing-lg) 0;
+}
+
+.anova .result-card {
+  background: var(--bg-secondary);
+  border-radius: var(--border-radius-md);
+  padding: var(--spacing-md) var(--spacing-lg);
+  text-align: center;
+  min-width: 120px;
+  border: 1px solid var(--border);
+}
+
+.anova .result-card .result-label {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: var(--spacing-xs);
+}
+
+.anova .result-card .result-value {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.anova .result-card .result-value.significant {
+  color: var(--accent);
+}
+
+.anova .result-card .result-value.not-significant {
+  color: var(--text-secondary);
+}
+
+/* Decision indicator */
+.anova .decision-indicator {
+  text-align: center;
+  padding: var(--spacing-md);
+  border-radius: var(--border-radius-md);
+  margin: var(--spacing-md) 0;
+  font-weight: 600;
+}
+
+.anova .decision-indicator.reject {
+  background: rgba(230, 57, 70, 0.1);
+  color: var(--accent);
+  border: 1px solid var(--accent);
+}
+
+.anova .decision-indicator.fail-to-reject {
+  background: rgba(67, 97, 238, 0.1);
+  color: var(--primary);
+  border: 1px solid var(--primary);
+}
+
+/* Math notation */
+.anova .math {
+  font-family: 'Times New Roman', serif;
+  font-style: italic;
+}
+
+/* ANOVA summary table */
+.anova .anova-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: var(--spacing-lg) 0;
+  font-size: 0.9375rem;
+}
+
+.anova .anova-table th,
+.anova .anova-table td {
+  padding: var(--spacing-sm) var(--spacing-md);
+  border: 1px solid var(--border);
+  text-align: right;
+}
+
+.anova .anova-table th {
+  background: var(--bg-secondary);
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.anova .anova-table td {
+  color: var(--text-secondary);
+}
+
+.anova .anova-table td:first-child {
+  text-align: left;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+/* Variance decomposition bar */
+.anova .variance-bar {
+  display: flex;
+  height: 40px;
+  border-radius: var(--border-radius);
+  overflow: hidden;
+  margin: var(--spacing-md) 0;
+  border: 1px solid var(--border);
+}
+
+.anova .variance-between {
+  background: #8b5cf6;
+  transition: width 0.5s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: 600;
+  font-size: 0.875rem;
+}
+
+.anova .variance-within {
+  background: #10b981;
+  transition: width 0.5s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: 600;
+  font-size: 0.875rem;
+}
+
+/* Variance legend */
+.anova .variance-legend {
+  display: flex;
+  justify-content: center;
+  gap: var(--spacing-xl);
+  margin-top: var(--spacing-sm);
+}
+
+.anova .legend-item {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+}
+
+.anova .legend-color {
+  width: 16px;
+  height: 16px;
+  border-radius: 3px;
+}
+
+.anova .legend-color.between {
+  background: #8b5cf6;
+}
+
+.anova .legend-color.within {
+  background: #10b981;
+}
+
+/* Comparison pairs highlight */
+.anova .comparison-highlight {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--spacing-md);
+  margin: var(--spacing-lg) 0;
+}
+
+.anova .comparison-pair {
+  padding: var(--spacing-sm) var(--spacing-md);
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: var(--border-radius-md);
+  font-size: 0.875rem;
+}
+
+/* Accumulated results table */
+.anova .results-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: var(--spacing-lg) 0;
+  font-size: 0.875rem;
+}
+
+.anova .results-table th,
+.anova .results-table td {
+  padding: var(--spacing-xs) var(--spacing-sm);
+  text-align: center;
+  border-bottom: 1px solid var(--border);
+}
+
+.anova .results-table th {
+  background: var(--bg-secondary);
+  font-weight: 600;
+}
+
+.anova .results-table tbody tr:hover {
+  background: rgba(67, 97, 238, 0.05);
+}
+
+/* Primary button */
+.anova .primary-button {
+  background: var(--primary);
+  color: white;
+  border: none;
+  padding: var(--spacing-sm) var(--spacing-lg);
+  border-radius: var(--border-radius-md);
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.anova .primary-button:hover {
+  background: #3651d4;
+}
+
+.anova .primary-button:disabled {
+  background: var(--text-secondary);
+  cursor: not-allowed;
+}
+
+/* Animation phase buttons */
+.anova .phase-buttons {
+  display: flex;
+  gap: var(--spacing-sm);
+  justify-content: center;
+  margin: var(--spacing-md) 0;
+}
+
+.anova .phase-button {
+  padding: var(--spacing-xs) var(--spacing-md);
+  border: 1px solid var(--border);
+  background: var(--bg-secondary);
+  border-radius: var(--border-radius-md);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.anova .phase-button:hover {
+  border-color: var(--primary);
+}
+
+.anova .phase-button.active {
+  background: var(--primary);
+  color: white;
+  border-color: var(--primary);
+}
+
+/* Footer */
+.anova .narrative-footer {
+  text-align: center;
+  padding: var(--spacing-xl);
+  border-top: 1px solid var(--border);
+  background: var(--bg-secondary);
+}
+
+.anova .narrative-footer p {
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+.anova .narrative-footer a {
+  color: var(--primary);
+  text-decoration: none;
+}
+
+.anova .narrative-footer a:hover {
+  text-decoration: underline;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .anova-header h1 {
+    font-size: 1.75rem;
+  }
+
+  .anova-content {
+    padding: var(--spacing-md);
+  }
+
+  .anova .controls-row {
+    flex-direction: column;
+  }
+
+  .anova .control-group {
+    width: 100%;
+  }
+
+  .anova .variance-legend {
+    flex-direction: column;
+    align-items: center;
+    gap: var(--spacing-sm);
+  }
+}

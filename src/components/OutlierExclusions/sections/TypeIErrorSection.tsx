@@ -412,6 +412,22 @@ export default function TypeIErrorSection() {
         </div>
       )}
 
+      {tStatistics.length < targetSimulations && (
+        <div style={{
+          marginTop: 'var(--spacing-xl)',
+          padding: 'var(--spacing-xl)',
+          background: 'var(--bg-secondary)',
+          borderRadius: 'var(--border-radius-lg)',
+          border: '1px dashed var(--border)',
+          textAlign: 'center'
+        }}>
+          <p style={{ margin: 0, color: 'var(--text-secondary)', fontStyle: 'italic' }}>
+            Run the simulation above to see a detailed comparison of the two exclusion methods
+            and understand why within-condition exclusion inflates false positive rates.
+          </p>
+        </div>
+      )}
+
       {tStatistics.length >= targetSimulations && (
         <>
           <p style={{ marginTop: 'var(--spacing-xl)', lineHeight: 1.7 }}>
@@ -680,22 +696,22 @@ export default function TypeIErrorSection() {
           </div>
 
           <p style={{ marginTop: 'var(--spacing-xl)', lineHeight: 1.7 }}>
-            As you can see, most of the dots are above the 45-degree line: It means that
+            As you can see, most of the dots are above the 45-degree line. This means that
             shifting from across-conditions exclusions to within-condition exclusions leads
             to more extreme t-values.
           </p>
 
           <p style={{ marginTop: 'var(--spacing-md)', lineHeight: 1.7 }}>
             In particular, you can see many dots in the <strong style={{ color: 'var(--accent)' }}>red area</strong> of
-            the graph: It means this exclusion procedure has generated many significant results
+            the graph. This means that this exclusion procedure has generated many significant results
             that would not be significant with across-conditions exclusions. Remember, the null
-            is true, so these results are false-positives!
+            is true, so these results are false positives.
           </p>
 
           <p style={{ marginTop: 'var(--spacing-md)', lineHeight: 1.7 }}>
-            That is why you must <em>never, ever</em> exclude observations within conditions.
-            By doing so, you <em>assume</em> the null to be false... and therefore greatly
-            increase the odds of false-positive results.
+            That is why you must <em>never</em> exclude observations within conditions.
+            By doing so, you <em>assume</em> the null to be false and therefore greatly
+            increase the odds of false positive results.
           </p>
         </>
       )}

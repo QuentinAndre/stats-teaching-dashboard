@@ -6,7 +6,7 @@ export default function SamplingDistributionSummary() {
       <h2>Putting It All Together: The Sampling Distribution</h2>
 
       <div className="summary-content">
-        <p className="key-insight">
+        <p className="summary-lead">
           The simulations above demonstrate a remarkable fact: <strong>the behavior of means
           calculated from random samples is entirely predictable</strong>, regardless of
           the shape of the population they come from.
@@ -19,9 +19,9 @@ export default function SamplingDistributionSummary() {
             their means, those sample means will form a distribution that is:
           </p>
           <ul>
-            <li><strong>Centered at the population mean (μ)</strong> — sample means are unbiased estimators of the true mean</li>
-            <li><strong>Narrower than the original population</strong> — averaging reduces variability</li>
-            <li><strong>Predictably shaped</strong> — even if the population is not normal, the distribution of means sampled from this population becomes bell-shaped</li>
+            <li><strong>Centered at the population mean (μ)</strong>—sample means are unbiased estimators of the true mean</li>
+            <li><strong>Narrower than the original population</strong>—averaging reduces variability</li>
+            <li><strong>Predictably shaped</strong>—even if the population is not normal, the distribution of means sampled from this population becomes bell-shaped</li>
           </ul>
         </div>
 
@@ -46,17 +46,17 @@ export default function SamplingDistributionSummary() {
             <ul>
               <li>
                 <strong>Universality:</strong> The CLT applies to any population with finite mean and
-                variance — normal, skewed, uniform, or otherwise. This universality makes it the
+                variance—normal, skewed, uniform, or otherwise. This universality makes it the
                 workhorse of statistical inference.
               </li>
               <li>
                 <strong>Convergence rate:</strong> The convergence to normality depends on the original
-                population's shape. Symmetric distributions converge quickly (n ≈ 15-20 is often sufficient),
+                population's shape. Symmetric distributions converge quickly (n ≈ 15–20 is often sufficient),
                 while heavily skewed distributions may require larger samples (n ≥ 30 or more).
               </li>
               <li>
-                <strong>Practical interpretation:</strong> Even when we don't know the population's
-                distribution, we can still make probabilistic statements about sample means — because
+                <strong>Practical interpretation:</strong> Even when we do not know the population's
+                distribution, we can still make probabilistic statements about sample means because
                 we know they will be approximately normally distributed for sufficiently large samples.
               </li>
             </ul>

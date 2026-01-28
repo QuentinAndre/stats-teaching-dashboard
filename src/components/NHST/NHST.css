@@ -1,0 +1,328 @@
+@import '../ScrollingNarrative/NavigationPane.css';
+
+.nhst {
+  min-height: 100vh;
+  background: var(--bg-primary);
+}
+
+.nhst-header {
+  text-align: center;
+  padding: var(--spacing-3xl) var(--spacing-xl) var(--spacing-xl);
+  background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-primary) 100%);
+  border-bottom: 1px solid var(--border);
+}
+
+.nhst-header h1 {
+  font-size: 2.5rem;
+  color: var(--text-primary);
+  margin-bottom: var(--spacing-sm);
+}
+
+.nhst-header .subtitle {
+  font-size: 1.125rem;
+  color: var(--text-secondary);
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.nhst-content {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: var(--spacing-xl);
+}
+
+.nhst-content .narrative-section {
+  margin-bottom: var(--spacing-3xl);
+  padding-bottom: var(--spacing-3xl);
+  border-bottom: 1px solid var(--border);
+}
+
+.nhst-content .narrative-section:last-child {
+  border-bottom: none;
+}
+
+/* Section intro styling */
+.nhst .section-intro h2 {
+  font-size: 1.75rem;
+  color: var(--text-primary);
+  margin-bottom: var(--spacing-lg);
+}
+
+.nhst .section-intro h3 {
+  font-size: 1.25rem;
+  color: var(--text-primary);
+  margin-top: var(--spacing-xl);
+  margin-bottom: var(--spacing-md);
+}
+
+.nhst .intro-text {
+  font-size: 1.0625rem;
+  line-height: 1.7;
+  color: var(--text-secondary);
+  margin-bottom: var(--spacing-lg);
+}
+
+/* Visualization containers */
+.nhst .viz-container {
+  background: var(--bg-secondary);
+  border-radius: var(--border-radius-lg);
+  padding: var(--spacing-lg);
+  margin: var(--spacing-xl) 0;
+  border: 1px solid var(--border);
+}
+
+.nhst .viz-container h4 {
+  text-align: center;
+  margin-bottom: var(--spacing-md);
+  color: var(--text-primary);
+}
+
+/* Key insight boxes */
+.nhst .key-insight {
+  background: linear-gradient(135deg, rgba(67, 97, 238, 0.08) 0%, rgba(67, 97, 238, 0.04) 100%);
+  border-left: 4px solid var(--primary);
+  padding: var(--spacing-lg);
+  border-radius: 0 var(--border-radius-md) var(--border-radius-md) 0;
+  margin: var(--spacing-xl) 0;
+}
+
+.nhst .key-insight h4 {
+  color: var(--primary);
+  margin-bottom: var(--spacing-sm);
+  font-size: 1rem;
+}
+
+.nhst .key-insight p {
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* Formula boxes */
+.nhst .formula-box {
+  background: var(--bg-secondary);
+  border-radius: var(--border-radius-lg);
+  padding: var(--spacing-xl);
+  margin: var(--spacing-xl) 0;
+  border: 1px solid var(--border);
+}
+
+.nhst .formula-box h3 {
+  margin-top: 0;
+  margin-bottom: var(--spacing-md);
+}
+
+.nhst .formula {
+  text-align: center;
+  padding: var(--spacing-lg);
+  background: var(--bg-primary);
+  border-radius: var(--border-radius-md);
+  margin: var(--spacing-md) 0;
+}
+
+.nhst .formula-main {
+  font-size: 1.5rem;
+  font-family: 'Times New Roman', serif;
+  font-style: italic;
+  color: var(--text-primary);
+}
+
+.nhst .formula-parts {
+  display: grid;
+  gap: var(--spacing-md);
+  margin-top: var(--spacing-lg);
+}
+
+.nhst .formula-part {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--spacing-md);
+  padding: var(--spacing-sm) 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.nhst .formula-part:last-child {
+  border-bottom: none;
+}
+
+.nhst .formula-part .symbol {
+  font-family: 'Times New Roman', serif;
+  font-style: italic;
+  font-size: 1.25rem;
+  min-width: 40px;
+  color: var(--primary);
+}
+
+.nhst .formula-part .explanation {
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+/* Interactive controls */
+.nhst .controls-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-lg);
+  margin: var(--spacing-lg) 0;
+  padding: var(--spacing-md);
+  background: var(--bg-secondary);
+  border-radius: var(--border-radius-md);
+}
+
+.nhst .control-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+  min-width: 140px;
+  flex: 1;
+}
+
+.nhst .control-group label {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.nhst .control-group input[type="range"] {
+  width: 100%;
+  accent-color: var(--primary);
+}
+
+.nhst .control-value {
+  font-size: 0.875rem;
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+/* Results display */
+.nhst .results-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-md);
+  justify-content: center;
+  margin: var(--spacing-lg) 0;
+}
+
+.nhst .result-card {
+  background: var(--bg-secondary);
+  border-radius: var(--border-radius-md);
+  padding: var(--spacing-md) var(--spacing-lg);
+  text-align: center;
+  min-width: 120px;
+  border: 1px solid var(--border);
+}
+
+.nhst .result-card .result-label {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: var(--spacing-xs);
+}
+
+.nhst .result-card .result-value {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.nhst .result-card .result-value.significant {
+  color: var(--accent);
+}
+
+.nhst .result-card .result-value.not-significant {
+  color: var(--text-secondary);
+}
+
+/* Decision indicator */
+.nhst .decision-indicator {
+  text-align: center;
+  padding: var(--spacing-md);
+  border-radius: var(--border-radius-md);
+  margin: var(--spacing-md) 0;
+  font-weight: 600;
+}
+
+.nhst .decision-indicator.reject {
+  background: rgba(230, 57, 70, 0.1);
+  color: var(--accent);
+  border: 1px solid var(--accent);
+}
+
+.nhst .decision-indicator.fail-to-reject {
+  background: rgba(67, 97, 238, 0.1);
+  color: var(--primary);
+  border: 1px solid var(--primary);
+}
+
+/* Math notation */
+.nhst .math {
+  font-family: 'Times New Roman', serif;
+  font-style: italic;
+}
+
+/* Comparison table */
+.nhst .comparison-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: var(--spacing-lg) 0;
+  font-size: 0.9375rem;
+}
+
+.nhst .comparison-table th,
+.nhst .comparison-table td {
+  padding: var(--spacing-sm) var(--spacing-md);
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+}
+
+.nhst .comparison-table th {
+  background: var(--bg-secondary);
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.nhst .comparison-table td {
+  color: var(--text-secondary);
+}
+
+/* Footer */
+.nhst-footer {
+  text-align: center;
+  padding: var(--spacing-xl);
+  border-top: 1px solid var(--border);
+  background: var(--bg-secondary);
+}
+
+.nhst-footer p {
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+.nhst-footer a {
+  color: var(--primary);
+  text-decoration: none;
+}
+
+.nhst-footer a:hover {
+  text-decoration: underline;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .nhst-header h1 {
+    font-size: 1.75rem;
+  }
+
+  .nhst-content {
+    padding: var(--spacing-md);
+  }
+
+  .nhst .controls-row {
+    flex-direction: column;
+  }
+
+  .nhst .control-group {
+    width: 100%;
+  }
+}

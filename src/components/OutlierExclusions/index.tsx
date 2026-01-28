@@ -4,6 +4,7 @@ import WithinVsAcross from './sections/WithinVsAcross';
 import TheIntuition from './sections/TheIntuition';
 import InteractiveDemo from './sections/InteractiveDemo';
 import TypeIErrorSection from './sections/TypeIErrorSection';
+import ModuleNavigation from '../ModuleNavigation';
 import './OutlierExclusions.css';
 
 export default function OutlierExclusions() {
@@ -53,6 +54,8 @@ export default function OutlierExclusions() {
           </a>
         </p>
       </footer>
+
+      <ModuleNavigation currentPath="/outlier-exclusions" />
     </div>
   );
 }

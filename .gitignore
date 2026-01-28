@@ -47,3 +47,6 @@ tmpclaude-*
 # Vite temp files
 vite.config.ts.timestamp-*.mjs
 nul
+
+# Local Netlify folder
+.netlify

@@ -555,12 +555,12 @@ export default function SkewedSamplingSection({
         <div className="section-conclusion">
           <p className="completion-text">
             It might be surprising, but the sampling distribution of means sampled from a non-normal
-            distribution still forms... a bell-shaped distribution. This is the <strong>"Central Limit
-            Theorem"</strong> in action: regardless of the population's shape, the distribution of sample
+            distribution still forms a bell-shaped distribution. This is the <strong>Central Limit
+            Theorem</strong> in action: regardless of the population's shape, the distribution of sample
             means approaches a normal distribution as the sample size increases.
           </p>
           <p className="completion-text" style={{ marginTop: '1rem' }}>
-            So if the sampling distribution of the means doesn't depend on the shape of the population
+            So if the sampling distribution of the means does not depend on the shape of the population
             the means are calculated from, what <em>does</em> it depend on?
           </p>
         </div>

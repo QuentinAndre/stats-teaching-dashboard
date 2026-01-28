@@ -128,7 +128,7 @@ export default function OutlierIntro() {
           </g>
         </svg>
         <p style={{ textAlign: 'center', fontSize: '0.875rem', color: 'var(--text-secondary)' }}>
-          Data points outside the dashed lines (1.5 x IQR from quartiles) are flagged as outliers
+          Data points outside the dashed lines (1.5 × IQR from quartiles) are flagged as outliers
         </p>
       </div>
 
@@ -155,7 +155,7 @@ export default function OutlierIntro() {
         <tbody>
           <tr>
             <td><strong>IQR Method</strong></td>
-            <td>Flag values outside Q1 - k*IQR and Q3 + k*IQR</td>
+            <td>Flag values outside Q1 − k×IQR and Q3 + k×IQR</td>
             <td>k = 1.5 (standard) or 3 (extreme)</td>
           </tr>
           <tr>

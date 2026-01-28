@@ -5,6 +5,7 @@ import HeterogeneityComparisonSection from './sections/HeterogeneityComparisonSe
 import SampleSizeComparisonSection from './sections/SampleSizeComparisonSection';
 import SamplingDistributionSummary from './sections/SamplingDistributionSummary';
 import NavigationPane from './NavigationPane';
+import ModuleNavigation from '../ModuleNavigation';
 
 interface ScrollingNarrativeProps {
   /** Sample size for the sampling demonstration */
@@ -45,9 +46,7 @@ export default function ScrollingNarrative({ sampleSize = 15 }: ScrollingNarrati
         <SamplingDistributionSummary />
       </div>
 
-      <footer className="narrative-footer">
-        <p>More concepts coming soon...</p>
-      </footer>
+      <ModuleNavigation currentPath="/sampling-distributions" />
     </div>
   );
 }
