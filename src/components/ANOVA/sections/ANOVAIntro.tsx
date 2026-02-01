@@ -255,9 +255,7 @@ export default function ANOVAIntro() {
       </div>
 
       <p className="intro-text">
-        This variance partitioning approach, championed by statisticians like Keppel and
-        Wickens, provides deep insight into our data's structure. In the following sections,
-        we'll build this intuition step by step.
+        In the following sections, we'll build this intuition step by step.
       </p>
     </div>
   );

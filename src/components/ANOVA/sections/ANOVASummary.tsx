@@ -7,14 +7,14 @@ export default function ANOVASummary() {
       step: 1,
       title: 'Calculate Total Variability',
       description: 'How much do all observations vary from the grand mean?',
-      formula: 'SS_Total = Σ(X_ij - X̄..)²',
+      formula: 'SS_T = Σ(Y - Ȳ_T)²',
       color: '#6c757d',
     },
     {
       step: 2,
       title: 'Partition into Sources',
       description: 'Split variance into between-groups and within-groups components.',
-      formula: 'SS_Total = SS_Between + SS_Within',
+      formula: 'SS_T = SS_A + SS_S/A',
       color: '#4361ee',
     },
     {
@@ -28,26 +28,33 @@ export default function ANOVASummary() {
       step: 4,
       title: 'Form the F-Ratio',
       description: 'Compare signal (between) to noise (within).',
-      formula: 'F = MS_Between / MS_Within',
+      formula: 'F = MS_A / MS_S/A',
+      color: '#2a9d8f',
+    },
+    {
+      step: 5,
+      title: 'Make a Decision',
+      description: 'If F is large → Reject H₀. At least one group mean differs.',
+      formula: 'Compare F to F_crit',
       color: '#e63946',
     },
   ], []);
 
   // SVG dimensions for vertical flow diagram
   const width = 600;
-  const height = 580;
+  const height = 680;
   const margin = { top: 30, right: 30, bottom: 30, left: 30 };
   const boxWidth = 320;
   const boxHeight = 65;
-  const verticalGap = 70;
+  const verticalGap = 65;
 
   return (
     <div className="section-intro">
-      <h2>The Logic of ANOVA</h2>
+      <h2>Wrapping Up</h2>
 
       <p className="intro-text">
         We've now built a complete understanding of <strong>Analysis of Variance</strong>.
-        Let's step back and see the elegant logic that ties it all together.
+        Let's step back and see the logic that ties it all together.
       </p>
 
       <div className="key-insight" style={{ marginBottom: 'var(--spacing-xl)' }}>
@@ -60,7 +67,7 @@ export default function ANOVASummary() {
         </p>
       </div>
 
-      <h3>The Four-Step Framework</h3>
+      <h3>The Five-Step Framework</h3>
 
       <p className="intro-text">
         Every ANOVA follows the same fundamental logic, whether comparing 2 groups or 20:
@@ -170,104 +177,13 @@ export default function ANOVASummary() {
             );
           })}
 
-          {/* Final decision box */}
-          <rect
-            x={(width - 220) / 2}
-            y={height - 65}
-            width={220}
-            height={50}
-            fill="#e63946"
-            opacity={0.12}
-            rx={8}
-            stroke="#e63946"
-            strokeWidth={1}
-          />
-          <text
-            x={width / 2}
-            y={height - 42}
-            textAnchor="middle"
-            fontSize={13}
-            fontWeight={600}
-            fill="#e63946"
-          >
-            If F is large → Reject H₀
-          </text>
-          <text
-            x={width / 2}
-            y={height - 24}
-            textAnchor="middle"
-            fontSize={11}
-            fill="#6c757d"
-          >
-            At least one group mean differs
-          </text>
         </svg>
       </div>
 
-      <h3>Connections to Previous Modules</h3>
-
-      <div style={{
-        display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
-        gap: 'var(--spacing-lg)',
-        marginTop: 'var(--spacing-lg)'
-      }}>
-        {/* Connection to Sampling Distributions */}
-        <div style={{
-          background: 'var(--bg-secondary)',
-          padding: 'var(--spacing-lg)',
-          borderRadius: 'var(--border-radius-md)',
-          border: '1px solid var(--border)'
-        }}>
-          <h4 style={{ marginTop: 0, color: 'var(--primary)' }}>
-            Sampling Distributions
-          </h4>
-          <p style={{ fontSize: '0.9375rem', color: 'var(--text-secondary)', marginBottom: 0 }}>
-            Just as sample means follow a <strong>t-distribution</strong> under the null hypothesis,
-            the ratio of variance estimates follows an <strong>F-distribution</strong>. The F-distribution
-            tells us what to expect when there are no real group differences—purely sampling variability.
-          </p>
-        </div>
-
-        {/* Connection to NHST */}
-        <div style={{
-          background: 'var(--bg-secondary)',
-          padding: 'var(--spacing-lg)',
-          borderRadius: 'var(--border-radius-md)',
-          border: '1px solid var(--border)'
-        }}>
-          <h4 style={{ marginTop: 0, color: 'var(--accent)' }}>
-            Hypothesis Testing
-          </h4>
-          <p style={{ fontSize: '0.9375rem', color: 'var(--text-secondary)', marginBottom: 0 }}>
-            ANOVA uses the same NHST logic: assume the null is true (all groups have equal means),
-            calculate what we'd expect under that assumption, and see if our data are surprising enough
-            to reject it. The F-statistic is our test statistic; the p-value tells us how rare our result would be.
-          </p>
-        </div>
-
-        {/* Connection to t-test */}
-        <div style={{
-          background: 'var(--bg-secondary)',
-          padding: 'var(--spacing-lg)',
-          borderRadius: 'var(--border-radius-md)',
-          border: '1px solid var(--border)'
-        }}>
-          <h4 style={{ marginTop: 0, color: '#2a9d8f' }}>
-            The t-Test
-          </h4>
-          <p style={{ fontSize: '0.9375rem', color: 'var(--text-secondary)', marginBottom: 0 }}>
-            For two groups, ANOVA and the t-test are <strong>mathematically equivalent</strong>: F = t².
-            ANOVA generalizes the t-test logic to any number of groups while controlling the familywise
-            error rate with a single omnibus test.
-          </p>
-        </div>
-      </div>
-
-      <h3 style={{ marginTop: 'var(--spacing-xl)' }}>The Bigger Picture: Variance as Information</h3>
+      <h3>The Bigger Picture: Variance as Information</h3>
 
       <p className="intro-text">
-        The variance partitioning approach reveals something profound about statistical analysis.
+        The variance partitioning approach reveals something important about statistical analysis.
         Variability isn't just noise to be eliminated—it's <em>information</em> about our data's structure.
       </p>
 
@@ -356,18 +272,6 @@ export default function ANOVASummary() {
         </ul>
       </div>
 
-      <footer className="narrative-footer" style={{ marginTop: 'var(--spacing-2xl)' }}>
-        <p>
-          Inspired by the variance partitioning approach in{' '}
-          <a
-            href="https://www.amazon.com/Design-Analysis-Researchers-Handbook-4th/dp/0135159415"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Keppel & Wickens: Design and Analysis
-          </a>
-        </p>
-      </footer>
     </div>
   );
 }

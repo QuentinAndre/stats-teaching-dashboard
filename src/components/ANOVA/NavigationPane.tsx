@@ -12,7 +12,7 @@ const sections: NavSection[] = [
   { id: 'variance-partitioning', label: 'Partitioning Variance' },
   { id: 'f-ratio', label: 'The F-Ratio' },
   { id: 'multi-group', label: 'Multiple Groups' },
-  { id: 'anova-summary', label: 'The Logic of ANOVA' },
+  { id: 'anova-summary', label: 'Wrapping Up' },
 ];
 
 export default function NavigationPane() {

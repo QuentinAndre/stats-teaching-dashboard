@@ -121,76 +121,58 @@ export default function MultiGroupANOVA() {
       <div className="viz-container">
         <h4>Multi-Group ANOVA Demonstration</h4>
 
-        <div className="controls-row">
-          <div className="control-group">
-            <label htmlFor="num-groups-multi">Number of Groups</label>
-            <input
-              type="range"
-              id="num-groups-multi"
-              min="2"
-              max="4"
-              value={numGroups}
-              onChange={(e) => setNumGroups(parseInt(e.target.value))}
-            />
+        {/* Combined controls - tighter layout */}
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(3, 1fr)',
+          gap: 'var(--spacing-sm)',
+          padding: 'var(--spacing-sm)',
+          background: 'var(--bg-primary)',
+          borderRadius: 'var(--border-radius-md)'
+        }}>
+          <div className="control-group" style={{ gap: '2px' }}>
+            <label htmlFor="num-groups-multi">Groups</label>
+            <input type="range" id="num-groups-multi" min="2" max="4" value={numGroups}
+              onChange={(e) => setNumGroups(parseInt(e.target.value))} />
             <span className="control-value">{numGroups}</span>
           </div>
-          <div className="control-group">
-            <label htmlFor="within-sd-multi">Within-Group SD</label>
-            <input
-              type="range"
-              id="within-sd-multi"
-              min="5"
-              max="25"
-              value={withinSD}
-              onChange={(e) => setWithinSD(parseInt(e.target.value))}
-            />
+          <div className="control-group" style={{ gap: '2px' }}>
+            <label htmlFor="within-sd-multi">Within SD</label>
+            <input type="range" id="within-sd-multi" min="5" max="25" value={withinSD}
+              onChange={(e) => setWithinSD(parseInt(e.target.value))} />
             <span className="control-value">{withinSD}</span>
           </div>
-          <div className="control-group">
-            <label htmlFor="sample-size-multi">Sample Size (per group)</label>
-            <input
-              type="range"
-              id="sample-size-multi"
-              min="10"
-              max="30"
-              value={sampleSize}
-              onChange={(e) => setSampleSize(parseInt(e.target.value))}
-            />
+          <div className="control-group" style={{ gap: '2px' }}>
+            <label htmlFor="sample-size-multi">n per group</label>
+            <input type="range" id="sample-size-multi" min="10" max="30" value={sampleSize}
+              onChange={(e) => setSampleSize(parseInt(e.target.value))} />
             <span className="control-value">{sampleSize}</span>
           </div>
         </div>
 
-        {/* Group mean sliders */}
+        {/* Group mean sliders - inline with button */}
         <div style={{
-          display: 'grid',
-          gridTemplateColumns: `repeat(${numGroups}, 1fr)`,
-          gap: 'var(--spacing-md)',
-          marginTop: 'var(--spacing-md)',
-          padding: 'var(--spacing-md)',
+          display: 'flex',
+          alignItems: 'center',
+          gap: 'var(--spacing-sm)',
+          marginTop: 'var(--spacing-sm)',
+          padding: 'var(--spacing-sm)',
           background: 'var(--bg-primary)',
           borderRadius: 'var(--border-radius-md)'
         }}>
           {Array.from({ length: numGroups }, (_, i) => (
-            <div key={i} className="control-group" style={{ alignItems: 'center' }}>
-              <label style={{ color: groupColors[i], fontWeight: 600 }}>
-                Group {groupLabels[i]} Mean
+            <div key={i} className="control-group" style={{ gap: '2px', flex: 1 }}>
+              <label style={{ color: groupColors[i], fontWeight: 600, fontSize: '0.8125rem' }}>
+                {groupLabels[i]} Mean
               </label>
-              <input
-                type="range"
-                min="80"
-                max="120"
-                value={groupMeans[i]}
+              <input type="range" min="80" max="120" value={groupMeans[i]}
                 onChange={(e) => updateGroupMean(i, parseInt(e.target.value))}
-                className={`slider-group-${groupLabels[i].toLowerCase()}`}
-              />
+                className={`slider-group-${groupLabels[i].toLowerCase()}`} />
               <span className="control-value">{groupMeans[i]}</span>
             </div>
           ))}
-        </div>
-
-        <div style={{ display: 'flex', justifyContent: 'center', marginTop: 'var(--spacing-md)' }}>
-          <button className="primary-button" onClick={regenerateData}>
-            Generate New Data
+          <button className="primary-button" onClick={regenerateData} style={{ whiteSpace: 'nowrap' }}>
+            New Data
           </button>
         </div>
 
@@ -292,10 +274,7 @@ export default function MultiGroupANOVA() {
         </svg>
 
         {/* ANOVA Summary Table */}
-        <h4 style={{ marginTop: 'var(--spacing-xl)', marginBottom: 'var(--spacing-md)' }}>
-          ANOVA Summary Table
-        </h4>
-        <table className="anova-table">
+        <table className="anova-table" style={{ marginTop: 'var(--spacing-md)' }}>
           <thead>
             <tr>
               <th>Source</th>
@@ -338,41 +317,6 @@ export default function MultiGroupANOVA() {
           </tbody>
         </table>
 
-        <div className={`decision-indicator ${isSignificant ? 'reject' : 'fail-to-reject'}`}>
-          {isSignificant
-            ? `Significant effect: At least one group mean differs (F(${anova.dfBetween}, ${anova.dfWithin}) = ${anova.fStatistic.toFixed(2)}, p < .05)`
-            : `No significant effect: Groups do not differ significantly (F(${anova.dfBetween}, ${anova.dfWithin}) = ${anova.fStatistic.toFixed(2)}, p ≥ .05)`}
-        </div>
-
-        {/* Variance bar */}
-        <div style={{ marginTop: 'var(--spacing-lg)' }}>
-          <h4 style={{ marginBottom: 'var(--spacing-sm)' }}>Variance Partitioning</h4>
-          <div className="variance-bar">
-            <div
-              className="variance-between"
-              style={{ width: `${(anova.ssBetween / anova.ssTotal) * 100}%` }}
-            >
-              {((anova.ssBetween / anova.ssTotal) * 100).toFixed(0)}%
-            </div>
-            <div
-              className="variance-within"
-              style={{ width: `${(anova.ssWithin / anova.ssTotal) * 100}%` }}
-            >
-              {((anova.ssWithin / anova.ssTotal) * 100).toFixed(0)}%
-            </div>
-          </div>
-          <div className="variance-legend">
-            <div className="legend-item">
-              <div className="legend-color between"></div>
-              <span>Between-groups ({((anova.ssBetween / anova.ssTotal) * 100).toFixed(1)}%)</span>
-            </div>
-            <div className="legend-item">
-              <div className="legend-color within"></div>
-              <span>Within-groups ({((anova.ssWithin / anova.ssTotal) * 100).toFixed(1)}%)</span>
-            </div>
-          </div>
-        </div>
-
         {/* F-distribution visualization */}
         <div style={{ marginTop: 'var(--spacing-xl)' }}>
           <h4 style={{ marginBottom: 'var(--spacing-sm)' }}>
@@ -387,11 +331,15 @@ export default function MultiGroupANOVA() {
               const fixedMaxY = 0.8;
 
               // Generate F-distribution curve
+              // Start at x=0.05 to avoid infinity at x=0 when df1=1
               const points: { x: number; y: number }[] = [];
+              const xStart = 0.05;
               for (let i = 0; i <= 100; i++) {
-                const x = (i / 100) * fMax;
+                const x = xStart + (i / 100) * (fMax - xStart);
                 const y = fDistributionPDF(x, anova.dfBetween, anova.dfWithin);
-                points.push({ x, y });
+                // Clamp y to avoid infinite/NaN values breaking the path
+                const clampedY = Number.isFinite(y) ? Math.min(y, fixedMaxY * 1.5) : 0;
+                points.push({ x, y: clampedY });
               }
 
               const xScale = (x: number) => (x / fMax) * fPlotWidth;

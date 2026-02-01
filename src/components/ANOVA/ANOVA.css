@@ -571,3 +571,205 @@
     gap: var(--spacing-sm);
   }
 }
+
+/* ========================================
+   ANOVA Decomposition Table Styles
+   ======================================== */
+
+/* Step description box */
+.anova .step-description-box {
+  background: var(--bg-primary);
+  border: 1px solid var(--border);
+  border-radius: var(--border-radius-md);
+  padding: var(--spacing-md);
+  margin-bottom: var(--spacing-lg);
+}
+
+.anova .step-description-box strong {
+  display: block;
+  color: var(--primary);
+  margin-bottom: var(--spacing-xs);
+  font-size: 0.9375rem;
+}
+
+.anova .step-description-box p {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+  line-height: 1.6;
+}
+
+/* Table wrapper for horizontal scrolling */
+.anova .decomposition-table-wrapper {
+  overflow-x: auto;
+  margin: var(--spacing-md) 0;
+  border-radius: var(--border-radius-md);
+  border: 1px solid var(--border);
+}
+
+/* Decomposition table */
+.anova .decomposition-table {
+  width: auto;
+  margin: 0 auto;
+  border-collapse: collapse;
+  font-size: 0.8125rem;
+}
+
+.anova .decomposition-table th,
+.anova .decomposition-table td {
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border: 1px solid var(--border);
+  text-align: center;
+  white-space: nowrap;
+}
+
+.anova .decomposition-table th {
+  background: var(--bg-primary);
+  font-weight: 600;
+  font-size: 0.75rem;
+  color: var(--text-primary);
+  position: sticky;
+  top: 0;
+}
+
+.anova .decomposition-table tbody td {
+  background: var(--bg-secondary);
+}
+
+/* Alternating row colors by group */
+.anova .decomposition-table tr.group-a td {
+  background: rgba(67, 97, 238, 0.04);
+}
+
+.anova .decomposition-table tr.group-b td {
+  background: rgba(244, 162, 97, 0.04);
+}
+
+/* Column type color coding */
+.anova .decomposition-table .col-total {
+  background-color: rgba(108, 117, 125, 0.08) !important;
+}
+
+.anova .decomposition-table .col-between {
+  background-color: rgba(139, 92, 246, 0.1) !important;
+}
+
+.anova .decomposition-table .col-within {
+  background-color: rgba(16, 185, 129, 0.1) !important;
+}
+
+/* Sum row styling */
+.anova .decomposition-table tfoot .sum-row td {
+  background: var(--bg-primary);
+  border-top: 2px solid var(--border);
+  font-weight: 600;
+}
+
+.anova .decomposition-table .sum-row .ss-value {
+  font-size: 0.8125rem;
+}
+
+.anova .decomposition-table .sum-row .col-total {
+  color: #6c757d;
+}
+
+.anova .decomposition-table .sum-row .col-between {
+  color: #8b5cf6;
+}
+
+.anova .decomposition-table .sum-row .col-within {
+  color: #10b981;
+}
+
+/* Column entering animation */
+.anova .decomposition-table .col-entering {
+  animation: columnSlideIn 0.4s ease-out forwards;
+}
+
+@keyframes columnSlideIn {
+  0% {
+    opacity: 0;
+    transform: translateX(15px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Cell highlight animation for sums */
+.anova .decomposition-table .cell-highlight {
+  animation: cellPulse 0.8s ease-out;
+}
+
+@keyframes cellPulse {
+  0% {
+    box-shadow: inset 0 0 0 3px var(--primary);
+  }
+  100% {
+    box-shadow: inset 0 0 0 0 transparent;
+  }
+}
+
+/* Verification box */
+.anova .verification-box {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  border-radius: var(--border-radius-md);
+  padding: var(--spacing-md) var(--spacing-lg);
+  margin: var(--spacing-lg) 0;
+}
+
+.anova .verification-box .check-icon {
+  font-size: 1.5rem;
+  color: #10b981;
+  font-weight: bold;
+}
+
+.anova .verification-box .verification-content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+}
+
+.anova .verification-box .verification-label {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+}
+
+.anova .verification-box .verification-equation {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  font-family: 'Times New Roman', serif;
+}
+
+/* Navigation controls */
+.anova .decomposition-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-lg);
+  margin-top: var(--spacing-lg);
+  padding-top: var(--spacing-md);
+  border-top: 1px solid var(--border);
+}
+
+.anova .decomposition-controls .step-indicator {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  min-width: 100px;
+  text-align: center;
+}
+
+.anova .decomposition-controls .phase-button {
+  min-width: 100px;
+}
+
+.anova .decomposition-controls .phase-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

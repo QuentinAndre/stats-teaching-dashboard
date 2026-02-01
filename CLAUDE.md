@@ -34,3 +34,9 @@ When explaining code or statistical concepts, include:
 - The statistical principle being demonstrated
 - Why this visualization helps students understand it
 - Any simplifications made for educational purposes
+
+## Writing Style
+- Keep content pedagogic and descriptive
+- Avoid fluff words like "elegant", "profound", "beautiful", "amazing", or similar hyperbole
+- Use clear, direct language that focuses on teaching the concept
+- Let the content speak for itself without embellishment
