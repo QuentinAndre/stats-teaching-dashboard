@@ -82,6 +82,49 @@ const modules: ModuleCard[] = [
     ),
   },
   {
+    id: 'outlier-exclusions',
+    title: 'Outlier Exclusions',
+    description:
+      'Learn why outlier exclusion procedures must be blind to experimental conditions. See how improper exclusions inflate false positive rates.',
+    path: '/outlier-exclusions',
+    icon: (
+      <svg viewBox="0 0 48 48" className="module-icon" aria-hidden="true">
+        <line
+          x1="4"
+          y1="36"
+          x2="44"
+          y2="36"
+          stroke="currentColor"
+          strokeWidth="2"
+          opacity="0.3"
+        />
+        <circle cx="10" cy="28" r="4" fill="currentColor" opacity="0.6" />
+        <circle cx="18" cy="26" r="4" fill="currentColor" opacity="0.6" />
+        <circle cx="26" cy="27" r="4" fill="currentColor" opacity="0.6" />
+        <circle cx="34" cy="25" r="4" fill="currentColor" opacity="0.6" />
+        <circle cx="40" cy="10" r="5" fill="var(--accent)" />
+        <line
+          x1="36"
+          y1="6"
+          x2="44"
+          y2="14"
+          stroke="var(--accent)"
+          strokeWidth="2"
+          strokeLinecap="round"
+        />
+        <line
+          x1="44"
+          y1="6"
+          x2="36"
+          y2="14"
+          stroke="var(--accent)"
+          strokeWidth="2"
+          strokeLinecap="round"
+        />
+      </svg>
+    ),
+  },
+  {
     id: 'anova',
     title: 'Analysis of Variance (ANOVA)',
     description:
@@ -126,45 +169,23 @@ const modules: ModuleCard[] = [
     ),
   },
   {
-    id: 'outlier-exclusions',
-    title: 'Outlier Exclusions',
+    id: 'factorial-anova',
+    title: 'Factorial ANOVA',
     description:
-      'Learn why outlier exclusion procedures must be blind to experimental conditions. See how improper exclusions inflate false positive rates.',
-    path: '/outlier-exclusions',
+      'Explore how multiple factors combine in experimental designs. Understand main effects, interactions, and variance partitioning in 2×2 designs.',
+    path: '/factorial-anova',
     icon: (
       <svg viewBox="0 0 48 48" className="module-icon" aria-hidden="true">
-        <line
-          x1="4"
-          y1="36"
-          x2="44"
-          y2="36"
-          stroke="currentColor"
-          strokeWidth="2"
-          opacity="0.3"
-        />
-        <circle cx="10" cy="28" r="4" fill="currentColor" opacity="0.6" />
-        <circle cx="18" cy="26" r="4" fill="currentColor" opacity="0.6" />
-        <circle cx="26" cy="27" r="4" fill="currentColor" opacity="0.6" />
-        <circle cx="34" cy="25" r="4" fill="currentColor" opacity="0.6" />
-        <circle cx="40" cy="10" r="5" fill="var(--accent)" />
-        <line
-          x1="36"
-          y1="6"
-          x2="44"
-          y2="14"
-          stroke="var(--accent)"
-          strokeWidth="2"
-          strokeLinecap="round"
-        />
-        <line
-          x1="44"
-          y1="6"
-          x2="36"
-          y2="14"
-          stroke="var(--accent)"
-          strokeWidth="2"
-          strokeLinecap="round"
-        />
+        {/* 2x2 grid representing factorial design */}
+        <rect x="4" y="4" width="18" height="18" fill="var(--primary)" opacity="0.7" rx="2" />
+        <rect x="26" y="4" width="18" height="18" fill="var(--primary)" opacity="0.3" rx="2" />
+        <rect x="4" y="26" width="18" height="18" fill="var(--accent)" opacity="0.3" rx="2" />
+        <rect x="26" y="26" width="18" height="18" fill="var(--accent)" opacity="0.7" rx="2" />
+        {/* Interaction lines */}
+        <line x1="13" y1="13" x2="35" y2="35" stroke="currentColor" strokeWidth="2" opacity="0.6" />
+        <line x1="35" y1="13" x2="13" y2="35" stroke="currentColor" strokeWidth="2" opacity="0.6" />
+        {/* Center dot */}
+        <circle cx="24" cy="24" r="4" fill="currentColor" />
       </svg>
     ),
   },

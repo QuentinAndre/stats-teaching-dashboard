@@ -40,3 +40,13 @@ When explaining code or statistical concepts, include:
 - Avoid fluff words like "elegant", "profound", "beautiful", "amazing", or similar hyperbole
 - Use clear, direct language that focuses on teaching the concept
 - Let the content speak for itself without embellishment
+- Always include a space after closing italics/emphasis tags (e.g., `<em>word</em> next` not `<em>word</em>next`)
+
+## Statistical Notation
+- Use Keppel & Wickens notation consistently throughout all modules
+- Observations: Y (not X)
+- Grand mean: Ȳ_T or Ȳ.. (with subscript dots for marginal means)
+- Group/cell means: Ȳ_A, Ȳ_B, Ȳ_AB
+- Sums of squares: SS_T, SS_A, SS_B, SS_AB, SS_S/A, SS_S/AB
+- Mean squares: MS_A, MS_B, MS_AB, MS_S/AB
+- Effect notation: Use descriptive labels (e.g., "Factor A effect") rather than Greek letters (α, β) in explanatory text

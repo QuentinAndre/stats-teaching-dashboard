@@ -9,8 +9,9 @@ interface Module {
 const modules: Module[] = [
   { path: '/sampling-distributions', title: 'Sampling Distributions' },
   { path: '/nhst', title: 'Hypothesis Testing' },
-  { path: '/anova', title: 'ANOVA' },
   { path: '/outlier-exclusions', title: 'Outlier Exclusions' },
+  { path: '/anova', title: 'ANOVA' },
+  { path: '/factorial-anova', title: 'Factorial ANOVA' },
 ];
 
 interface ModuleNavigationProps {

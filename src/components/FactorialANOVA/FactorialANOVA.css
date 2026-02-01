@@ -1,0 +1,722 @@
+/* =====================================================
+   FACTORIAL ANOVA MODULE STYLES
+   Extends patterns from ANOVA.css
+   ===================================================== */
+
+/* Layout */
+.factorial-anova {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: var(--spacing-xl) var(--spacing-lg);
+  padding-left: calc(var(--spacing-lg) + 60px);
+}
+
+.factorial-anova-header {
+  text-align: center;
+  margin-bottom: var(--spacing-2xl);
+  padding-bottom: var(--spacing-xl);
+  border-bottom: 1px solid var(--border);
+}
+
+.factorial-anova-header h1 {
+  font-size: 2.5rem;
+  color: var(--text-primary);
+  margin-bottom: var(--spacing-md);
+}
+
+.factorial-anova-header .subtitle {
+  font-size: 1.125rem;
+  color: var(--text-secondary);
+  max-width: 600px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+.factorial-anova-content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-2xl);
+}
+
+/* Section styling */
+.factorial-anova .narrative-section {
+  scroll-margin-top: 2rem;
+}
+
+.factorial-anova .section-intro {
+  max-width: 100%;
+}
+
+.factorial-anova .section-intro h2 {
+  font-size: 1.75rem;
+  color: var(--text-primary);
+  margin-bottom: var(--spacing-lg);
+  padding-bottom: var(--spacing-sm);
+  border-bottom: 2px solid var(--primary);
+}
+
+.factorial-anova .section-intro h3 {
+  font-size: 1.25rem;
+  color: var(--text-primary);
+  margin-top: var(--spacing-xl);
+  margin-bottom: var(--spacing-md);
+}
+
+.factorial-anova .intro-text {
+  font-size: 1rem;
+  line-height: 1.7;
+  color: var(--text-secondary);
+  margin-bottom: var(--spacing-md);
+}
+
+/* Factor cards */
+.factor-cards {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--spacing-lg);
+  margin: var(--spacing-lg) 0;
+}
+
+.factor-card {
+  padding: var(--spacing-lg);
+  border-radius: var(--border-radius-md);
+  border: 2px solid var(--border);
+}
+
+.factor-card.factor-a {
+  background: rgba(67, 97, 238, 0.05);
+  border-color: #4361ee;
+}
+
+.factor-card.factor-b {
+  background: rgba(244, 162, 97, 0.05);
+  border-color: #f4a261;
+}
+
+.factor-card h4 {
+  margin: 0 0 var(--spacing-md) 0;
+  font-size: 1rem;
+  color: var(--text-primary);
+}
+
+.factor-card.factor-a h4 {
+  color: #4361ee;
+}
+
+.factor-card.factor-b h4 {
+  color: #f4a261;
+}
+
+.factor-levels {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+}
+
+.factor-levels .level {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+}
+
+/* Cell means table */
+.cell-means-table {
+  margin: var(--spacing-lg) 0;
+  overflow-x: auto;
+}
+
+.cell-means-table table {
+  width: 100%;
+  max-width: 500px;
+  margin: 0 auto;
+  border-collapse: collapse;
+  font-size: 0.9375rem;
+}
+
+.cell-means-table th,
+.cell-means-table td {
+  padding: var(--spacing-sm) var(--spacing-md);
+  text-align: center;
+  border: 1px solid var(--border);
+}
+
+.cell-means-table thead th {
+  background: var(--bg-secondary);
+  font-weight: 600;
+}
+
+.cell-means-table .col-marginal {
+  background: var(--bg-secondary);
+  font-weight: 600;
+}
+
+.cell-means-table tbody th {
+  background: var(--bg-secondary);
+  font-weight: 600;
+}
+
+.cell-means-table .cell-value {
+  font-size: 1.125rem;
+  font-weight: 600;
+}
+
+.cell-means-table .marginal-value {
+  background: var(--bg-secondary);
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.cell-means-table .grand-mean {
+  background: var(--bg-tertiary);
+  font-weight: 700;
+}
+
+.cell-means-table tfoot th {
+  background: var(--bg-secondary);
+  font-weight: 600;
+}
+
+/* Toggle buttons for interaction viz */
+.toggle-button {
+  padding: var(--spacing-sm) var(--spacing-lg);
+  border: 2px solid var(--border);
+  background: var(--bg-primary);
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.toggle-button:first-child {
+  border-radius: var(--border-radius-md) 0 0 var(--border-radius-md);
+  border-right: none;
+}
+
+.toggle-button:last-child {
+  border-radius: 0 var(--border-radius-md) var(--border-radius-md) 0;
+}
+
+.toggle-button.active {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: white;
+}
+
+.toggle-button:hover:not(.active) {
+  background: var(--bg-secondary);
+}
+
+/* Interpretation cards */
+.interpretation-cards {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--spacing-lg);
+  margin: var(--spacing-lg) 0;
+}
+
+.interpretation-card {
+  padding: var(--spacing-lg);
+  background: var(--bg-secondary);
+  border-radius: var(--border-radius-md);
+  border: 1px solid var(--border);
+}
+
+.interpretation-card h4 {
+  margin: 0 0 var(--spacing-sm) 0;
+  color: var(--text-primary);
+  font-size: 1rem;
+}
+
+.interpretation-card p {
+  margin: 0;
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+/* Decomposition table - factorial specific */
+.decomposition-table.factorial {
+  font-size: 0.8125rem;
+}
+
+.decomposition-table.factorial th,
+.decomposition-table.factorial td {
+  padding: var(--spacing-xs) var(--spacing-sm);
+  white-space: nowrap;
+}
+
+/* Column colors for factorial effects */
+.col-factor-a {
+  background-color: rgba(67, 97, 238, 0.1) !important;
+}
+
+.col-factor-b {
+  background-color: rgba(244, 162, 97, 0.1) !important;
+}
+
+.col-interaction {
+  background-color: rgba(139, 92, 246, 0.1) !important;
+}
+
+/* ANOVA table */
+.factorial-anova .anova-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9375rem;
+  margin: var(--spacing-md) 0;
+}
+
+.factorial-anova .anova-table th,
+.factorial-anova .anova-table td {
+  padding: var(--spacing-sm) var(--spacing-md);
+  text-align: center;
+  border: 1px solid var(--border);
+}
+
+.factorial-anova .anova-table thead th {
+  background: var(--bg-secondary);
+  font-weight: 600;
+}
+
+.factorial-anova .anova-table tbody td:first-child {
+  text-align: left;
+  font-weight: 500;
+}
+
+.factorial-anova .anova-table .interaction-row {
+  background: rgba(139, 92, 246, 0.05);
+}
+
+.factorial-anova .anova-table tfoot td {
+  background: var(--bg-secondary);
+  font-weight: 600;
+}
+
+/* Reuse common styles from ANOVA module */
+.factorial-anova .viz-container {
+  background: var(--bg-secondary);
+  border-radius: var(--border-radius-lg);
+  padding: var(--spacing-lg);
+  margin: var(--spacing-lg) 0;
+  border: 1px solid var(--border);
+}
+
+.factorial-anova .viz-container h4 {
+  margin: 0 0 var(--spacing-md) 0;
+  font-size: 1rem;
+  color: var(--text-primary);
+  text-align: center;
+}
+
+.factorial-anova .formula-box {
+  background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-primary) 100%);
+  border: 1px solid var(--border);
+  border-radius: var(--border-radius-lg);
+  padding: var(--spacing-xl);
+  margin: var(--spacing-lg) 0;
+}
+
+.factorial-anova .formula-box h3 {
+  margin: 0 0 var(--spacing-md) 0;
+  font-size: 1rem;
+  color: var(--text-primary);
+  text-align: center;
+}
+
+.factorial-anova .formula {
+  text-align: center;
+  margin-bottom: var(--spacing-lg);
+}
+
+.factorial-anova .formula-main {
+  font-size: 1.25rem;
+  font-family: 'Times New Roman', serif;
+  color: var(--text-primary);
+}
+
+.factorial-anova .formula-parts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-md);
+  justify-content: center;
+}
+
+.factorial-anova .formula-part {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-xs);
+  padding: var(--spacing-sm) var(--spacing-md);
+  background: var(--bg-primary);
+  border-radius: var(--border-radius-sm);
+  min-width: 140px;
+}
+
+.factorial-anova .formula-part .symbol {
+  font-family: 'Times New Roman', serif;
+  font-size: 1rem;
+  color: var(--primary);
+  font-weight: 600;
+}
+
+.factorial-anova .formula-part .explanation {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  text-align: center;
+}
+
+.factorial-anova .key-insight {
+  background: linear-gradient(135deg, rgba(67, 97, 238, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%);
+  border-left: 4px solid var(--primary);
+  border-radius: 0 var(--border-radius-md) var(--border-radius-md) 0;
+  padding: var(--spacing-lg);
+  margin: var(--spacing-lg) 0;
+}
+
+.factorial-anova .key-insight h4 {
+  margin: 0 0 var(--spacing-sm) 0;
+  color: var(--primary);
+  font-size: 1rem;
+}
+
+.factorial-anova .key-insight p {
+  margin: 0;
+  color: var(--text-secondary);
+  line-height: 1.7;
+}
+
+/* Decomposition table styles */
+.factorial-anova .step-description-box {
+  background: var(--bg-primary);
+  padding: var(--spacing-md);
+  border-radius: var(--border-radius-md);
+  margin-bottom: var(--spacing-md);
+  border: 1px solid var(--border);
+}
+
+.factorial-anova .step-description-box strong {
+  color: var(--text-primary);
+  display: block;
+  margin-bottom: var(--spacing-xs);
+}
+
+.factorial-anova .step-description-box p {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+  line-height: 1.6;
+}
+
+.factorial-anova .decomposition-table-wrapper {
+  overflow-x: auto;
+  margin: var(--spacing-md) 0;
+}
+
+.factorial-anova .decomposition-table {
+  width: auto;
+  min-width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+}
+
+.factorial-anova .decomposition-table th,
+.factorial-anova .decomposition-table td {
+  padding: var(--spacing-xs) var(--spacing-sm);
+  text-align: center;
+  border: 1px solid var(--border);
+  white-space: nowrap;
+}
+
+.factorial-anova .decomposition-table thead th {
+  background: var(--bg-tertiary);
+  font-weight: 600;
+  position: sticky;
+  top: 0;
+}
+
+.factorial-anova .decomposition-table .col-total {
+  background-color: rgba(108, 117, 125, 0.1);
+}
+
+.factorial-anova .decomposition-table .col-within {
+  background-color: rgba(16, 185, 129, 0.1);
+}
+
+.factorial-anova .decomposition-table .sum-row td {
+  background: var(--bg-tertiary);
+  font-weight: 600;
+}
+
+.factorial-anova .decomposition-table .ss-value {
+  font-size: 0.75rem;
+}
+
+.factorial-anova .decomposition-controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: var(--spacing-lg);
+  margin-top: var(--spacing-lg);
+}
+
+.factorial-anova .step-indicator {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  min-width: 100px;
+  text-align: center;
+}
+
+.factorial-anova .phase-button {
+  padding: var(--spacing-sm) var(--spacing-lg);
+  border: 1px solid var(--border);
+  border-radius: var(--border-radius-md);
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.factorial-anova .phase-button:hover:not(:disabled) {
+  background: var(--bg-secondary);
+}
+
+.factorial-anova .phase-button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.factorial-anova .phase-button.active {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: white;
+}
+
+.factorial-anova .verification-box {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+  padding: var(--spacing-md);
+  background: rgba(16, 185, 129, 0.1);
+  border: 2px solid #10b981;
+  border-radius: var(--border-radius-md);
+  margin-top: var(--spacing-md);
+}
+
+.factorial-anova .verification-box .check-icon {
+  font-size: 1.5rem;
+  color: #10b981;
+}
+
+.factorial-anova .verification-content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+}
+
+.factorial-anova .verification-label {
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.factorial-anova .verification-equation {
+  font-family: monospace;
+  color: #10b981;
+}
+
+/* Column entering animation */
+@keyframes columnSlideIn {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.factorial-anova .col-entering {
+  animation: columnSlideIn 0.4s ease-out;
+}
+
+@keyframes cellPulse {
+  0%, 100% {
+    background-color: inherit;
+  }
+  50% {
+    background-color: rgba(16, 185, 129, 0.3);
+  }
+}
+
+.factorial-anova .cell-highlight {
+  animation: cellPulse 0.6s ease-in-out 2;
+}
+
+/* Footer */
+.factorial-anova .narrative-footer {
+  margin-top: var(--spacing-2xl);
+  padding-top: var(--spacing-xl);
+  border-top: 1px solid var(--border);
+  text-align: center;
+}
+
+.factorial-anova .narrative-footer p {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+}
+
+.factorial-anova .narrative-footer a {
+  color: var(--primary);
+  text-decoration: none;
+}
+
+.factorial-anova .narrative-footer a:hover {
+  text-decoration: underline;
+}
+
+/* Navigation pane styles - reuse from ANOVA */
+.factorial-anova .navigation-pane {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 220px;
+  height: 100vh;
+  background: var(--bg-secondary);
+  border-right: 1px solid var(--border);
+  padding: var(--spacing-lg);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+  transform: translateX(-100%);
+  transition: transform 0.3s ease;
+  z-index: 100;
+}
+
+.factorial-anova .navigation-pane.open {
+  transform: translateX(0);
+}
+
+.factorial-anova .nav-toggle {
+  position: fixed;
+  left: var(--spacing-md);
+  top: var(--spacing-md);
+  width: 40px;
+  height: 40px;
+  border: 1px solid var(--border);
+  border-radius: var(--border-radius-md);
+  background: var(--bg-primary);
+  cursor: pointer;
+  z-index: 101;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.factorial-anova .nav-toggle-icon {
+  width: 20px;
+  height: 2px;
+  background: var(--text-primary);
+  position: relative;
+}
+
+.factorial-anova .nav-toggle-icon::before,
+.factorial-anova .nav-toggle-icon::after {
+  content: '';
+  position: absolute;
+  width: 20px;
+  height: 2px;
+  background: var(--text-primary);
+  left: 0;
+}
+
+.factorial-anova .nav-toggle-icon::before {
+  top: -6px;
+}
+
+.factorial-anova .nav-toggle-icon::after {
+  top: 6px;
+}
+
+.factorial-anova .nav-overlay-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.3);
+  z-index: 99;
+}
+
+.factorial-anova .back-to-home {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  color: var(--text-secondary);
+  text-decoration: none;
+  font-size: 0.875rem;
+  padding: var(--spacing-sm) 0;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: var(--spacing-sm);
+}
+
+.factorial-anova .back-to-home:hover {
+  color: var(--primary);
+}
+
+.factorial-anova .back-icon {
+  width: 16px;
+  height: 16px;
+}
+
+.factorial-anova .navigation-pane ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+}
+
+.factorial-anova .navigation-pane button {
+  width: 100%;
+  text-align: left;
+  padding: var(--spacing-sm) var(--spacing-md);
+  border: none;
+  border-radius: var(--border-radius-sm);
+  background: transparent;
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.factorial-anova .navigation-pane button:hover {
+  background: var(--bg-primary);
+  color: var(--text-primary);
+}
+
+.factorial-anova .navigation-pane button.active {
+  background: var(--primary);
+  color: white;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .factorial-anova {
+    padding-left: var(--spacing-lg);
+  }
+
+  .factorial-anova-header h1 {
+    font-size: 1.75rem;
+  }
+
+  .factor-cards {
+    grid-template-columns: 1fr;
+  }
+
+  .interpretation-cards {
+    grid-template-columns: 1fr;
+  }
+
+  .factorial-anova .formula-parts {
+    flex-direction: column;
+    align-items: center;
+  }
+}
