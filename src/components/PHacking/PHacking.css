@@ -1,0 +1,508 @@
+/* ==========================================================================
+   P-Hacking Module Styles
+   ========================================================================== */
+
+/* Import shared navigation styles */
+@import '../ScrollingNarrative/NavigationPane.css';
+
+.p-hacking {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: var(--spacing-xl);
+}
+
+.p-hacking-content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xl);
+}
+
+/* Ensure lists are left-aligned */
+.p-hacking-content ul,
+.p-hacking-content ol {
+  text-align: left;
+  padding-left: var(--spacing-xl);
+}
+
+.p-hacking-content li {
+  margin-bottom: var(--spacing-sm);
+  line-height: 1.6;
+}
+
+/* ==========================================================================
+   Visualization Containers
+   ========================================================================== */
+
+.p-hacking-viz-container {
+  background: var(--surface);
+  border-radius: var(--border-radius-lg);
+  padding: var(--spacing-lg);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  margin: var(--spacing-lg) 0;
+}
+
+.p-hacking-viz-container svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  background: var(--background);
+  border-radius: var(--border-radius);
+}
+
+/* ==========================================================================
+   Forking Paths Tree Diagram
+   ========================================================================== */
+
+.forking-paths-diagram {
+  padding: var(--spacing-xl);
+  overflow-x: auto;
+}
+
+.tree-node {
+  fill: var(--surface);
+  stroke: var(--border);
+  stroke-width: 2;
+}
+
+.tree-node.root {
+  fill: var(--primary);
+  stroke: var(--primary);
+}
+
+.tree-node.leaf {
+  fill: var(--bg-secondary);
+}
+
+.tree-node.significant {
+  fill: var(--accent);
+  stroke: var(--accent);
+}
+
+.tree-link {
+  fill: none;
+  stroke: var(--border);
+  stroke-width: 1.5;
+}
+
+.tree-label {
+  font-size: 11px;
+  fill: var(--text-primary);
+}
+
+/* ==========================================================================
+   P-Hacking Controls
+   ========================================================================== */
+
+.phacking-controls {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+  background: var(--bg-secondary);
+  border-radius: var(--border-radius-lg);
+  padding: var(--spacing-lg);
+  margin: var(--spacing-lg) 0;
+}
+
+.phacking-controls h4 {
+  margin: 0 0 var(--spacing-sm);
+  color: var(--text-primary);
+  font-size: var(--font-size-md);
+}
+
+.control-row {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+}
+
+.control-checkbox {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  cursor: pointer;
+  padding: var(--spacing-sm) var(--spacing-md);
+  background: var(--surface);
+  border-radius: var(--border-radius);
+  border: 1px solid var(--border);
+  transition: all 0.2s ease;
+}
+
+.control-checkbox:hover {
+  border-color: var(--primary);
+}
+
+.control-checkbox.active {
+  background: rgba(67, 97, 238, 0.1);
+  border-color: var(--primary);
+}
+
+.control-checkbox input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--primary);
+}
+
+.control-checkbox label {
+  cursor: pointer;
+  font-size: var(--font-size-sm);
+  color: var(--text-primary);
+}
+
+.add-observations-btn {
+  padding: var(--spacing-sm) var(--spacing-md);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--border-radius);
+  font-size: var(--font-size-sm);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.add-observations-btn:hover:not(:disabled) {
+  border-color: var(--primary);
+  background: rgba(67, 97, 238, 0.1);
+}
+
+.add-observations-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ==========================================================================
+   P-Value Trail
+   ========================================================================== */
+
+.p-value-trail {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-xs);
+  margin-top: var(--spacing-md);
+  padding: var(--spacing-md);
+  background: var(--bg-secondary);
+  border-radius: var(--border-radius);
+}
+
+.p-value-chip {
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border-radius: var(--border-radius-sm);
+  font-size: 0.75rem;
+  font-family: 'SF Mono', Monaco, Consolas, monospace;
+  background: var(--surface);
+  border: 1px solid var(--border);
+}
+
+.p-value-chip.significant {
+  background: rgba(230, 57, 70, 0.15);
+  border-color: var(--accent);
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.p-value-chip.min-p {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: white;
+}
+
+/* ==========================================================================
+   Simulation Mode Toggle
+   ========================================================================== */
+
+.mode-toggle {
+  display: flex;
+  gap: var(--spacing-sm);
+  justify-content: center;
+  margin: var(--spacing-lg) 0;
+}
+
+.mode-button {
+  padding: var(--spacing-sm) var(--spacing-lg);
+  border: 2px solid var(--border);
+  background: var(--surface);
+  border-radius: var(--border-radius);
+  font-size: var(--font-size-md);
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.mode-button:hover:not(:disabled) {
+  border-color: var(--primary);
+}
+
+.mode-button.active {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: white;
+}
+
+/* ==========================================================================
+   Simulation Results Panel
+   ========================================================================== */
+
+.simulation-panel {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--spacing-lg);
+  margin: var(--spacing-lg) 0;
+}
+
+.panel-section {
+  background: var(--surface);
+  border-radius: var(--border-radius-lg);
+  padding: var(--spacing-lg);
+}
+
+.panel-section h4 {
+  margin: 0 0 var(--spacing-md);
+  color: var(--text-primary);
+  font-size: var(--font-size-md);
+  text-align: center;
+}
+
+.panel-section.honest h4 {
+  color: var(--primary);
+}
+
+.panel-section.phacked h4 {
+  color: var(--accent);
+}
+
+/* ==========================================================================
+   FPR Comparison
+   ========================================================================== */
+
+.fpr-comparison {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--spacing-md);
+  margin: var(--spacing-lg) 0;
+}
+
+.fpr-card {
+  background: var(--surface);
+  border-radius: var(--border-radius);
+  padding: var(--spacing-lg);
+  text-align: center;
+}
+
+.fpr-card.honest {
+  border-left: 4px solid var(--primary);
+}
+
+.fpr-card.phacked {
+  border-left: 4px solid var(--accent);
+}
+
+.fpr-card.expected {
+  border-left: 4px solid var(--success);
+}
+
+.fpr-label {
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
+  margin-bottom: var(--spacing-xs);
+}
+
+.p-hacking .fpr-value {
+  position: static;
+  transform: none;
+  font-size: 2rem;
+  font-weight: 700;
+  font-family: 'SF Mono', Monaco, Consolas, monospace;
+}
+
+.p-hacking .fpr-card.honest .fpr-value {
+  color: var(--primary);
+}
+
+.p-hacking .fpr-card.phacked .fpr-value {
+  color: var(--accent);
+}
+
+.p-hacking .fpr-card.expected .fpr-value {
+  color: var(--success);
+}
+
+/* ==========================================================================
+   Key Insight Box (reusing from outlier module)
+   ========================================================================== */
+
+.key-insight {
+  background: linear-gradient(135deg, rgba(67, 97, 238, 0.1), rgba(67, 97, 238, 0.05));
+  border-left: 4px solid var(--primary);
+  border-radius: var(--border-radius);
+  padding: var(--spacing-lg);
+  margin: var(--spacing-lg) 0;
+}
+
+.key-insight h4 {
+  margin: 0 0 var(--spacing-sm);
+  color: var(--primary);
+  font-size: var(--font-size-md);
+}
+
+.key-insight p {
+  margin: 0;
+  line-height: 1.6;
+}
+
+.warning-box {
+  background: linear-gradient(135deg, rgba(230, 57, 70, 0.1), rgba(230, 57, 70, 0.05));
+  border-left: 4px solid var(--accent);
+}
+
+.warning-box h4 {
+  color: var(--accent);
+}
+
+/* ==========================================================================
+   Result Cards (reusing pattern)
+   ========================================================================== */
+
+.simulation-results {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: var(--spacing-md);
+  margin-top: var(--spacing-lg);
+}
+
+.result-card {
+  background: var(--background);
+  border-radius: var(--border-radius);
+  padding: var(--spacing-md);
+  text-align: center;
+}
+
+.result-label {
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
+  margin-bottom: var(--spacing-xs);
+}
+
+.result-value {
+  font-size: 1.5rem;
+  font-weight: 700;
+  font-family: 'SF Mono', Monaco, Consolas, monospace;
+}
+
+.result-value.significant {
+  color: var(--accent);
+}
+
+.result-value.not-significant {
+  color: var(--success);
+}
+
+/* ==========================================================================
+   Dual Histogram Display
+   ========================================================================== */
+
+.dual-histogram {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--spacing-lg);
+  margin: var(--spacing-lg) 0;
+}
+
+.histogram-panel {
+  background: var(--surface);
+  border-radius: var(--border-radius-lg);
+  padding: var(--spacing-lg);
+}
+
+.histogram-panel h4 {
+  margin: 0 0 var(--spacing-md);
+  text-align: center;
+  font-size: var(--font-size-md);
+}
+
+.histogram-panel.honest h4 {
+  color: var(--primary);
+}
+
+.histogram-panel.phacked h4 {
+  color: var(--accent);
+}
+
+/* ==========================================================================
+   Method Toggle (reusing from outlier module)
+   ========================================================================== */
+
+.method-toggle {
+  display: flex;
+  gap: var(--spacing-sm);
+  justify-content: center;
+  margin: var(--spacing-md) 0;
+}
+
+.method-button {
+  padding: var(--spacing-sm) var(--spacing-lg);
+  border: 2px solid var(--border);
+  background: var(--surface);
+  border-radius: var(--border-radius);
+  font-size: var(--font-size-md);
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.method-button:hover:not(:disabled) {
+  border-color: var(--primary);
+}
+
+.method-button.active {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: white;
+}
+
+/* ==========================================================================
+   Action Buttons
+   ========================================================================== */
+
+.action-buttons {
+  display: flex;
+  gap: var(--spacing-sm);
+  justify-content: center;
+  margin: var(--spacing-lg) 0;
+}
+
+/* ==========================================================================
+   Responsive
+   ========================================================================== */
+
+@media (max-width: 768px) {
+  .p-hacking {
+    padding: var(--spacing-md);
+  }
+
+  .simulation-panel {
+    grid-template-columns: 1fr;
+  }
+
+  .dual-histogram {
+    grid-template-columns: 1fr;
+  }
+
+  .fpr-comparison {
+    grid-template-columns: 1fr;
+  }
+
+  .phacking-controls .control-row {
+    flex-wrap: wrap;
+  }
+
+  .control-checkbox {
+    flex: 1 1 45%;
+    min-width: 140px;
+  }
+
+  .mode-toggle {
+    flex-direction: column;
+  }
+
+  .mode-button {
+    width: 100%;
+  }
+}

@@ -906,3 +906,456 @@ export function generateANOVAData(
 
   return groupMeans.map((groupMean, i) => generateNormalSample(ns[i], groupMean, sds[i]));
 }
+
+/* ==========================================================================
+   P-Hacking Utility Functions
+   ========================================================================== */
+
+/**
+ * Computes residuals after regressing Y on X (covariate adjustment).
+ * Residuals = Y - (a + b*X) where b = cov(X,Y)/var(X) and a = mean(Y) - b*mean(X)
+ * @param y - Dependent variable values
+ * @param x - Covariate values
+ * @returns Array of residuals
+ */
+export function getResiduals(y: number[], x: number[]): number[] {
+  if (y.length !== x.length || y.length < 2) {
+    return y;
+  }
+
+  const meanY = mean(y);
+  const meanX = mean(x);
+  const n = y.length;
+
+  // Compute covariance and variance
+  let cov = 0;
+  let varX = 0;
+  for (let i = 0; i < n; i++) {
+    const dx = x[i] - meanX;
+    const dy = y[i] - meanY;
+    cov += dx * dy;
+    varX += dx * dx;
+  }
+
+  // Avoid division by zero
+  if (varX === 0) {
+    return y.map((yi) => yi - meanY);
+  }
+
+  const b = cov / varX;
+  const a = meanY - b * meanX;
+
+  // Compute residuals
+  return y.map((yi, i) => yi - (a + b * x[i]));
+}
+
+/**
+ * Generates a random covariate (normally distributed).
+ * Used to simulate adding a covariate in p-hacking scenarios.
+ * @param n - Sample size
+ * @param mean - Mean of the covariate (default 0)
+ * @param sd - Standard deviation (default 1)
+ * @returns Array of covariate values
+ */
+export function generateRandomCovariate(
+  n: number,
+  mean: number = 0,
+  sd: number = 1
+): number[] {
+  return generateNormalSample(n, mean, sd);
+}
+
+/**
+ * Applies log transformation to data with floor for zeros/negatives.
+ * Adds a constant (min + 1) if needed to make all values positive.
+ * @param data - Array of values to transform
+ * @returns Log-transformed values
+ */
+export function logTransform(data: number[]): number[] {
+  const minVal = Math.min(...data);
+  // If minimum is <= 0, shift all values to be positive
+  const shift = minVal <= 0 ? Math.abs(minVal) + 1 : 0;
+  return data.map((v) => Math.log(v + shift));
+}
+
+/**
+ * Generates random binary grouping (e.g., simulated gender).
+ * @param n - Sample size
+ * @param proportion - Proportion assigned to group 1 (default 0.5)
+ * @returns Array of boolean values (true = group 1, false = group 2)
+ */
+export function generateBinaryGrouping(
+  n: number,
+  proportion: number = 0.5
+): boolean[] {
+  return Array.from({ length: n }, () => Math.random() < proportion);
+}
+
+/**
+ * Generates a second variable correlated with the first at a specified correlation.
+ * Uses the formula: y = r*x_standardized + sqrt(1-r^2)*noise, then rescale.
+ * @param original - The original variable
+ * @param correlation - Target correlation (e.g., 0.6)
+ * @param targetMean - Mean of the correlated variable (default: same as original)
+ * @param targetSD - SD of the correlated variable (default: same as original)
+ * @returns Array correlated with the original at approximately the specified r
+ */
+export function generateCorrelatedVariable(
+  original: number[],
+  correlation: number,
+  targetMean?: number,
+  targetSD?: number
+): number[] {
+  const n = original.length;
+  const origMean = mean(original);
+  const origSD = standardDeviation(original, false);
+
+  // Standardize original
+  const xStd = original.map((v) => (origSD > 0 ? (v - origMean) / origSD : 0));
+
+  // Generate independent noise
+  const noise = generateNormalSample(n, 0, 1);
+
+  // Combine: y_std = r * x_std + sqrt(1 - r^2) * noise
+  const r = Math.max(-1, Math.min(1, correlation)); // Clamp correlation
+  const sqrtOneMinusR2 = Math.sqrt(1 - r * r);
+  const yStd = xStd.map((x, i) => r * x + sqrtOneMinusR2 * noise[i]);
+
+  // Rescale to target mean and SD
+  const finalMean = targetMean !== undefined ? targetMean : origMean;
+  const finalSD = targetSD !== undefined ? targetSD : origSD;
+
+  return yStd.map((y) => y * finalSD + finalMean);
+}
+
+/**
+ * Options for running a p-hacking trial.
+ */
+export interface PHackingOptions {
+  group1: number[];
+  group2: number[];
+  removeOutliers?: boolean;
+  addCovariate?: boolean;
+  covariate1?: number[];
+  covariate2?: number[];
+  splitByGender?: boolean;
+  gender1?: boolean[];
+  gender2?: boolean[];
+  logTransform?: boolean;
+}
+
+/**
+ * Result from a p-hacking trial.
+ */
+export interface PHackingTrialResult {
+  pValues: number[];
+  minP: number;
+  analyses: string[];
+  significant: boolean;
+}
+
+/**
+ * Runs a single p-hacking trial, applying selected researcher degrees of freedom.
+ * Returns all p-values tried and the minimum.
+ * @param options - Configuration for which degrees of freedom to exploit
+ * @returns Object with all p-values, minimum p, and analysis descriptions
+ */
+export function runPHackingTrial(options: PHackingOptions): PHackingTrialResult {
+  const pValues: number[] = [];
+  const analyses: string[] = [];
+  let { group1, group2 } = options;
+
+  // Helper function to run t-test and record result
+  const runAndRecord = (g1: number[], g2: number[], label: string) => {
+    if (g1.length >= 2 && g2.length >= 2) {
+      const result = welchTTest(g1, g2);
+      pValues.push(result.p);
+      analyses.push(label);
+    }
+  };
+
+  // 1. Basic analysis (always included)
+  runAndRecord(group1, group2, 'Basic analysis');
+
+  // 2. Remove outliers (±2.5 SD from overall mean)
+  if (options.removeOutliers) {
+    const combined = [...group1, ...group2];
+    const m = mean(combined);
+    const sd = standardDeviation(combined, false);
+    const lower = m - 2.5 * sd;
+    const upper = m + 2.5 * sd;
+
+    const filtered1 = group1.filter((v) => v >= lower && v <= upper);
+    const filtered2 = group2.filter((v) => v >= lower && v <= upper);
+    runAndRecord(filtered1, filtered2, 'Outliers removed');
+
+    // Update for subsequent analyses
+    group1 = filtered1;
+    group2 = filtered2;
+  }
+
+  // 3. Add covariate (residualize)
+  if (options.addCovariate && options.covariate1 && options.covariate2) {
+    const residuals1 = getResiduals(group1, options.covariate1.slice(0, group1.length));
+    const residuals2 = getResiduals(group2, options.covariate2.slice(0, group2.length));
+    runAndRecord(residuals1, residuals2, 'Covariate controlled');
+  }
+
+  // 4. Split by gender (report whichever subgroup is significant)
+  if (options.splitByGender && options.gender1 && options.gender2) {
+    // Males only
+    const males1 = group1.filter((_, i) => options.gender1![i]);
+    const males2 = group2.filter((_, i) => options.gender2![i]);
+    runAndRecord(males1, males2, 'Males only');
+
+    // Females only
+    const females1 = group1.filter((_, i) => !options.gender1![i]);
+    const females2 = group2.filter((_, i) => !options.gender2![i]);
+    runAndRecord(females1, females2, 'Females only');
+  }
+
+  // 5. Log transform DV
+  if (options.logTransform) {
+    const log1 = logTransform(group1);
+    const log2 = logTransform(group2);
+    runAndRecord(log1, log2, 'Log-transformed');
+  }
+
+  const minP = Math.min(...pValues);
+
+  return {
+    pValues,
+    minP,
+    analyses,
+    significant: minP < 0.05,
+  };
+}
+
+/* ==========================================================================
+   Within-Subjects / Repeated Measures Functions
+   ========================================================================== */
+
+/**
+ * Performs a paired t-test (dependent samples t-test).
+ * Tests whether the mean difference between paired observations is zero.
+ *
+ * The paired t-test is equivalent to a one-sample t-test on the difference scores.
+ * t = D̄ / (s_D / √n)
+ *
+ * @param group1 - First set of paired observations
+ * @param group2 - Second set of paired observations (same subjects)
+ * @returns Object with t-statistic, degrees of freedom, p-value, mean difference, and SE
+ */
+export function pairedTTest(
+  group1: number[],
+  group2: number[]
+): {
+  t: number;
+  df: number;
+  p: number;
+  meanDiff: number;
+  seDiff: number;
+} {
+  if (group1.length !== group2.length) {
+    throw new Error('Paired t-test requires equal-length arrays');
+  }
+
+  const n = group1.length;
+  if (n < 2) {
+    return { t: 0, df: 0, p: 1, meanDiff: 0, seDiff: 0 };
+  }
+
+  // Calculate difference scores: D = group2 - group1
+  const differences = group1.map((val, i) => group2[i] - val);
+
+  // Mean of differences
+  const meanDiff = mean(differences);
+
+  // Standard deviation of differences
+  const sdDiff = standardDeviation(differences, true);
+
+  // Standard error of the mean difference
+  const seDiff = sdDiff / Math.sqrt(n);
+
+  // t-statistic: H₀ is that μ_D = 0
+  const t = seDiff > 0 ? meanDiff / seDiff : 0;
+
+  // Degrees of freedom
+  const df = n - 1;
+
+  // Two-tailed p-value
+  const p = 2 * (1 - jStatDist.studentt.cdf(Math.abs(t), df));
+
+  return { t, df, p, meanDiff, seDiff };
+}
+
+/**
+ * Performs one-way repeated measures ANOVA.
+ * Tests whether condition means differ when the same subjects are measured
+ * under multiple conditions.
+ *
+ * Variance partition:
+ * SS_T = SS_A (conditions) + SS_S (subjects) + SS_A×S (residual/error)
+ *
+ * The error term (SS_A×S) represents inconsistency in how subjects respond
+ * across conditions—typically much smaller than SS_Within in between-subjects designs.
+ *
+ * @param data - 2D array where data[subject][condition] = score
+ * @returns Full RM-ANOVA table: SS, df, MS, F, and p-value
+ */
+export function repeatedMeasuresANOVA(data: number[][]): {
+  ssTotal: number;
+  ssSubjects: number;
+  ssConditions: number;
+  ssResidual: number;
+  dfSubjects: number;
+  dfConditions: number;
+  dfResidual: number;
+  msConditions: number;
+  msResidual: number;
+  F: number;
+  p: number;
+  grandMean: number;
+  subjectMeans: number[];
+  conditionMeans: number[];
+} {
+  const nSubjects = data.length;
+  const nConditions = data[0]?.length || 0;
+
+  if (nSubjects < 2 || nConditions < 2) {
+    return {
+      ssTotal: 0,
+      ssSubjects: 0,
+      ssConditions: 0,
+      ssResidual: 0,
+      dfSubjects: 0,
+      dfConditions: 0,
+      dfResidual: 0,
+      msConditions: 0,
+      msResidual: 0,
+      F: 0,
+      p: 1,
+      grandMean: 0,
+      subjectMeans: [],
+      conditionMeans: [],
+    };
+  }
+
+  // Flatten all data to calculate grand mean
+  const allScores = data.flat();
+  const grandMean = mean(allScores);
+
+  // Calculate subject means (row means)
+  const subjectMeans = data.map((subjectScores) => mean(subjectScores));
+
+  // Calculate condition means (column means)
+  const conditionMeans: number[] = [];
+  for (let c = 0; c < nConditions; c++) {
+    const conditionScores = data.map((subject) => subject[c]);
+    conditionMeans.push(mean(conditionScores));
+  }
+
+  // SS_Total: total variation around grand mean
+  let ssTotal = 0;
+  for (const subject of data) {
+    for (const score of subject) {
+      ssTotal += Math.pow(score - grandMean, 2);
+    }
+  }
+
+  // SS_Subjects: variation between subjects (averaged across conditions)
+  // SS_S = nConditions * Σ(Ȳ_s - Ȳ_T)²
+  let ssSubjects = 0;
+  for (const subjectMean of subjectMeans) {
+    ssSubjects += nConditions * Math.pow(subjectMean - grandMean, 2);
+  }
+
+  // SS_Conditions: variation between conditions (averaged across subjects)
+  // SS_A = nSubjects * Σ(Ȳ_a - Ȳ_T)²
+  let ssConditions = 0;
+  for (const conditionMean of conditionMeans) {
+    ssConditions += nSubjects * Math.pow(conditionMean - grandMean, 2);
+  }
+
+  // SS_Residual (SS_A×S): what's left after removing subject and condition effects
+  // SS_A×S = SS_T - SS_S - SS_A
+  // This represents the subject × condition interaction (inconsistency)
+  const ssResidual = ssTotal - ssSubjects - ssConditions;
+
+  // Degrees of freedom
+  const dfSubjects = nSubjects - 1;
+  const dfConditions = nConditions - 1;
+  const dfResidual = dfSubjects * dfConditions;
+
+  // Mean squares
+  const msConditions = dfConditions > 0 ? ssConditions / dfConditions : 0;
+  const msResidual = dfResidual > 0 ? ssResidual / dfResidual : 0;
+
+  // F-statistic: MS_A / MS_A×S
+  const F = msResidual > 0 ? msConditions / msResidual : 0;
+
+  // P-value
+  const p =
+    dfConditions > 0 && dfResidual > 0
+      ? 1 - fDistributionCDF(F, dfConditions, dfResidual)
+      : 1;
+
+  return {
+    ssTotal,
+    ssSubjects,
+    ssConditions,
+    ssResidual,
+    dfSubjects,
+    dfConditions,
+    dfResidual,
+    msConditions,
+    msResidual,
+    F,
+    p,
+    grandMean,
+    subjectMeans,
+    conditionMeans,
+  };
+}
+
+/**
+ * Generates within-subjects data with subject effects.
+ * Each subject has a baseline (random intercept) plus condition effects plus noise.
+ *
+ * Model: Y_ij = μ_j + b_i + ε_ij
+ * where:
+ * - μ_j is the condition mean
+ * - b_i ~ N(0, subjectSD) is the subject's baseline deviation
+ * - ε_ij ~ N(0, errorSD) is random error
+ *
+ * @param nSubjects - Number of subjects
+ * @param conditionMeans - Array of means for each condition
+ * @param subjectSD - Standard deviation of subject random effects (individual differences)
+ * @param errorSD - Standard deviation of residual error (within-subject noise)
+ * @returns 2D array where result[subject][condition] = score
+ */
+export function generateWithinSubjectsData(
+  nSubjects: number,
+  conditionMeans: number[],
+  subjectSD: number,
+  errorSD: number
+): number[][] {
+  const nConditions = conditionMeans.length;
+  const data: number[][] = [];
+
+  for (let s = 0; s < nSubjects; s++) {
+    // Generate subject-level random effect (baseline)
+    const subjectEffect = generateNormalSample(1, 0, subjectSD)[0];
+
+    const subjectScores: number[] = [];
+    for (let c = 0; c < nConditions; c++) {
+      // Score = condition mean + subject baseline + random error
+      const error = generateNormalSample(1, 0, errorSD)[0];
+      const score = conditionMeans[c] + subjectEffect + error;
+      subjectScores.push(score);
+    }
+    data.push(subjectScores);
+  }
+
+  return data;
+}

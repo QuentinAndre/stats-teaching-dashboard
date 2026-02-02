@@ -169,6 +169,67 @@ const modules: ModuleCard[] = [
     ),
   },
   {
+    id: 'p-hacking',
+    title: 'P-Hacking',
+    description:
+      'Discover how researcher degrees of freedom inflate false-positive rates. See why pre-registration and transparent reporting are essential for credible science.',
+    path: '/p-hacking',
+    icon: (
+      <svg viewBox="0 0 48 48" className="module-icon" aria-hidden="true">
+        {/* Multiple forking paths representing researcher decisions */}
+        <path
+          d="M24 4 L24 14"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+        />
+        {/* Left branch */}
+        <path
+          d="M24 14 L12 24 L8 38"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          opacity="0.5"
+        />
+        <path
+          d="M12 24 L16 38"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          opacity="0.5"
+        />
+        {/* Right branch */}
+        <path
+          d="M24 14 L36 24 L32 38"
+          fill="none"
+          stroke="var(--accent)"
+          strokeWidth="2"
+          strokeLinecap="round"
+        />
+        <path
+          d="M36 24 L40 38"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          opacity="0.5"
+        />
+        {/* Significant result marker */}
+        <circle cx="32" cy="38" r="5" fill="var(--accent)" />
+        <text x="32" y="41" textAnchor="middle" fontSize="6" fill="white" fontWeight="bold">*</text>
+        {/* Other endpoints */}
+        <circle cx="8" cy="38" r="3" fill="currentColor" opacity="0.4" />
+        <circle cx="16" cy="38" r="3" fill="currentColor" opacity="0.4" />
+        <circle cx="40" cy="38" r="3" fill="currentColor" opacity="0.4" />
+        {/* Root node */}
+        <circle cx="24" cy="14" r="4" fill="var(--primary)" />
+      </svg>
+    ),
+  },
+  {
     id: 'factorial-anova',
     title: 'Factorial ANOVA',
     description:
@@ -186,6 +247,32 @@ const modules: ModuleCard[] = [
         <line x1="35" y1="13" x2="13" y2="35" stroke="currentColor" strokeWidth="2" opacity="0.6" />
         {/* Center dot */}
         <circle cx="24" cy="24" r="4" fill="currentColor" />
+      </svg>
+    ),
+  },
+  {
+    id: 'within-subjects',
+    title: 'Within-Subject Designs',
+    description:
+      'Learn how measuring the same subjects multiple times removes individual differences from error. Understand paired t-tests and repeated measures ANOVA.',
+    path: '/within-subjects',
+    icon: (
+      <svg viewBox="0 0 48 48" className="module-icon" aria-hidden="true">
+        {/* Subject circles on left and right connected by lines */}
+        <circle cx="10" cy="12" r="4" fill="var(--accent)" opacity="0.8" />
+        <circle cx="10" cy="24" r="4" fill="var(--accent)" opacity="0.8" />
+        <circle cx="10" cy="36" r="4" fill="var(--accent)" opacity="0.8" />
+        {/* Connecting lines (spaghetti pattern) - going UP to show improvement */}
+        <path d="M14 12 L24 18 L34 10" fill="none" stroke="var(--accent)" strokeWidth="2" opacity="0.6" />
+        <path d="M14 24 L24 28 L34 22" fill="none" stroke="var(--accent)" strokeWidth="2" opacity="0.6" />
+        <path d="M14 36 L24 40 L34 34" fill="none" stroke="var(--accent)" strokeWidth="2" opacity="0.6" />
+        {/* Condition markers */}
+        <circle cx="24" cy="18" r="3" fill="var(--primary)" opacity="0.6" />
+        <circle cx="24" cy="28" r="3" fill="var(--primary)" opacity="0.6" />
+        <circle cx="24" cy="40" r="3" fill="var(--primary)" opacity="0.6" />
+        <circle cx="34" cy="10" r="3" fill="var(--primary)" />
+        <circle cx="34" cy="22" r="3" fill="var(--primary)" />
+        <circle cx="34" cy="34" r="3" fill="var(--primary)" />
       </svg>
     ),
   },
