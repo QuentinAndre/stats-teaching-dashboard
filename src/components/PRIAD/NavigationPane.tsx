@@ -7,16 +7,15 @@ interface NavSection {
 }
 
 const sections: NavSection[] = [
-  { id: 'within-intro', label: 'Same Subjects, Different Conditions' },
-  { id: 'individual-differences', label: 'The Problem with People' },
-  { id: 'two-cell', label: 'The Paired Comparison' },
-  { id: 'three-cell', label: 'Repeated Measures ANOVA' },
-  { id: 'power-comparison', label: 'The Power Advantage' },
-  { id: 'sphericity', label: 'Sphericity Assumptions' },
+  { id: 'sample-size-dilemma', label: 'The Sample Size Dilemma' },
+  { id: 'why-peeking-fails', label: 'Why Peeking Fails' },
+  { id: 'adjusted-thresholds', label: 'Adjusted Thresholds' },
+  { id: 'efficiency-tradeoff', label: 'Efficiency Trade-off' },
+  { id: 'implementation', label: 'Implementing PRIADs' },
 ];
 
 export default function NavigationPane() {
-  const [activeSection, setActiveSection] = useState<string>('within-intro');
+  const [activeSection, setActiveSection] = useState<string>('sample-size-dilemma');
   const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {

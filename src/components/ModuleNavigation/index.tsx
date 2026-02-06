@@ -1,18 +1,6 @@
 import { Link } from 'react-router-dom';
+import { modules } from '../../config/modules';
 import './ModuleNavigation.css';
-
-interface Module {
-  path: string;
-  title: string;
-}
-
-const modules: Module[] = [
-  { path: '/sampling-distributions', title: 'Sampling Distributions' },
-  { path: '/nhst', title: 'Hypothesis Testing' },
-  { path: '/outlier-exclusions', title: 'Outlier Exclusions' },
-  { path: '/anova', title: 'ANOVA' },
-  { path: '/factorial-anova', title: 'Factorial ANOVA' },
-];
 
 interface ModuleNavigationProps {
   currentPath: string;

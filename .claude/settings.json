@@ -6,7 +6,7 @@
   "hooks": {
     "SessionStart": [
       {
-        "matcher": ["compact", "resume"],
+        "matcher": "startup",
         "hooks": [
           {
             "type": "command",

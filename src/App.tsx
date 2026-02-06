@@ -5,9 +5,12 @@ import ScrollingNarrative from './components/ScrollingNarrative';
 import OutlierExclusions from './components/OutlierExclusions';
 import NHST from './components/NHST';
 import ANOVA from './components/ANOVA';
+import EffectSizesPower from './components/EffectSizesPower';
 import FactorialANOVA from './components/FactorialANOVA';
 import WithinSubjects from './components/WithinSubjects';
+import MixedDesigns from './components/MixedDesigns';
 import PHacking from './components/PHacking';
+import PRIAD from './components/PRIAD';
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -32,10 +35,13 @@ function App() {
           />
           <Route path="/nhst" element={<NHST />} />
           <Route path="/anova" element={<ANOVA />} />
+          <Route path="/effect-sizes-power" element={<EffectSizesPower />} />
           <Route path="/factorial-anova" element={<FactorialANOVA />} />
           <Route path="/within-subjects" element={<WithinSubjects />} />
+          <Route path="/mixed-designs" element={<MixedDesigns />} />
           <Route path="/outlier-exclusions" element={<OutlierExclusions />} />
           <Route path="/p-hacking" element={<PHacking />} />
+          <Route path="/priad" element={<PRIAD />} />
         </Routes>
       </div>
     </Router>

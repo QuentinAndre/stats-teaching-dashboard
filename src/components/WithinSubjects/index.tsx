@@ -4,6 +4,7 @@ import IndividualDifferences from './sections/IndividualDifferences';
 import TwoCellDesign from './sections/TwoCellDesign';
 import ThreeCellDesign from './sections/ThreeCellDesign';
 import PowerComparison from './sections/PowerComparison';
+import Sphericity from './sections/Sphericity';
 import ModuleNavigation from '../ModuleNavigation';
 import './WithinSubjects.css';
 
@@ -38,6 +39,10 @@ export default function WithinSubjects() {
 
         <section id="power-comparison" className="narrative-section">
           <PowerComparison />
+        </section>
+
+        <section id="sphericity" className="narrative-section">
+          <Sphericity />
         </section>
       </main>
 

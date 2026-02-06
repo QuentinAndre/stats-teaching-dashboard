@@ -7,16 +7,16 @@ interface NavSection {
 }
 
 const sections: NavSection[] = [
-  { id: 'within-intro', label: 'Same Subjects, Different Conditions' },
-  { id: 'individual-differences', label: 'The Problem with People' },
-  { id: 'two-cell', label: 'The Paired Comparison' },
-  { id: 'three-cell', label: 'Repeated Measures ANOVA' },
-  { id: 'power-comparison', label: 'The Power Advantage' },
-  { id: 'sphericity', label: 'Sphericity Assumptions' },
+  { id: 'effect-size-intro', label: 'What Are Effect Sizes?' },
+  { id: 'cohens-d', label: 'Standardized Differences' },
+  { id: 'variance-explained', label: 'Variance Explained' },
+  { id: 'power-analysis', label: 'Statistical Power' },
+  { id: 'publication-bias', label: 'Publication Bias' },
+  { id: 'study-planning', label: 'Planning Your Study' },
 ];
 
 export default function NavigationPane() {
-  const [activeSection, setActiveSection] = useState<string>('within-intro');
+  const [activeSection, setActiveSection] = useState<string>('effect-size-intro');
   const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {

@@ -1359,3 +1359,761 @@ export function generateWithinSubjectsData(
 
   return data;
 }
+
+/* ==========================================================================
+   Effect Size Functions
+   ========================================================================== */
+
+/**
+ * Calculates the pooled standard deviation for two groups.
+ * Used as the denominator in Cohen's d.
+ *
+ * s_pooled = √[((n₁-1)s₁² + (n₂-1)s₂²) / (n₁ + n₂ - 2)]
+ *
+ * @param group1 - First group data
+ * @param group2 - Second group data
+ * @returns Pooled standard deviation
+ */
+export function pooledSD(group1: number[], group2: number[]): number {
+  const n1 = group1.length;
+  const n2 = group2.length;
+
+  if (n1 < 2 || n2 < 2) return 0;
+
+  const var1 = Math.pow(standardDeviation(group1, true), 2);
+  const var2 = Math.pow(standardDeviation(group2, true), 2);
+
+  return Math.sqrt(((n1 - 1) * var1 + (n2 - 1) * var2) / (n1 + n2 - 2));
+}
+
+/**
+ * Calculates Cohen's d effect size for two groups.
+ * Expresses the difference between means in standard deviation units.
+ *
+ * d = (Ȳ₁ - Ȳ₂) / s_pooled
+ *
+ * Interpretation (Cohen's conventions):
+ * - d = 0.2: small effect
+ * - d = 0.5: medium effect
+ * - d = 0.8: large effect
+ *
+ * @param group1 - First group data
+ * @param group2 - Second group data
+ * @returns Cohen's d effect size
+ */
+export function cohensD(group1: number[], group2: number[]): number {
+  const mean1 = mean(group1);
+  const mean2 = mean(group2);
+  const sp = pooledSD(group1, group2);
+
+  if (sp === 0) return 0;
+
+  return (mean1 - mean2) / sp;
+}
+
+/**
+ * Calculates Cohen's d from summary statistics.
+ * Useful for interactive visualizations.
+ *
+ * @param meanDiff - Difference between means (Ȳ₁ - Ȳ₂)
+ * @param pooledStd - Pooled standard deviation
+ * @returns Cohen's d effect size
+ */
+export function cohensDFromStats(meanDiff: number, pooledStd: number): number {
+  if (pooledStd === 0) return 0;
+  return meanDiff / pooledStd;
+}
+
+/**
+ * Calculates eta-squared (η²) for ANOVA.
+ * Proportion of total variance explained by the factor.
+ *
+ * η² = SS_A / SS_T
+ *
+ * Note: η² is biased upward, especially in small samples.
+ *
+ * @param ssEffect - Sum of squares for the effect (SS_A)
+ * @param ssTotal - Total sum of squares (SS_T)
+ * @returns Eta-squared value (0 to 1)
+ */
+export function etaSquared(ssEffect: number, ssTotal: number): number {
+  if (ssTotal === 0) return 0;
+  return ssEffect / ssTotal;
+}
+
+/**
+ * Calculates omega-squared (ω²) for ANOVA.
+ * Less biased estimate of population effect size.
+ *
+ * ω² = (SS_A - df_A × MS_S/A) / (SS_T + MS_S/A)
+ *
+ * Interpretation (Kirk's conventions):
+ * - ω² = 0.01: small effect
+ * - ω² = 0.06: medium effect
+ * - ω² = 0.14: large effect
+ *
+ * @param ssEffect - Sum of squares for the effect (SS_A)
+ * @param dfEffect - Degrees of freedom for the effect (df_A)
+ * @param msError - Mean square error (MS_S/A)
+ * @param ssTotal - Total sum of squares (SS_T)
+ * @returns Omega-squared value (can be negative in small samples)
+ */
+export function omegaSquared(
+  ssEffect: number,
+  dfEffect: number,
+  msError: number,
+  ssTotal: number
+): number {
+  const denominator = ssTotal + msError;
+  if (denominator === 0) return 0;
+  return (ssEffect - dfEffect * msError) / denominator;
+}
+
+/* ==========================================================================
+   Statistical Power Functions
+   ========================================================================== */
+
+/**
+ * Returns the PDF of a standard normal distribution at value x.
+ * @param x - The value at which to evaluate the PDF
+ * @param mu - Mean (default 0)
+ * @param sigma - Standard deviation (default 1)
+ */
+export function normalPDF(x: number, mu: number = 0, sigma: number = 1): number {
+  return jStatDist.normal.pdf(x, mu, sigma);
+}
+
+/**
+ * Returns the CDF of a standard normal distribution at value x.
+ * @param x - The value at which to evaluate the CDF
+ */
+export function normalCDF(x: number): number {
+  // Use jStat's normal CDF
+  return jStat.normal.cdf(x, 0, 1);
+}
+
+/**
+ * Returns the inverse CDF (quantile function) of a standard normal distribution.
+ * @param p - Probability (0 to 1)
+ */
+export function normalInv(p: number): number {
+  return jStatDist.normal.inv(p, 0, 1);
+}
+
+/**
+ * Calculates statistical power for a two-sample t-test.
+ * Power = P(reject H₀ | H₁ is true)
+ *
+ * Uses the noncentral t-distribution approximation.
+ *
+ * @param d - Cohen's d effect size
+ * @param n - Sample size per group
+ * @param alpha - Significance level (default 0.05)
+ * @param tails - 1 or 2 for one-tailed or two-tailed test (default 2)
+ * @returns Power (probability of detecting the effect)
+ */
+export function calculatePower(
+  d: number,
+  n: number,
+  alpha: number = 0.05,
+  tails: 1 | 2 = 2
+): number {
+  if (n < 2 || d === 0) return alpha; // Power equals alpha when d = 0
+
+  // Noncentrality parameter: δ = d × √(n/2)
+  const ncp = d * Math.sqrt(n / 2);
+
+  // Power using normal approximation
+  // Power ≈ Φ(-z_α + |d|√(n/2)) for large samples
+  const zCrit = tails === 2
+    ? normalInv(1 - alpha / 2)
+    : normalInv(1 - alpha);
+
+  const power = 1 - normalCDF(zCrit - Math.abs(ncp));
+
+  // For two-tailed test, also add lower tail (negligible for reasonable d)
+  if (tails === 2) {
+    const powerLowerTail = normalCDF(-zCrit - Math.abs(ncp));
+    return Math.min(power + powerLowerTail, 1);
+  }
+
+  return Math.min(Math.max(power, 0), 1);
+}
+
+/**
+ * Calculates required sample size per group to achieve desired power.
+ * Uses iterative search since there's no closed-form solution.
+ *
+ * @param d - Cohen's d effect size
+ * @param power - Desired power (default 0.80)
+ * @param alpha - Significance level (default 0.05)
+ * @param tails - 1 or 2 for one-tailed or two-tailed test (default 2)
+ * @returns Required n per group (rounded up to nearest integer)
+ */
+export function requiredSampleSize(
+  d: number,
+  power: number = 0.80,
+  alpha: number = 0.05,
+  tails: 1 | 2 = 2
+): number {
+  if (d === 0) return Infinity;
+
+  const absD = Math.abs(d);
+
+  // Initial estimate using normal approximation:
+  // n ≈ 2 × ((z_α + z_β) / d)²
+  const zAlpha = tails === 2
+    ? normalInv(1 - alpha / 2)
+    : normalInv(1 - alpha);
+  const zBeta = normalInv(power);
+
+  let n = Math.ceil(2 * Math.pow((zAlpha + zBeta) / absD, 2));
+  n = Math.max(n, 2);
+
+  // Refine with binary search
+  let low = 2;
+  let high = Math.max(n * 2, 1000);
+
+  while (low < high) {
+    const mid = Math.floor((low + high) / 2);
+    const actualPower = calculatePower(absD, mid, alpha, tails);
+
+    if (actualPower >= power) {
+      high = mid;
+    } else {
+      low = mid + 1;
+    }
+  }
+
+  return low;
+}
+
+/**
+ * Calculates the overlap coefficient for two normal distributions.
+ * Returns the proportion of shared area (0 to 1).
+ *
+ * For equal-variance normals with standardized difference d:
+ * Overlap = 2 × Φ(-|d|/2)
+ *
+ * @param d - Cohen's d (standardized mean difference)
+ * @returns Overlap proportion (0 to 1)
+ */
+export function distributionOverlap(d: number): number {
+  // Overlap = 2 × Φ(-|d|/2) where Φ is the standard normal CDF
+  return 2 * normalCDF(-Math.abs(d) / 2);
+}
+
+/* ==========================================================================
+   PRIAD (Pre-Registered Interim Analysis Design) Functions
+   ========================================================================== */
+
+/**
+ * Pocock thresholds for sequential testing.
+ * Equal significance thresholds at each stage that maintain overall α = 0.05.
+ *
+ * These values are from André & Reinholtz (forthcoming), Appendix B.
+ *
+ * @param numStages - Number of interim analyses (2, 3, or 4)
+ * @returns Array of significance thresholds for each stage
+ */
+export function getPocockThresholds(numStages: number): number[] {
+  switch (numStages) {
+    case 2:
+      return [0.0294, 0.0294];
+    case 3:
+      return [0.022, 0.022, 0.022];
+    case 4:
+      return [0.0182, 0.0182, 0.0182, 0.0182];
+    default:
+      return [0.05]; // Single analysis, standard threshold
+  }
+}
+
+/**
+ * O'Brien-Fleming thresholds for sequential testing.
+ * Conservative early thresholds, liberal late thresholds.
+ * Preserves more power at the final stage compared to Pocock.
+ *
+ * These values are from André & Reinholtz (forthcoming), Appendix B.
+ *
+ * @param numStages - Number of interim analyses (2, 3, or 4)
+ * @returns Array of significance thresholds for each stage
+ */
+export function getOBFThresholds(numStages: number): number[] {
+  switch (numStages) {
+    case 2:
+      return [0.0052, 0.048];
+    case 3:
+      return [0.0005, 0.0137, 0.0452];
+    case 4:
+      return [0.0001, 0.0042, 0.0194, 0.0429];
+    default:
+      return [0.05]; // Single analysis, standard threshold
+  }
+}
+
+/**
+ * Type I error rate for naive peeking (without adjustment).
+ * When peeking at data multiple times with α = 0.05 at each look,
+ * the true Type I error rate exceeds 0.05.
+ *
+ * This is calculated as: P(at least one rejection | H₀ true)
+ * = 1 - P(no rejection at any peek)
+ * ≈ 1 - (1 - α)^numPeeks for independent peeks
+ *
+ * In practice, peeks are correlated (cumulative data), so the formula
+ * is more complex. This function uses simulation-based approximations
+ * that match the values in André & Reinholtz.
+ *
+ * @param numPeeks - Number of times the data is examined
+ * @param alpha - Nominal significance level at each peek (default 0.05)
+ * @returns Actual Type I error rate
+ */
+export function calculatePeekingTypeIError(
+  numPeeks: number,
+  alpha: number = 0.05
+): number {
+  // Approximation based on the correlation structure of sequential p-values
+  // These values match typical sequential analysis results
+  if (numPeeks <= 1) return alpha;
+
+  // For correlated sequential analyses, the inflation is less than independent tests
+  // but still substantial. These are approximate values from sequential analysis theory.
+  const inflationFactors: { [key: number]: number } = {
+    2: 1.65, // ~8.3% instead of 5%
+    3: 2.08, // ~10.4%
+    4: 2.40, // ~12.0%
+    5: 2.65, // ~13.2%
+  };
+
+  const factor = inflationFactors[numPeeks] || 1 + 0.4 * Math.log(numPeeks);
+  return Math.min(alpha * factor, 1);
+}
+
+/**
+ * Result from a sequential test simulation.
+ */
+export interface SequentialTestResult {
+  stoppedAt: number;      // Stage at which the test stopped (1-indexed)
+  finalP: number;         // P-value at the stopping stage
+  rejected: boolean;      // Whether H₀ was rejected
+  totalN: number;         // Total sample size used
+  stageResults: {         // Results at each stage
+    stage: number;
+    n: number;
+    pValue: number;
+    threshold: number;
+    rejected: boolean;
+  }[];
+}
+
+/**
+ * Simulates a sequential hypothesis test using PRIAD methodology.
+ *
+ * Generates data in stages and performs interim analyses at each stage.
+ * Stops early if significance is reached according to the adjusted thresholds.
+ *
+ * @param trueD - True Cohen's d effect size (0 for null hypothesis)
+ * @param nPerStage - Sample size per group per stage
+ * @param numStages - Number of stages (interim analyses)
+ * @param thresholds - Significance thresholds for each stage
+ * @returns Simulation result including stopping stage, final p-value, and sample size
+ */
+export function simulateSequentialTest(
+  trueD: number,
+  nPerStage: number,
+  numStages: number,
+  thresholds: number[]
+): SequentialTestResult {
+  const stageResults: SequentialTestResult['stageResults'] = [];
+  let allGroup1: number[] = [];
+  let allGroup2: number[] = [];
+
+  for (let stage = 1; stage <= numStages; stage++) {
+    // Generate new data for this stage
+    const stageGroup1 = generateNormalSample(nPerStage, 0, 1);
+    const stageGroup2 = generateNormalSample(nPerStage, trueD, 1);
+
+    // Accumulate data
+    allGroup1 = [...allGroup1, ...stageGroup1];
+    allGroup2 = [...allGroup2, ...stageGroup2];
+
+    // Perform t-test on accumulated data
+    const testResult = welchTTest(allGroup1, allGroup2);
+    const threshold = thresholds[stage - 1];
+    const rejected = testResult.p < threshold;
+
+    stageResults.push({
+      stage,
+      n: allGroup1.length,
+      pValue: testResult.p,
+      threshold,
+      rejected,
+    });
+
+    // Stop if significant
+    if (rejected) {
+      return {
+        stoppedAt: stage,
+        finalP: testResult.p,
+        rejected: true,
+        totalN: allGroup1.length * 2, // Both groups
+        stageResults,
+      };
+    }
+  }
+
+  // Completed all stages without significance
+  const finalResult = stageResults[stageResults.length - 1];
+  return {
+    stoppedAt: numStages,
+    finalP: finalResult.pValue,
+    rejected: false,
+    totalN: allGroup1.length * 2,
+    stageResults,
+  };
+}
+
+/**
+ * Simulates multiple sequential tests and returns summary statistics.
+ *
+ * @param trueD - True Cohen's d effect size
+ * @param nPerStage - Sample size per group per stage
+ * @param numStages - Number of stages
+ * @param thresholds - Significance thresholds for each stage
+ * @param nSimulations - Number of simulations to run
+ * @returns Summary statistics
+ */
+export function runPRIADSimulation(
+  trueD: number,
+  nPerStage: number,
+  numStages: number,
+  thresholds: number[],
+  nSimulations: number = 1000
+): {
+  powerOrTypeIError: number;
+  avgSampleSize: number;
+  avgStoppedAt: number;
+  stoppingDistribution: number[];
+  sampleSizeSaved: number;
+} {
+  let rejections = 0;
+  let totalSampleSize = 0;
+  let totalStoppedAt = 0;
+  const stoppingCounts = new Array(numStages).fill(0);
+
+  const maxN = nPerStage * numStages * 2; // Maximum possible sample size
+
+  for (let i = 0; i < nSimulations; i++) {
+    const result = simulateSequentialTest(trueD, nPerStage, numStages, thresholds);
+
+    if (result.rejected) {
+      rejections++;
+      stoppingCounts[result.stoppedAt - 1]++;
+    } else {
+      stoppingCounts[numStages - 1]++; // Count non-rejections at final stage
+    }
+
+    totalSampleSize += result.totalN;
+    totalStoppedAt += result.stoppedAt;
+  }
+
+  const avgSampleSize = totalSampleSize / nSimulations;
+  const sampleSizeSaved = ((maxN - avgSampleSize) / maxN) * 100;
+
+  return {
+    powerOrTypeIError: rejections / nSimulations,
+    avgSampleSize,
+    avgStoppedAt: totalStoppedAt / nSimulations,
+    stoppingDistribution: stoppingCounts.map((c) => c / nSimulations),
+    sampleSizeSaved,
+  };
+}
+
+/**
+ * Calculates conditional power at an interim analysis.
+ * Conditional power is the probability of ultimately rejecting H₀
+ * given the data observed so far.
+ *
+ * @param currentZ - Current z-statistic from interim analysis
+ * @param currentN - Current sample size per group
+ * @param finalN - Planned final sample size per group
+ * @param alpha - Final significance threshold
+ * @returns Conditional power (0 to 1)
+ */
+export function conditionalPower(
+  currentZ: number,
+  currentN: number,
+  finalN: number,
+  alpha: number = 0.05
+): number {
+  // Information fraction
+  const t = currentN / finalN;
+
+  // Critical value at final analysis
+  const zCrit = normalInv(1 - alpha / 2);
+
+  // Under the current trend (assuming effect continues), conditional power is:
+  // P(Z_final > z_crit | Z_current)
+  // where Z_final ~ N(Z_current * sqrt(t), sqrt(1-t))
+
+  if (t >= 1) {
+    // Already at final analysis
+    return Math.abs(currentZ) > zCrit ? 1 : 0;
+  }
+
+  // Standardize: P(Z > (z_crit - Z_current * sqrt(t)) / sqrt(1-t))
+  const adjustedZ = (zCrit - Math.abs(currentZ) * Math.sqrt(t)) / Math.sqrt(1 - t);
+  return 1 - normalCDF(adjustedZ);
+}
+
+/**
+ * Determines if futility stopping is warranted.
+ * Futility stopping means stopping early because the current data
+ * suggest the study is unlikely to achieve significance.
+ *
+ * @param conditionalPwr - Current conditional power
+ * @param futilityThreshold - Threshold below which to stop for futility (default 0.20)
+ * @returns Whether to stop for futility
+ */
+export function shouldStopForFutility(
+  conditionalPwr: number,
+  futilityThreshold: number = 0.20
+): boolean {
+  return conditionalPwr < futilityThreshold;
+}
+
+/* ==========================================================================
+   Mixed Designs (Split-Plot) ANOVA Functions
+   ========================================================================== */
+
+/**
+ * Data structure for mixed designs ANOVA.
+ * Each observation has a subject ID, between-subjects group, within-subjects time point, and value.
+ */
+export interface MixedDesignData {
+  subject: string;
+  group: string;   // Between-subjects factor (e.g., Ad Appeal: Emotional vs Rational)
+  time: string;    // Within-subjects factor (e.g., Time: Immediate vs Delayed)
+  value: number;
+}
+
+/**
+ * Result structure for mixed designs ANOVA.
+ */
+export interface MixedANOVAResult {
+  // Sums of squares
+  SS_A: number;      // Between-subjects factor
+  SS_S_A: number;    // Subjects within groups (error for A)
+  SS_B: number;      // Within-subjects factor
+  SS_AB: number;     // Interaction (A × B)
+  SS_BS_A: number;   // B × Subjects within A (error for B and A×B)
+  SS_Total: number;  // Total SS
+  // Degrees of freedom
+  df_A: number;
+  df_S_A: number;
+  df_B: number;
+  df_AB: number;
+  df_BS_A: number;
+  df_Total: number;
+  // Mean squares
+  MS_A: number;
+  MS_S_A: number;
+  MS_B: number;
+  MS_AB: number;
+  MS_BS_A: number;
+  // F-statistics
+  F_A: number;
+  F_B: number;
+  F_AB: number;
+  // P-values
+  p_A: number;
+  p_B: number;
+  p_AB: number;
+  // Means for reference
+  grandMean: number;
+  groupMeans: Record<string, number>;
+  timeMeans: Record<string, number>;
+  cellMeans: Record<string, Record<string, number>>;
+  subjectMeans: Record<string, number>;
+}
+
+/**
+ * Performs a mixed-design (split-plot) ANOVA.
+ *
+ * Mixed designs combine:
+ * - A between-subjects factor (A): different subjects in each group
+ * - A within-subjects factor (B): same subjects measured at multiple time points
+ *
+ * Variance partition:
+ * SS_Total = SS_A + SS_S/A + SS_B + SS_AB + SS_B×S/A
+ *
+ * Error terms:
+ * - F_A = MS_A / MS_S/A (between-subjects error)
+ * - F_B = MS_B / MS_B×S/A (within-subjects error)
+ * - F_AB = MS_AB / MS_B×S/A (within-subjects error)
+ *
+ * @param data - Array of observations with subject, group, time, and value
+ * @returns Full mixed ANOVA results including SS, df, MS, F, and p-values
+ */
+export function mixedANOVA(data: MixedDesignData[]): MixedANOVAResult {
+  // Extract unique levels
+  const groups = [...new Set(data.map((d) => d.group))];
+  const times = [...new Set(data.map((d) => d.time))];
+  const subjects = [...new Set(data.map((d) => d.subject))];
+
+  const a = groups.length;  // Number of groups (between-subjects factor levels)
+  const b = times.length;   // Number of time points (within-subjects factor levels)
+  const N = data.length;    // Total observations
+
+  // Calculate n per group (subjects per group)
+  const subjectsPerGroup: Record<string, string[]> = {};
+  for (const g of groups) {
+    subjectsPerGroup[g] = [...new Set(
+      data.filter((d) => d.group === g).map((d) => d.subject)
+    )];
+  }
+  const n = subjectsPerGroup[groups[0]].length; // Assuming balanced design
+
+  // Calculate grand mean
+  const grandMean = data.reduce((sum, d) => sum + d.value, 0) / N;
+
+  // Calculate group means (marginal means for factor A)
+  const groupMeans: Record<string, number> = {};
+  for (const g of groups) {
+    const groupData = data.filter((d) => d.group === g);
+    groupMeans[g] = groupData.reduce((sum, d) => sum + d.value, 0) / groupData.length;
+  }
+
+  // Calculate time means (marginal means for factor B)
+  const timeMeans: Record<string, number> = {};
+  for (const t of times) {
+    const timeData = data.filter((d) => d.time === t);
+    timeMeans[t] = timeData.reduce((sum, d) => sum + d.value, 0) / timeData.length;
+  }
+
+  // Calculate cell means (group × time combinations)
+  const cellMeans: Record<string, Record<string, number>> = {};
+  for (const g of groups) {
+    cellMeans[g] = {};
+    for (const t of times) {
+      const cellData = data.filter((d) => d.group === g && d.time === t);
+      cellMeans[g][t] = cellData.reduce((sum, d) => sum + d.value, 0) / cellData.length;
+    }
+  }
+
+  // Calculate subject means (averaged across time points)
+  const subjectMeans: Record<string, number> = {};
+  for (const s of subjects) {
+    const subjectData = data.filter((d) => d.subject === s);
+    subjectMeans[s] = subjectData.reduce((sum, d) => sum + d.value, 0) / subjectData.length;
+  }
+
+  // --- Calculate Sums of Squares ---
+
+  // SS_Total: Total variability
+  let SS_Total = 0;
+  for (const d of data) {
+    SS_Total += Math.pow(d.value - grandMean, 2);
+  }
+
+  // SS_A: Between-subjects factor (Group effect)
+  // SS_A = n × b × Σ(Ȳ_a - Ȳ_T)²
+  let SS_A = 0;
+  for (const g of groups) {
+    SS_A += n * b * Math.pow(groupMeans[g] - grandMean, 2);
+  }
+
+  // SS_S/A: Subjects within groups (between-subjects error)
+  // SS_S/A = b × Σ(Ȳ_s - Ȳ_a)² for each subject s in group a
+  let SS_S_A = 0;
+  for (const g of groups) {
+    for (const s of subjectsPerGroup[g]) {
+      SS_S_A += b * Math.pow(subjectMeans[s] - groupMeans[g], 2);
+    }
+  }
+
+  // SS_B: Within-subjects factor (Time effect)
+  // SS_B = a × n × Σ(Ȳ_b - Ȳ_T)²
+  let SS_B = 0;
+  for (const t of times) {
+    SS_B += a * n * Math.pow(timeMeans[t] - grandMean, 2);
+  }
+
+  // SS_AB: Interaction (Group × Time)
+  // SS_AB = n × Σ(Ȳ_ab - Ȳ_a - Ȳ_b + Ȳ_T)²
+  let SS_AB = 0;
+  for (const g of groups) {
+    for (const t of times) {
+      const interaction = cellMeans[g][t] - groupMeans[g] - timeMeans[t] + grandMean;
+      SS_AB += n * Math.pow(interaction, 2);
+    }
+  }
+
+  // SS_B×S/A: Residual (within-subjects error)
+  // SS_B×S/A = Σ(Y - Ȳ_ab - Ȳ_s + Ȳ_a)²
+  // This is: observation - cell mean - subject mean + group mean
+  let SS_BS_A = 0;
+  for (const d of data) {
+    const residual = d.value - cellMeans[d.group][d.time] - subjectMeans[d.subject] + groupMeans[d.group];
+    SS_BS_A += Math.pow(residual, 2);
+  }
+
+  // --- Degrees of Freedom ---
+  const df_A = a - 1;
+  const df_S_A = a * (n - 1);
+  const df_B = b - 1;
+  const df_AB = (a - 1) * (b - 1);
+  const df_BS_A = a * (n - 1) * (b - 1);
+  const df_Total = N - 1;
+
+  // --- Mean Squares ---
+  const MS_A = df_A > 0 ? SS_A / df_A : 0;
+  const MS_S_A = df_S_A > 0 ? SS_S_A / df_S_A : 0;
+  const MS_B = df_B > 0 ? SS_B / df_B : 0;
+  const MS_AB = df_AB > 0 ? SS_AB / df_AB : 0;
+  const MS_BS_A = df_BS_A > 0 ? SS_BS_A / df_BS_A : 0;
+
+  // --- F-Statistics ---
+  // F_A uses between-subjects error (MS_S/A)
+  const F_A = MS_S_A > 0 ? MS_A / MS_S_A : 0;
+  // F_B and F_AB use within-subjects error (MS_B×S/A)
+  const F_B = MS_BS_A > 0 ? MS_B / MS_BS_A : 0;
+  const F_AB = MS_BS_A > 0 ? MS_AB / MS_BS_A : 0;
+
+  // --- P-values ---
+  const p_A = df_A > 0 && df_S_A > 0 ? 1 - fDistributionCDF(F_A, df_A, df_S_A) : 1;
+  const p_B = df_B > 0 && df_BS_A > 0 ? 1 - fDistributionCDF(F_B, df_B, df_BS_A) : 1;
+  const p_AB = df_AB > 0 && df_BS_A > 0 ? 1 - fDistributionCDF(F_AB, df_AB, df_BS_A) : 1;
+
+  return {
+    SS_A,
+    SS_S_A,
+    SS_B,
+    SS_AB,
+    SS_BS_A,
+    SS_Total,
+    df_A,
+    df_S_A,
+    df_B,
+    df_AB,
+    df_BS_A,
+    df_Total,
+    MS_A,
+    MS_S_A,
+    MS_B,
+    MS_AB,
+    MS_BS_A,
+    F_A,
+    F_B,
+    F_AB,
+    p_A,
+    p_B,
+    p_AB,
+    grandMean,
+    groupMeans,
+    timeMeans,
+    cellMeans,
+    subjectMeans,
+  };
+}

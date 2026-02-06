@@ -41,7 +41,7 @@ const STEP_CONTENT = [
   },
   {
     title: 'Step 6: Residual Variance (SSA×S)',
-    text: 'The residual is what remains: Y − Ȳa − Ȳs + ȲT. Square and sum to get SSA×S—our error term representing inconsistency in how subjects respond to conditions.',
+    text: 'The residual is what remains when you subtract from each observation (Y) the condition-level mean (Ȳa), the subject-level mean (Ȳs), and add back the grand mean (ȲT): Y − Ȳa − Ȳs + ȲT. We then square and sum these residuals to get SSA×S — our error term representing inconsistency in how subjects respond to conditions.',
   },
 ];
 

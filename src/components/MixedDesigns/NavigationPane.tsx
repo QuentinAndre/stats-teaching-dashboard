@@ -7,16 +7,15 @@ interface NavSection {
 }
 
 const sections: NavSection[] = [
-  { id: 'within-intro', label: 'Same Subjects, Different Conditions' },
-  { id: 'individual-differences', label: 'The Problem with People' },
-  { id: 'two-cell', label: 'The Paired Comparison' },
-  { id: 'three-cell', label: 'Repeated Measures ANOVA' },
-  { id: 'power-comparison', label: 'The Power Advantage' },
+  { id: 'mixed-intro', label: 'When and Why Mixed Designs' },
+  { id: 'variance-partitioning', label: 'Variance Partitioning' },
+  { id: 'error-terms', label: 'Different Error Terms' },
+  { id: 'interaction-effects', label: 'The A×B Interaction' },
   { id: 'sphericity', label: 'Sphericity Assumptions' },
 ];
 
 export default function NavigationPane() {
-  const [activeSection, setActiveSection] = useState<string>('within-intro');
+  const [activeSection, setActiveSection] = useState<string>('mixed-intro');
   const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {

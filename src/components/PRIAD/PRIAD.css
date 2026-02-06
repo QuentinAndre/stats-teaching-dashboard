@@ -1,0 +1,754 @@
+/* ==========================================================================
+   PRIAD Module Styles
+   ========================================================================== */
+
+/* Import shared navigation styles */
+@import '../ScrollingNarrative/NavigationPane.css';
+
+.priad {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: var(--spacing-xl);
+}
+
+.priad-content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xl);
+}
+
+/* Ensure lists are left-aligned */
+.priad-content ul,
+.priad-content ol {
+  text-align: left;
+  padding-left: var(--spacing-xl);
+}
+
+.priad-content li {
+  margin-bottom: var(--spacing-sm);
+  line-height: 1.6;
+}
+
+/* ==========================================================================
+   Visualization Containers
+   ========================================================================== */
+
+.priad-viz-container {
+  background: var(--surface);
+  border-radius: var(--border-radius-lg);
+  padding: var(--spacing-lg);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  margin: var(--spacing-lg) 0;
+}
+
+.priad-viz-container svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  background: var(--background);
+  border-radius: var(--border-radius);
+}
+
+/* ==========================================================================
+   Sample Size Slider
+   ========================================================================== */
+
+.sample-size-controls {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+  background: var(--bg-secondary);
+  border-radius: var(--border-radius-lg);
+  padding: var(--spacing-lg);
+  margin: var(--spacing-lg) 0;
+}
+
+.slider-container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+.slider-label {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: var(--font-size-sm);
+  color: var(--text-primary);
+}
+
+.slider-value {
+  font-family: 'SF Mono', Monaco, Consolas, monospace;
+  font-weight: 600;
+  color: var(--primary);
+}
+
+.sample-size-controls input[type="range"] {
+  width: 100%;
+  height: 8px;
+  border-radius: 4px;
+  background: var(--border);
+  cursor: pointer;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.sample-size-controls input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--primary);
+  cursor: pointer;
+  border: 2px solid white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.sample-size-controls input[type="range"]::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--primary);
+  cursor: pointer;
+  border: 2px solid white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* ==========================================================================
+   Stage Timeline Visualization
+   ========================================================================== */
+
+.stage-timeline {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--spacing-lg) 0;
+  position: relative;
+}
+
+.stage-timeline::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 5%;
+  right: 5%;
+  height: 4px;
+  background: var(--border);
+  transform: translateY(-50%);
+  z-index: 0;
+}
+
+.stage-node {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-xs);
+  z-index: 1;
+  background: var(--background);
+  padding: 0 var(--spacing-sm);
+}
+
+.stage-circle {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: var(--font-size-md);
+  transition: all 0.3s ease;
+}
+
+.stage-circle.pocock {
+  background: var(--primary);
+  color: white;
+}
+
+.stage-circle.obf {
+  background: var(--accent);
+  color: white;
+}
+
+.stage-circle.inactive {
+  background: var(--bg-secondary);
+  color: var(--text-secondary);
+  border: 2px solid var(--border);
+}
+
+.stage-label {
+  font-size: var(--font-size-xs);
+  color: var(--text-secondary);
+  text-align: center;
+}
+
+.stage-threshold {
+  font-family: 'SF Mono', Monaco, Consolas, monospace;
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+}
+
+.stage-threshold.pocock {
+  color: var(--primary);
+}
+
+.stage-threshold.obf {
+  color: var(--accent);
+}
+
+/* ==========================================================================
+   Threshold Comparison Card
+   ========================================================================== */
+
+.threshold-comparison {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--spacing-lg);
+  margin: var(--spacing-lg) 0;
+}
+
+.threshold-card {
+  background: var(--surface);
+  border-radius: var(--border-radius-lg);
+  padding: var(--spacing-lg);
+  text-align: center;
+}
+
+.threshold-card.pocock {
+  border-top: 4px solid var(--primary);
+}
+
+.threshold-card.obf {
+  border-top: 4px solid var(--accent);
+}
+
+.threshold-card h4 {
+  margin: 0 0 var(--spacing-sm);
+  font-size: var(--font-size-md);
+}
+
+.threshold-card.pocock h4 {
+  color: var(--primary);
+}
+
+.threshold-card.obf h4 {
+  color: var(--accent);
+}
+
+.threshold-card p {
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
+  margin: 0 0 var(--spacing-md);
+}
+
+.threshold-values {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--spacing-sm);
+}
+
+.threshold-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border-radius: var(--border-radius);
+  font-family: 'SF Mono', Monaco, Consolas, monospace;
+  font-size: var(--font-size-sm);
+}
+
+.threshold-badge.pocock {
+  background: rgba(67, 97, 238, 0.15);
+  color: var(--primary);
+}
+
+.threshold-badge.obf {
+  background: rgba(230, 57, 70, 0.15);
+  color: var(--accent);
+}
+
+/* ==========================================================================
+   P-Value Trajectory Visualization
+   ========================================================================== */
+
+.pvalue-trajectory {
+  position: relative;
+  padding: var(--spacing-lg);
+  background: var(--surface);
+  border-radius: var(--border-radius-lg);
+  margin: var(--spacing-lg) 0;
+}
+
+.trajectory-svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.trajectory-line {
+  fill: none;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.trajectory-line.under-null {
+  stroke: var(--text-secondary);
+  opacity: 0.3;
+}
+
+.trajectory-line.highlighted {
+  stroke: var(--accent);
+  stroke-width: 3;
+}
+
+.threshold-line {
+  stroke-dasharray: 6, 4;
+  stroke-width: 2;
+}
+
+/* ==========================================================================
+   Type I Error Accumulation
+   ========================================================================== */
+
+.error-accumulation {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: var(--spacing-md);
+  margin: var(--spacing-lg) 0;
+}
+
+.error-card {
+  background: var(--surface);
+  border-radius: var(--border-radius);
+  padding: var(--spacing-md);
+  text-align: center;
+}
+
+.error-value {
+  font-size: 1.75rem;
+  font-weight: 700;
+  font-family: 'SF Mono', Monaco, Consolas, monospace;
+}
+
+.error-value.warning {
+  color: var(--accent);
+}
+
+.error-value.safe {
+  color: var(--success);
+}
+
+.error-label {
+  font-size: var(--font-size-xs);
+  color: var(--text-secondary);
+  margin-top: var(--spacing-xs);
+}
+
+/* ==========================================================================
+   Efficiency Stats
+   ========================================================================== */
+
+.efficiency-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--spacing-md);
+  margin: var(--spacing-lg) 0;
+}
+
+.stat-card {
+  background: var(--surface);
+  border-radius: var(--border-radius);
+  padding: var(--spacing-lg);
+  text-align: center;
+}
+
+.stat-card.savings {
+  border-left: 4px solid var(--success);
+}
+
+.stat-card.power {
+  border-left: 4px solid var(--primary);
+}
+
+.stat-card.stages {
+  border-left: 4px solid var(--accent);
+}
+
+.stat-value {
+  font-size: 2rem;
+  font-weight: 700;
+  font-family: 'SF Mono', Monaco, Consolas, monospace;
+}
+
+.stat-card.savings .stat-value {
+  color: var(--success);
+}
+
+.stat-card.power .stat-value {
+  color: var(--primary);
+}
+
+.stat-card.stages .stat-value {
+  color: var(--accent);
+}
+
+.stat-label {
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
+  margin-top: var(--spacing-xs);
+}
+
+/* ==========================================================================
+   Simulation Results
+   ========================================================================== */
+
+.simulation-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-md);
+  background: var(--bg-secondary);
+  border-radius: var(--border-radius-lg);
+  padding: var(--spacing-lg);
+  margin: var(--spacing-lg) 0;
+}
+
+.control-group {
+  flex: 1;
+  min-width: 150px;
+}
+
+.control-group label {
+  display: block;
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
+  margin-bottom: var(--spacing-xs);
+}
+
+.control-group select {
+  width: 100%;
+  padding: var(--spacing-sm);
+  border: 1px solid var(--border);
+  border-radius: var(--border-radius);
+  background: var(--surface);
+  font-size: var(--font-size-sm);
+  cursor: pointer;
+}
+
+.control-group select:focus {
+  outline: none;
+  border-color: var(--primary);
+}
+
+/* ==========================================================================
+   Threshold Reference Table
+   ========================================================================== */
+
+.threshold-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: var(--spacing-lg) 0;
+  font-size: var(--font-size-sm);
+}
+
+.threshold-table th,
+.threshold-table td {
+  padding: var(--spacing-sm) var(--spacing-md);
+  text-align: center;
+  border-bottom: 1px solid var(--border);
+}
+
+.threshold-table th {
+  background: var(--bg-secondary);
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.threshold-table td {
+  font-family: 'SF Mono', Monaco, Consolas, monospace;
+}
+
+.threshold-table tr:hover td {
+  background: var(--bg-secondary);
+}
+
+.threshold-table .row-label {
+  font-family: inherit;
+  font-weight: 500;
+  text-align: left;
+}
+
+.threshold-table .pocock {
+  color: var(--primary);
+}
+
+.threshold-table .obf {
+  color: var(--accent);
+}
+
+/* ==========================================================================
+   Decision Helper
+   ========================================================================== */
+
+.decision-helper {
+  background: var(--surface);
+  border-radius: var(--border-radius-lg);
+  padding: var(--spacing-lg);
+  margin: var(--spacing-lg) 0;
+}
+
+.decision-helper h4 {
+  margin: 0 0 var(--spacing-md);
+  color: var(--text-primary);
+}
+
+.decision-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--spacing-md);
+}
+
+.decision-option {
+  padding: var(--spacing-md);
+  border-radius: var(--border-radius);
+  background: var(--bg-secondary);
+}
+
+.decision-option h5 {
+  margin: 0 0 var(--spacing-sm);
+  font-size: var(--font-size-md);
+}
+
+.decision-option.pocock h5 {
+  color: var(--primary);
+}
+
+.decision-option.obf h5 {
+  color: var(--accent);
+}
+
+.decision-option ul {
+  margin: 0;
+  padding-left: var(--spacing-lg);
+}
+
+.decision-option li {
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
+  margin-bottom: var(--spacing-xs);
+}
+
+/* ==========================================================================
+   Key Insight Box (shared with other modules)
+   ========================================================================== */
+
+.key-insight {
+  background: linear-gradient(135deg, rgba(67, 97, 238, 0.1), rgba(67, 97, 238, 0.05));
+  border-left: 4px solid var(--primary);
+  border-radius: var(--border-radius);
+  padding: var(--spacing-lg);
+  margin: var(--spacing-lg) 0;
+}
+
+.key-insight h4 {
+  margin: 0 0 var(--spacing-sm);
+  color: var(--primary);
+  font-size: var(--font-size-md);
+}
+
+.key-insight p {
+  margin: 0;
+  line-height: 1.6;
+}
+
+.warning-box {
+  background: linear-gradient(135deg, rgba(230, 57, 70, 0.1), rgba(230, 57, 70, 0.05));
+  border-left: 4px solid var(--accent);
+}
+
+.warning-box h4 {
+  color: var(--accent);
+}
+
+.success-box {
+  background: linear-gradient(135deg, rgba(46, 204, 113, 0.1), rgba(46, 204, 113, 0.05));
+  border-left: 4px solid var(--success);
+}
+
+.success-box h4 {
+  color: var(--success);
+}
+
+/* ==========================================================================
+   Action Buttons
+   ========================================================================== */
+
+.action-buttons {
+  display: flex;
+  gap: var(--spacing-sm);
+  justify-content: center;
+  margin: var(--spacing-lg) 0;
+}
+
+/* ==========================================================================
+   Mode Toggle (shared pattern)
+   ========================================================================== */
+
+.mode-toggle {
+  display: flex;
+  gap: var(--spacing-sm);
+  justify-content: center;
+  margin: var(--spacing-lg) 0;
+}
+
+.mode-button {
+  padding: var(--spacing-sm) var(--spacing-lg);
+  border: 2px solid var(--border);
+  background: var(--surface);
+  border-radius: var(--border-radius);
+  font-size: var(--font-size-md);
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.mode-button:hover:not(:disabled) {
+  border-color: var(--primary);
+}
+
+.mode-button.active {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: white;
+}
+
+/* ==========================================================================
+   Conditional Power Gauge
+   ========================================================================== */
+
+.power-gauge {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-md);
+  padding: var(--spacing-lg);
+  background: var(--surface);
+  border-radius: var(--border-radius-lg);
+  margin: var(--spacing-lg) 0;
+}
+
+.gauge-container {
+  position: relative;
+  width: 200px;
+  height: 100px;
+}
+
+.gauge-arc {
+  fill: none;
+  stroke-width: 20;
+  stroke-linecap: round;
+}
+
+.gauge-background {
+  stroke: var(--bg-secondary);
+}
+
+.gauge-fill {
+  stroke: var(--primary);
+  transition: stroke-dashoffset 0.5s ease;
+}
+
+.gauge-fill.low {
+  stroke: var(--accent);
+}
+
+.gauge-fill.medium {
+  stroke: var(--warning, #f39c12);
+}
+
+.gauge-fill.high {
+  stroke: var(--success);
+}
+
+.gauge-value {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 2rem;
+  font-weight: 700;
+  font-family: 'SF Mono', Monaco, Consolas, monospace;
+}
+
+.gauge-label {
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
+}
+
+/* ==========================================================================
+   Futility Zone Visualization
+   ========================================================================== */
+
+.futility-zone {
+  fill: rgba(230, 57, 70, 0.1);
+  stroke: var(--accent);
+  stroke-width: 1;
+  stroke-dasharray: 4, 4;
+}
+
+.continuation-zone {
+  fill: rgba(46, 204, 113, 0.1);
+}
+
+/* ==========================================================================
+   Responsive
+   ========================================================================== */
+
+@media (max-width: 768px) {
+  .priad {
+    padding: var(--spacing-md);
+  }
+
+  .threshold-comparison {
+    grid-template-columns: 1fr;
+  }
+
+  .efficiency-stats {
+    grid-template-columns: 1fr;
+  }
+
+  .decision-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .simulation-controls {
+    flex-direction: column;
+  }
+
+  .control-group {
+    min-width: 100%;
+  }
+
+  .mode-toggle {
+    flex-direction: column;
+  }
+
+  .mode-button {
+    width: 100%;
+  }
+
+  .stage-timeline {
+    flex-wrap: wrap;
+    gap: var(--spacing-md);
+  }
+
+  .stage-timeline::before {
+    display: none;
+  }
+
+  .error-accumulation {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}

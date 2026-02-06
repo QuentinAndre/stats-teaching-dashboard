@@ -23,13 +23,6 @@ export default function PowerComparison() {
   const [currentSample, setCurrentSample] = useState<SimulationResult | null>(null);
   const [currentData, setCurrentData] = useState<number[][] | null>(null);
 
-  // Simulation results
-  const [isSimulating, setIsSimulating] = useState(false);
-  const [powerResults, setPowerResults] = useState<{
-    withinPower: number;
-    betweenPower: number;
-    nSims: number;
-  } | null>(null);
 
   // Condition means (3 conditions with specified effect size)
   const conditionMeans = useMemo(
@@ -65,57 +58,8 @@ export default function PowerComparison() {
       betweenF: betweenResult.fStatistic,
       betweenP: betweenResult.pValue,
     });
-
-    setPowerResults(null);
   }, [sampleSize, conditionMeans, subjectSD]);
 
-  // Run power simulation
-  const runSimulation = useCallback(() => {
-    setIsSimulating(true);
-    setPowerResults(null);
-
-    // Use setTimeout to allow UI to update
-    setTimeout(() => {
-      const nSims = 200;
-      const errorSD = 15;
-      let withinSig = 0;
-      let betweenSig = 0;
-
-      for (let i = 0; i < nSims; i++) {
-        const data = generateWithinSubjectsData(
-          sampleSize,
-          conditionMeans,
-          subjectSD,
-          errorSD
-        );
-
-        // Within-subjects analysis
-        const withinResult = repeatedMeasuresANOVA(data);
-        if (withinResult.p < 0.05) withinSig++;
-
-        // Between-subjects analysis
-        const groups = [
-          data.map((subject) => subject[0]),
-          data.map((subject) => subject[1]),
-          data.map((subject) => subject[2]),
-        ];
-        const betweenResult = oneWayANOVA(groups);
-        if (betweenResult.pValue < 0.05) betweenSig++;
-      }
-
-      setPowerResults({
-        withinPower: withinSig / nSims,
-        betweenPower: betweenSig / nSims,
-        nSims,
-      });
-      setIsSimulating(false);
-    }, 50);
-  }, [sampleSize, conditionMeans, subjectSD]);
-
-  // SVG dimensions for power bar chart
-  const barWidth = 400;
-  const barHeight = 180;
-  const barMargin = { top: 30, right: 30, bottom: 40, left: 30 };
 
   // Calculate condition means for the current data
   const dataConditionMeans = useMemo(() => {
@@ -139,9 +83,12 @@ export default function PowerComparison() {
       </p>
 
       <p className="intro-text">
-        Let's see this in action. We'll generate data that could be analyzed either
-        as a within-subjects design (respecting the pairing) or as a between-subjects
-        design (ignoring who each observation came from).
+        Let's see this in action. We'll generate data from a repeated measures design
+        where each participant provides one observation in each of three conditions
+        (e.g., response times under low, medium, and high cognitive load). The same
+        data can be analyzed either as a within-subjects design (respecting which
+        observations came from the same person) or as a between-subjects design
+        (ignoring the pairing structure entirely).
       </p>
 
       <h3>Interactive Simulation</h3>
@@ -187,13 +134,6 @@ export default function PowerComparison() {
       <div className="power-buttons">
         <button className="generate-button" onClick={generateSample}>
           Generate New Sample
-        </button>
-        <button
-          className="simulate-button"
-          onClick={runSimulation}
-          disabled={isSimulating}
-        >
-          {isSimulating ? 'Simulating...' : 'Run 200 Simulations'}
         </button>
       </div>
 
@@ -256,183 +196,6 @@ export default function PowerComparison() {
           >
             Same data, same effect—but the within-subjects F is typically{' '}
             <strong>larger</strong> because the error term is smaller.
-          </div>
-        </div>
-      )}
-
-      {powerResults && (
-        <div className="viz-container">
-          <h4>Power Comparison ({powerResults.nSims} Simulations)</h4>
-
-          <svg
-            width={barWidth}
-            height={barHeight}
-            viewBox={`0 0 ${barWidth} ${barHeight}`}
-            style={{ display: 'block', margin: '0 auto' }}
-          >
-            {/* Y-axis */}
-            <line
-              x1={barMargin.left}
-              y1={barMargin.top}
-              x2={barMargin.left}
-              y2={barHeight - barMargin.bottom}
-              stroke="var(--border)"
-              strokeWidth={1}
-            />
-
-            {/* Y-axis label */}
-            <text
-              x={10}
-              y={(barHeight - barMargin.top - barMargin.bottom) / 2 + barMargin.top}
-              textAnchor="middle"
-              fontSize={11}
-              fill="var(--text-secondary)"
-              transform={`rotate(-90, 10, ${(barHeight - barMargin.top - barMargin.bottom) / 2 + barMargin.top})`}
-            >
-              Power (% significant)
-            </text>
-
-            {/* Y-axis ticks */}
-            {[0, 25, 50, 75, 100].map((tick) => {
-              const y =
-                barMargin.top +
-                (barHeight - barMargin.top - barMargin.bottom) * (1 - tick / 100);
-              return (
-                <g key={tick}>
-                  <line
-                    x1={barMargin.left - 5}
-                    y1={y}
-                    x2={barMargin.left}
-                    y2={y}
-                    stroke="var(--border)"
-                  />
-                  <text
-                    x={barMargin.left - 8}
-                    y={y}
-                    textAnchor="end"
-                    alignmentBaseline="middle"
-                    fontSize={10}
-                    fill="var(--text-secondary)"
-                  >
-                    {tick}%
-                  </text>
-                  <line
-                    x1={barMargin.left}
-                    y1={y}
-                    x2={barWidth - barMargin.right}
-                    y2={y}
-                    stroke="var(--border)"
-                    strokeDasharray="3,3"
-                    opacity={0.3}
-                  />
-                </g>
-              );
-            })}
-
-            {/* Bars */}
-            {[
-              {
-                label: 'Between',
-                value: powerResults.betweenPower,
-                x: barMargin.left + 80,
-                fill: '#6b7280',
-              },
-              {
-                label: 'Within',
-                value: powerResults.withinPower,
-                x: barMargin.left + 220,
-                fill: '#10b981',
-              },
-            ].map((bar) => {
-              const barH =
-                (bar.value / 1) *
-                (barHeight - barMargin.top - barMargin.bottom);
-              return (
-                <g key={bar.label}>
-                  <rect
-                    x={bar.x - 40}
-                    y={barMargin.top + (barHeight - barMargin.top - barMargin.bottom) - barH}
-                    width={80}
-                    height={barH}
-                    fill={bar.fill}
-                    rx={4}
-                  />
-                  <text
-                    x={bar.x}
-                    y={
-                      barMargin.top +
-                      (barHeight - barMargin.top - barMargin.bottom) -
-                      barH -
-                      8
-                    }
-                    textAnchor="middle"
-                    fontSize={14}
-                    fontWeight={600}
-                    fill={bar.fill}
-                  >
-                    {(bar.value * 100).toFixed(0)}%
-                  </text>
-                  <text
-                    x={bar.x}
-                    y={barHeight - 15}
-                    textAnchor="middle"
-                    fontSize={12}
-                    fill="var(--text-primary)"
-                    fontWeight={500}
-                  >
-                    {bar.label}
-                  </text>
-                </g>
-              );
-            })}
-
-            {/* Alpha line at 5% */}
-            <line
-              x1={barMargin.left}
-              y1={
-                barMargin.top +
-                (barHeight - barMargin.top - barMargin.bottom) * (1 - 0.05)
-              }
-              x2={barWidth - barMargin.right}
-              y2={
-                barMargin.top +
-                (barHeight - barMargin.top - barMargin.bottom) * (1 - 0.05)
-              }
-              stroke="#ef4444"
-              strokeWidth={2}
-              strokeDasharray="5,3"
-            />
-            <text
-              x={barWidth - barMargin.right + 5}
-              y={
-                barMargin.top +
-                (barHeight - barMargin.top - barMargin.bottom) * (1 - 0.05)
-              }
-              alignmentBaseline="middle"
-              fontSize={10}
-              fill="#ef4444"
-            >
-              α = .05
-            </text>
-          </svg>
-
-          <div
-            style={{
-              textAlign: 'center',
-              marginTop: 'var(--spacing-md)',
-              padding: 'var(--spacing-md)',
-              background: 'var(--bg-primary)',
-              borderRadius: 'var(--border-radius-md)',
-              fontSize: '0.875rem',
-            }}
-          >
-            <strong>Power advantage:</strong>{' '}
-            {(
-              ((powerResults.withinPower - powerResults.betweenPower) /
-                Math.max(powerResults.betweenPower, 0.05)) *
-              100
-            ).toFixed(0)}
-            % more likely to find a significant effect with within-subjects design
           </div>
         </div>
       )}

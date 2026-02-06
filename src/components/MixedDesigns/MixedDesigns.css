@@ -1,0 +1,740 @@
+/* =====================================================
+   MIXED DESIGNS MODULE STYLES
+   Extends patterns from WithinSubjects module
+   ===================================================== */
+
+/* Import shared navigation styles */
+@import '../ScrollingNarrative/NavigationPane.css';
+
+/* Color definitions for this module */
+.mixed-designs {
+  --color-between: #6366f1;     /* Between-subjects factor (Ad Appeal) */
+  --color-within: #f59e0b;      /* Within-subjects factor (Time) */
+  --color-interaction: #10b981; /* Interaction (A×B) */
+  --color-subject: #f4a261;     /* Subject effects */
+  --color-residual: #8b5cf6;    /* Residual error */
+  --color-reference: #6c757d;
+}
+
+/* Layout */
+.mixed-designs {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: var(--spacing-xl);
+}
+
+.mixed-designs-header {
+  text-align: center;
+  margin-bottom: var(--spacing-2xl);
+  padding-bottom: var(--spacing-xl);
+  border-bottom: 1px solid var(--border);
+}
+
+.mixed-designs-header h1 {
+  font-size: 2.5rem;
+  color: var(--text-primary);
+  margin-bottom: var(--spacing-md);
+}
+
+.mixed-designs-header .subtitle {
+  font-size: 1.125rem;
+  color: var(--text-secondary);
+  max-width: 600px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+.mixed-designs-content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-2xl);
+}
+
+/* Section styling */
+.mixed-designs .narrative-section {
+  scroll-margin-top: 2rem;
+}
+
+.mixed-designs .section-intro {
+  max-width: 100%;
+}
+
+.mixed-designs .section-intro h2 {
+  font-size: 1.75rem;
+  color: var(--text-primary);
+  margin-bottom: var(--spacing-lg);
+  padding-bottom: var(--spacing-sm);
+  border-bottom: 2px solid var(--primary);
+}
+
+.mixed-designs .section-intro h3 {
+  font-size: 1.25rem;
+  color: var(--text-primary);
+  margin-top: var(--spacing-xl);
+  margin-bottom: var(--spacing-md);
+}
+
+.mixed-designs .intro-text {
+  font-size: 1rem;
+  line-height: 1.7;
+  color: var(--text-secondary);
+  margin-bottom: var(--spacing-md);
+}
+
+/* Key insight box */
+.mixed-designs .key-insight {
+  background: linear-gradient(135deg, rgba(67, 97, 238, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%);
+  border-left: 4px solid var(--primary);
+  border-radius: 0 var(--border-radius-md) var(--border-radius-md) 0;
+  padding: var(--spacing-lg);
+  margin: var(--spacing-lg) 0;
+}
+
+.mixed-designs .key-insight h4 {
+  margin: 0 0 var(--spacing-sm) 0;
+  color: var(--primary);
+  font-size: 1rem;
+}
+
+.mixed-designs .key-insight p {
+  margin: 0;
+  color: var(--text-secondary);
+  line-height: 1.7;
+}
+
+/* Study design example cards */
+.design-comparison {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--spacing-md);
+  margin: var(--spacing-lg) 0;
+}
+
+.design-card {
+  padding: var(--spacing-lg);
+  border-radius: var(--border-radius-md);
+  border: 2px solid var(--border);
+  text-align: center;
+}
+
+.design-card.between {
+  background: rgba(99, 102, 241, 0.05);
+  border-color: var(--color-between);
+}
+
+.design-card.within {
+  background: rgba(245, 158, 11, 0.05);
+  border-color: var(--color-within);
+}
+
+.design-card.mixed {
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.05) 0%, rgba(245, 158, 11, 0.05) 100%);
+  border-color: var(--color-interaction);
+}
+
+.design-card h5 {
+  margin: 0 0 var(--spacing-sm) 0;
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.design-card.between h5 { color: var(--color-between); }
+.design-card.within h5 { color: var(--color-within); }
+.design-card.mixed h5 { color: var(--color-interaction); }
+
+.design-card p {
+  margin: 0;
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+/* Factor display */
+.factor-display {
+  display: flex;
+  gap: var(--spacing-lg);
+  margin: var(--spacing-lg) 0;
+  justify-content: center;
+}
+
+.factor-box {
+  padding: var(--spacing-md) var(--spacing-lg);
+  border-radius: var(--border-radius-md);
+  border: 2px solid var(--border);
+  min-width: 200px;
+}
+
+.factor-box.between {
+  background: rgba(99, 102, 241, 0.1);
+  border-color: var(--color-between);
+}
+
+.factor-box.within {
+  background: rgba(245, 158, 11, 0.1);
+  border-color: var(--color-within);
+}
+
+.factor-box h5 {
+  margin: 0 0 var(--spacing-xs) 0;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.factor-box.between h5 { color: var(--color-between); }
+.factor-box.within h5 { color: var(--color-within); }
+
+.factor-box .factor-name {
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: var(--spacing-xs);
+}
+
+.factor-box .factor-levels {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+}
+
+/* Visualization container */
+.mixed-designs .viz-container {
+  background: var(--bg-secondary);
+  border-radius: var(--border-radius-lg);
+  padding: var(--spacing-lg);
+  margin: var(--spacing-lg) 0;
+  border: 1px solid var(--border);
+}
+
+.mixed-designs .viz-container h4 {
+  margin: 0 0 var(--spacing-md) 0;
+  font-size: 1rem;
+  color: var(--text-primary);
+  text-align: center;
+}
+
+/* Data table */
+.mixed-designs .data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9375rem;
+  margin: var(--spacing-md) 0;
+}
+
+.mixed-designs .data-table th,
+.mixed-designs .data-table td {
+  padding: var(--spacing-sm) var(--spacing-md);
+  text-align: center;
+  border: 1px solid var(--border);
+}
+
+.mixed-designs .data-table thead th {
+  background: var(--bg-secondary);
+  font-weight: 600;
+}
+
+.mixed-designs .data-table thead th.between-header {
+  background: rgba(99, 102, 241, 0.15);
+  color: var(--color-between);
+}
+
+.mixed-designs .data-table thead th.within-header {
+  background: rgba(245, 158, 11, 0.15);
+  color: var(--color-within);
+}
+
+.mixed-designs .data-table tbody td:first-child {
+  font-weight: 500;
+  color: var(--color-subject);
+}
+
+.mixed-designs .data-table tbody td.group-emotional {
+  background: rgba(99, 102, 241, 0.05);
+}
+
+.mixed-designs .data-table tbody td.group-rational {
+  background: rgba(107, 114, 128, 0.05);
+}
+
+.mixed-designs .data-table tfoot td {
+  background: var(--bg-secondary);
+  font-weight: 600;
+}
+
+/* Decomposition table styles */
+.mixed-designs .step-description-box {
+  background: var(--bg-primary);
+  padding: var(--spacing-md);
+  border-radius: var(--border-radius-md);
+  margin-bottom: var(--spacing-md);
+  border: 1px solid var(--border);
+}
+
+.mixed-designs .step-description-box strong {
+  color: var(--text-primary);
+  display: block;
+  margin-bottom: var(--spacing-xs);
+}
+
+.mixed-designs .step-description-box p {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+  line-height: 1.6;
+}
+
+.mixed-designs .decomposition-table-wrapper {
+  overflow-x: auto;
+  margin: var(--spacing-md) 0;
+}
+
+.mixed-designs .decomposition-table {
+  width: auto;
+  min-width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+}
+
+.mixed-designs .decomposition-table th,
+.mixed-designs .decomposition-table td {
+  padding: var(--spacing-xs) var(--spacing-sm);
+  text-align: center;
+  border: 1px solid var(--border);
+  white-space: nowrap;
+}
+
+.mixed-designs .decomposition-table thead th {
+  background: var(--bg-tertiary);
+  font-weight: 600;
+  position: sticky;
+  top: 0;
+}
+
+.mixed-designs .decomposition-table .col-between {
+  background-color: rgba(99, 102, 241, 0.1);
+}
+
+.mixed-designs .decomposition-table .col-subject {
+  background-color: rgba(244, 162, 97, 0.1);
+}
+
+.mixed-designs .decomposition-table .col-within {
+  background-color: rgba(245, 158, 11, 0.1);
+}
+
+.mixed-designs .decomposition-table .col-interaction {
+  background-color: rgba(16, 185, 129, 0.1);
+}
+
+.mixed-designs .decomposition-table .col-residual {
+  background-color: rgba(139, 92, 246, 0.1);
+}
+
+.mixed-designs .decomposition-table .col-total {
+  background-color: rgba(107, 114, 128, 0.1);
+}
+
+.mixed-designs .decomposition-table .sum-row td {
+  background: var(--bg-tertiary);
+  font-weight: 600;
+}
+
+.mixed-designs .decomposition-table .ss-value {
+  font-size: 0.75rem;
+}
+
+.mixed-designs .decomposition-controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: var(--spacing-lg);
+  margin-top: var(--spacing-lg);
+}
+
+.mixed-designs .step-indicator {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  min-width: 100px;
+  text-align: center;
+}
+
+.mixed-designs .phase-button {
+  padding: var(--spacing-sm) var(--spacing-lg);
+  border: 1px solid var(--border);
+  border-radius: var(--border-radius-md);
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.mixed-designs .phase-button:hover:not(:disabled) {
+  background: var(--bg-secondary);
+}
+
+.mixed-designs .phase-button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.mixed-designs .phase-button.active {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: white;
+}
+
+.mixed-designs .verification-box {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+  padding: var(--spacing-md);
+  background: rgba(16, 185, 129, 0.1);
+  border: 2px solid #10b981;
+  border-radius: var(--border-radius-md);
+  margin-top: var(--spacing-md);
+}
+
+.mixed-designs .verification-box .check-icon {
+  font-size: 1.5rem;
+  color: #10b981;
+}
+
+.mixed-designs .verification-content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+}
+
+.mixed-designs .verification-label {
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.mixed-designs .verification-equation {
+  font-family: monospace;
+  color: #10b981;
+}
+
+/* ANOVA summary table */
+.mixed-designs .anova-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9375rem;
+  margin: var(--spacing-md) 0;
+}
+
+.mixed-designs .anova-table th,
+.mixed-designs .anova-table td {
+  padding: var(--spacing-sm) var(--spacing-md);
+  text-align: center;
+  border: 1px solid var(--border);
+}
+
+.mixed-designs .anova-table thead th {
+  background: var(--bg-secondary);
+  font-weight: 600;
+}
+
+.mixed-designs .anova-table tbody td:first-child {
+  text-align: left;
+  font-weight: 500;
+}
+
+.mixed-designs .anova-table .between-row {
+  background: rgba(99, 102, 241, 0.05);
+}
+
+.mixed-designs .anova-table .subject-row {
+  background: rgba(244, 162, 97, 0.05);
+}
+
+.mixed-designs .anova-table .within-row {
+  background: rgba(245, 158, 11, 0.05);
+}
+
+.mixed-designs .anova-table .interaction-row {
+  background: rgba(16, 185, 129, 0.05);
+}
+
+.mixed-designs .anova-table .residual-row {
+  background: rgba(139, 92, 246, 0.05);
+}
+
+.mixed-designs .anova-table tfoot td {
+  background: var(--bg-secondary);
+  font-weight: 600;
+}
+
+.mixed-designs .anova-table .significant {
+  color: #10b981;
+  font-weight: 600;
+}
+
+/* Error term comparison */
+.error-comparison {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--spacing-lg);
+  margin: var(--spacing-lg) 0;
+}
+
+.error-card {
+  padding: var(--spacing-lg);
+  border-radius: var(--border-radius-md);
+  border: 2px solid var(--border);
+}
+
+.error-card.between-error {
+  background: rgba(99, 102, 241, 0.05);
+  border-color: var(--color-between);
+}
+
+.error-card.within-error {
+  background: rgba(245, 158, 11, 0.05);
+  border-color: var(--color-within);
+}
+
+.error-card h5 {
+  margin: 0 0 var(--spacing-md) 0;
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.error-card.between-error h5 { color: var(--color-between); }
+.error-card.within-error h5 { color: var(--color-within); }
+
+.error-card .formula {
+  font-family: 'Times New Roman', serif;
+  font-size: 1.125rem;
+  color: var(--text-primary);
+  text-align: center;
+  margin-bottom: var(--spacing-md);
+}
+
+.error-card .explanation {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+/* Toggle view buttons */
+.view-toggle {
+  display: flex;
+  justify-content: center;
+  gap: 0;
+  margin-bottom: var(--spacing-md);
+}
+
+.view-toggle .toggle-button {
+  padding: var(--spacing-sm) var(--spacing-lg);
+  border: 2px solid var(--border);
+  background: var(--bg-primary);
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.view-toggle .toggle-button:first-child {
+  border-radius: var(--border-radius-md) 0 0 var(--border-radius-md);
+  border-right: none;
+}
+
+.view-toggle .toggle-button:last-child {
+  border-radius: 0 var(--border-radius-md) var(--border-radius-md) 0;
+}
+
+.view-toggle .toggle-button.active {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: white;
+}
+
+.view-toggle .toggle-button:hover:not(.active) {
+  background: var(--bg-secondary);
+}
+
+/* Interaction plot */
+.interaction-plot {
+  position: relative;
+  height: 350px;
+  margin: var(--spacing-md) 0;
+}
+
+.interaction-plot svg {
+  width: 100%;
+  height: 100%;
+}
+
+.interaction-legend {
+  display: flex;
+  justify-content: center;
+  gap: var(--spacing-xl);
+  margin-top: var(--spacing-md);
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  font-size: 0.875rem;
+}
+
+.legend-line {
+  width: 24px;
+  height: 3px;
+  border-radius: 2px;
+}
+
+.legend-line.immediate {
+  background: var(--color-between);
+}
+
+.legend-line.delayed {
+  background: var(--color-within);
+}
+
+/* Formula box */
+.mixed-designs .formula-box {
+  background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-primary) 100%);
+  border: 1px solid var(--border);
+  border-radius: var(--border-radius-lg);
+  padding: var(--spacing-xl);
+  margin: var(--spacing-lg) 0;
+}
+
+.mixed-designs .formula-box h3 {
+  margin: 0 0 var(--spacing-md) 0;
+  font-size: 1rem;
+  color: var(--text-primary);
+  text-align: center;
+}
+
+.mixed-designs .formula {
+  text-align: center;
+  margin-bottom: var(--spacing-lg);
+}
+
+.mixed-designs .formula-main {
+  font-size: 1.25rem;
+  font-family: 'Times New Roman', serif;
+  color: var(--text-primary);
+}
+
+.mixed-designs .formula-parts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-md);
+  justify-content: center;
+}
+
+.mixed-designs .formula-part {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-xs);
+  padding: var(--spacing-sm) var(--spacing-md);
+  background: var(--bg-primary);
+  border-radius: var(--border-radius-sm);
+  min-width: 120px;
+}
+
+.mixed-designs .formula-part .symbol {
+  font-family: 'Times New Roman', serif;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.mixed-designs .formula-part .symbol.between {
+  color: var(--color-between);
+}
+
+.mixed-designs .formula-part .symbol.subject {
+  color: var(--color-subject);
+}
+
+.mixed-designs .formula-part .symbol.within {
+  color: var(--color-within);
+}
+
+.mixed-designs .formula-part .symbol.interaction {
+  color: var(--color-interaction);
+}
+
+.mixed-designs .formula-part .symbol.residual {
+  color: var(--color-residual);
+}
+
+.mixed-designs .formula-part .explanation {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  text-align: center;
+}
+
+/* Column entering animation */
+@keyframes columnSlideIn {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.mixed-designs .col-entering {
+  animation: columnSlideIn 0.4s ease-out;
+}
+
+@keyframes cellPulse {
+  0%, 100% {
+    background-color: inherit;
+  }
+  50% {
+    background-color: rgba(16, 185, 129, 0.3);
+  }
+}
+
+.mixed-designs .cell-highlight {
+  animation: cellPulse 0.6s ease-in-out 2;
+}
+
+/* Footer */
+.mixed-designs .narrative-footer {
+  margin-top: var(--spacing-2xl);
+  padding-top: var(--spacing-xl);
+  border-top: 1px solid var(--border);
+  text-align: center;
+}
+
+.mixed-designs .narrative-footer p {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .mixed-designs-header h1 {
+    font-size: 1.75rem;
+  }
+
+  .design-comparison {
+    grid-template-columns: 1fr;
+  }
+
+  .factor-display {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .error-comparison {
+    grid-template-columns: 1fr;
+  }
+
+  .mixed-designs .formula-parts {
+    flex-direction: column;
+    align-items: center;
+  }
+}
