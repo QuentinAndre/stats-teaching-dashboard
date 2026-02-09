@@ -2117,3 +2117,299 @@ export function mixedANOVA(data: MixedDesignData[]): MixedANOVAResult {
     subjectMeans,
   };
 }
+
+// =====================================================
+// CONTINUOUS INTERACTIONS / MODERATED REGRESSION
+// =====================================================
+
+/**
+ * Invert a 4×4 matrix using cofactor expansion.
+ * Returns null if the matrix is singular.
+ */
+export function invertMatrix4x4(m: number[][]): number[][] | null {
+  // Flatten for easier indexing
+  const a = m.flat();
+  if (a.length !== 16) return null;
+
+  const inv = new Array(16);
+
+  inv[0] = a[5]*a[10]*a[15] - a[5]*a[11]*a[14] - a[9]*a[6]*a[15] + a[9]*a[7]*a[14] + a[13]*a[6]*a[11] - a[13]*a[7]*a[10];
+  inv[4] = -a[4]*a[10]*a[15] + a[4]*a[11]*a[14] + a[8]*a[6]*a[15] - a[8]*a[7]*a[14] - a[12]*a[6]*a[11] + a[12]*a[7]*a[10];
+  inv[8] = a[4]*a[9]*a[15] - a[4]*a[11]*a[13] - a[8]*a[5]*a[15] + a[8]*a[7]*a[13] + a[12]*a[5]*a[11] - a[12]*a[7]*a[9];
+  inv[12] = -a[4]*a[9]*a[14] + a[4]*a[10]*a[13] + a[8]*a[5]*a[14] - a[8]*a[6]*a[13] - a[12]*a[5]*a[10] + a[12]*a[6]*a[9];
+
+  inv[1] = -a[1]*a[10]*a[15] + a[1]*a[11]*a[14] + a[9]*a[2]*a[15] - a[9]*a[3]*a[14] - a[13]*a[2]*a[11] + a[13]*a[3]*a[10];
+  inv[5] = a[0]*a[10]*a[15] - a[0]*a[11]*a[14] - a[8]*a[2]*a[15] + a[8]*a[3]*a[14] + a[12]*a[2]*a[11] - a[12]*a[3]*a[10];
+  inv[9] = -a[0]*a[9]*a[15] + a[0]*a[11]*a[13] + a[8]*a[1]*a[15] - a[8]*a[3]*a[13] - a[12]*a[1]*a[11] + a[12]*a[3]*a[9];
+  inv[13] = a[0]*a[9]*a[14] - a[0]*a[10]*a[13] - a[8]*a[1]*a[14] + a[8]*a[2]*a[13] + a[12]*a[1]*a[10] - a[12]*a[2]*a[9];
+
+  inv[2] = a[1]*a[6]*a[15] - a[1]*a[7]*a[14] - a[5]*a[2]*a[15] + a[5]*a[3]*a[14] + a[13]*a[2]*a[7] - a[13]*a[3]*a[6];
+  inv[6] = -a[0]*a[6]*a[15] + a[0]*a[7]*a[14] + a[4]*a[2]*a[15] - a[4]*a[3]*a[14] - a[12]*a[2]*a[7] + a[12]*a[3]*a[6];
+  inv[10] = a[0]*a[5]*a[15] - a[0]*a[7]*a[13] - a[4]*a[1]*a[15] + a[4]*a[3]*a[13] + a[12]*a[1]*a[7] - a[12]*a[3]*a[5];
+  inv[14] = -a[0]*a[5]*a[14] + a[0]*a[6]*a[13] + a[4]*a[1]*a[14] - a[4]*a[2]*a[13] - a[12]*a[1]*a[6] + a[12]*a[2]*a[5];
+
+  inv[3] = -a[1]*a[6]*a[11] + a[1]*a[7]*a[10] + a[5]*a[2]*a[11] - a[5]*a[3]*a[10] - a[9]*a[2]*a[7] + a[9]*a[3]*a[6];
+  inv[7] = a[0]*a[6]*a[11] - a[0]*a[7]*a[10] - a[4]*a[2]*a[11] + a[4]*a[3]*a[10] + a[8]*a[2]*a[7] - a[8]*a[3]*a[6];
+  inv[11] = -a[0]*a[5]*a[11] + a[0]*a[7]*a[9] + a[4]*a[1]*a[11] - a[4]*a[3]*a[9] - a[8]*a[1]*a[7] + a[8]*a[3]*a[5];
+  inv[15] = a[0]*a[5]*a[10] - a[0]*a[6]*a[9] - a[4]*a[1]*a[10] + a[4]*a[2]*a[9] + a[8]*a[1]*a[6] - a[8]*a[2]*a[5];
+
+  const det = a[0]*inv[0] + a[1]*inv[4] + a[2]*inv[8] + a[3]*inv[12];
+  if (Math.abs(det) < 1e-12) return null;
+
+  const detInv = 1.0 / det;
+  const result: number[][] = [];
+  for (let i = 0; i < 4; i++) {
+    result.push([inv[i*4]*detInv, inv[i*4+1]*detInv, inv[i*4+2]*detInv, inv[i*4+3]*detInv]);
+  }
+  return result;
+}
+
+/**
+ * Generate simulated data for a moderated regression:
+ * Y = a + b*Z + c*X + d*Z*X + error
+ * Z is binary (0/1, equal groups), X ~ N(xMean, xSD), error ~ N(0, residualSD)
+ */
+export function generateSpotlightData(
+  n: number,
+  a: number,
+  b: number,
+  c: number,
+  d: number,
+  residualSD: number,
+  xMean: number,
+  xSD: number
+): { x: number; z: number; y: number }[] {
+  const data: { x: number; z: number; y: number }[] = [];
+  for (let i = 0; i < n; i++) {
+    const z = i < n / 2 ? 0 : 1;
+    // Box-Muller for normal X
+    const u1 = Math.random();
+    const u2 = Math.random();
+    const normal1 = Math.sqrt(-2 * Math.log(u1)) * Math.cos(2 * Math.PI * u2);
+    const x = xMean + xSD * normal1;
+    // Error term
+    const u3 = Math.random();
+    const u4 = Math.random();
+    const error = residualSD * Math.sqrt(-2 * Math.log(u3)) * Math.cos(2 * Math.PI * u4);
+    const y = a + b * z + c * x + d * z * x + error;
+    data.push({ x, z, y });
+  }
+  return data;
+}
+
+export interface ModeratedRegressionResult {
+  a: number;
+  b: number;
+  c: number;
+  d: number;
+  varCovar: number[][];
+  residualSE: number;
+  df: number;
+  rSquared: number;
+}
+
+/**
+ * OLS regression for Y = a + b*Z + c*X + d*Z*X
+ * Uses normal equations: beta = (X'X)^{-1} X'Y
+ */
+export function fitModeratedRegression(
+  data: { x: number; z: number; y: number }[]
+): ModeratedRegressionResult {
+  const n = data.length;
+  const k = 4; // intercept, Z, X, ZX
+
+  // Build X'X (4×4) and X'Y (4×1)
+  const XtX = Array.from({ length: k }, () => new Array(k).fill(0));
+  const XtY = new Array(k).fill(0);
+
+  for (const { x, z, y } of data) {
+    const row = [1, z, x, z * x];
+    for (let i = 0; i < k; i++) {
+      for (let j = 0; j < k; j++) {
+        XtX[i][j] += row[i] * row[j];
+      }
+      XtY[i] += row[i] * y;
+    }
+  }
+
+  const XtXinv = invertMatrix4x4(XtX);
+  if (!XtXinv) {
+    return { a: 0, b: 0, c: 0, d: 0, varCovar: [[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0]], residualSE: 0, df: n - k, rSquared: 0 };
+  }
+
+  // beta = XtXinv * XtY
+  const beta = new Array(k).fill(0);
+  for (let i = 0; i < k; i++) {
+    for (let j = 0; j < k; j++) {
+      beta[i] += XtXinv[i][j] * XtY[j];
+    }
+  }
+
+  // Residual sum of squares
+  let ssRes = 0;
+  let ssTotal = 0;
+  const yMean = data.reduce((s, d) => s + d.y, 0) / n;
+  for (const { x, z, y } of data) {
+    const yHat = beta[0] + beta[1] * z + beta[2] * x + beta[3] * z * x;
+    ssRes += (y - yHat) ** 2;
+    ssTotal += (y - yMean) ** 2;
+  }
+
+  const df = n - k;
+  const mse = df > 0 ? ssRes / df : 0;
+  const residualSE = Math.sqrt(mse);
+  const rSquared = ssTotal > 0 ? 1 - ssRes / ssTotal : 0;
+
+  // Variance-covariance of beta = MSE * (X'X)^{-1}
+  const varCovar = XtXinv.map(row => row.map(v => v * mse));
+
+  return {
+    a: beta[0],
+    b: beta[1],
+    c: beta[2],
+    d: beta[3],
+    varCovar,
+    residualSE,
+    df,
+    rSquared,
+  };
+}
+
+/**
+ * Simple effect of Z at a given X value: b + d * xValue
+ */
+export function simpleEffect(b: number, d: number, xValue: number): number {
+  return b + d * xValue;
+}
+
+/**
+ * Standard error of the simple effect of Z at a given X value:
+ * SE = sqrt(Var(b) + 2 * xValue * Cov(b,d) + xValue^2 * Var(d))
+ */
+export function simpleEffectSE(
+  varB: number,
+  varD: number,
+  covBD: number,
+  xValue: number
+): number {
+  const variance = varB + 2 * xValue * covBD + xValue * xValue * varD;
+  return Math.sqrt(Math.max(0, variance));
+}
+
+/**
+ * t-test for the simple effect of Z at a given X value.
+ */
+export function simpleEffectTTest(
+  b: number,
+  d: number,
+  varB: number,
+  varD: number,
+  covBD: number,
+  xValue: number,
+  df: number
+): { effect: number; se: number; t: number; p: number } {
+  const effect = simpleEffect(b, d, xValue);
+  const se = simpleEffectSE(varB, varD, covBD, xValue);
+  const t = se > 0 ? effect / se : 0;
+  const p = df > 0 ? 2 * (1 - tDistributionCDF(Math.abs(t), df)) : 1;
+  return { effect, se, t, p };
+}
+
+/**
+ * Johnson-Neyman boundaries: find X values where the simple effect of Z
+ * crosses the significance boundary |t| = t_crit.
+ *
+ * Solves: (b + d*X)^2 = t_crit^2 * (Var(b) + 2*X*Cov(b,d) + X^2*Var(d))
+ * This is a quadratic in X: (d^2 - t_crit^2*Var(d))*X^2 + ... = 0
+ */
+export function johnsonNeymanBoundaries(
+  b: number,
+  d: number,
+  varB: number,
+  varD: number,
+  covBD: number,
+  df: number,
+  alpha: number = 0.05
+): { boundaries: number[]; significantBelow: boolean } {
+  // Find t_crit by binary search (inverse of tDistributionCDF)
+  let tCrit = 1.96; // initial guess
+  let lo = 0, hi = 20;
+  for (let iter = 0; iter < 100; iter++) {
+    const mid = (lo + hi) / 2;
+    const p2 = 2 * (1 - tDistributionCDF(mid, df));
+    if (p2 > alpha) {
+      lo = mid;
+    } else {
+      hi = mid;
+    }
+  }
+  tCrit = (lo + hi) / 2;
+  const tCrit2 = tCrit * tCrit;
+
+  // Quadratic: A*X^2 + B*X + C = 0
+  const A = d * d - tCrit2 * varD;
+  const B = 2 * b * d - 2 * tCrit2 * covBD;
+  const C = b * b - tCrit2 * varB;
+
+  const disc = B * B - 4 * A * C;
+  if (disc < 0 || Math.abs(A) < 1e-12) {
+    // No real roots or degenerate
+    // Check if effect is significant everywhere or nowhere
+    const effectAtZero = simpleEffect(b, d, 0);
+    const seAtZero = simpleEffectSE(varB, varD, covBD, 0);
+    const tAtZero = seAtZero > 0 ? Math.abs(effectAtZero / seAtZero) : 0;
+    return { boundaries: [], significantBelow: tAtZero > tCrit };
+  }
+
+  const sqrtDisc = Math.sqrt(disc);
+  const x1 = (-B - sqrtDisc) / (2 * A);
+  const x2 = (-B + sqrtDisc) / (2 * A);
+  const boundaries = [Math.min(x1, x2), Math.max(x1, x2)];
+
+  // Determine if significant below the lower boundary
+  const testX = boundaries[0] - 1;
+  const testEffect = simpleEffect(b, d, testX);
+  const testSE = simpleEffectSE(varB, varD, covBD, testX);
+  const testT = testSE > 0 ? Math.abs(testEffect / testSE) : 0;
+
+  return { boundaries, significantBelow: testT > tCrit };
+}
+
+/**
+ * Compute the marginal effect of Z with confidence interval at an array of X values.
+ * Used for plotting the floodlight band.
+ */
+export function marginalEffectWithCI(
+  b: number,
+  d: number,
+  varB: number,
+  varD: number,
+  covBD: number,
+  df: number,
+  alpha: number,
+  xValues: number[]
+): { x: number; effect: number; lower: number; upper: number }[] {
+  // Find t_crit by binary search
+  let lo = 0, hi = 20;
+  for (let iter = 0; iter < 100; iter++) {
+    const mid = (lo + hi) / 2;
+    const p2 = 2 * (1 - tDistributionCDF(mid, df));
+    if (p2 > alpha) {
+      lo = mid;
+    } else {
+      hi = mid;
+    }
+  }
+  const tCrit = (lo + hi) / 2;
+
+  return xValues.map(x => {
+    const effect = simpleEffect(b, d, x);
+    const se = simpleEffectSE(varB, varD, covBD, x);
+    return {
+      x,
+      effect,
+      lower: effect - tCrit * se,
+      upper: effect + tCrit * se,
+    };
+  });
+}

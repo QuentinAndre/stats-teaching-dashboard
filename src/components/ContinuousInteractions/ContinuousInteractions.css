@@ -1,0 +1,531 @@
+/* =====================================================
+   CONTINUOUS INTERACTIONS MODULE STYLES
+   ===================================================== */
+
+/* Layout */
+.continuous-interactions {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: var(--spacing-xl) var(--spacing-lg);
+  padding-left: calc(var(--spacing-lg) + 60px);
+}
+
+.continuous-interactions-header {
+  text-align: center;
+  margin-bottom: var(--spacing-2xl);
+  padding-bottom: var(--spacing-xl);
+  border-bottom: 1px solid var(--border);
+}
+
+.continuous-interactions-header h1 {
+  font-size: 2.5rem;
+  color: var(--text-primary);
+  margin-bottom: var(--spacing-md);
+}
+
+.continuous-interactions-header .subtitle {
+  font-size: 1.125rem;
+  color: var(--text-secondary);
+  max-width: 600px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+.continuous-interactions-content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-2xl);
+}
+
+/* Section styling */
+.continuous-interactions .narrative-section {
+  scroll-margin-top: 2rem;
+}
+
+.continuous-interactions .section-intro {
+  max-width: 100%;
+}
+
+.continuous-interactions .section-intro h2 {
+  font-size: 1.75rem;
+  color: var(--text-primary);
+  margin-bottom: var(--spacing-lg);
+  padding-bottom: var(--spacing-sm);
+  border-bottom: 2px solid var(--primary);
+}
+
+.continuous-interactions .section-intro h3 {
+  font-size: 1.25rem;
+  color: var(--text-primary);
+  margin-top: var(--spacing-xl);
+  margin-bottom: var(--spacing-md);
+}
+
+.continuous-interactions .intro-text {
+  font-size: 1rem;
+  line-height: 1.7;
+  color: var(--text-secondary);
+  margin-bottom: var(--spacing-md);
+}
+
+/* Viz container */
+.continuous-interactions .viz-container {
+  background: var(--bg-secondary);
+  border-radius: var(--border-radius-lg);
+  padding: var(--spacing-lg);
+  margin: var(--spacing-lg) 0;
+  border: 1px solid var(--border);
+}
+
+.continuous-interactions .viz-container h4 {
+  margin: 0 0 var(--spacing-md) 0;
+  font-size: 1rem;
+  color: var(--text-primary);
+  text-align: center;
+}
+
+/* Dual panel layout */
+.continuous-interactions .dual-panel {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--spacing-lg);
+  margin: var(--spacing-lg) 0;
+}
+
+/* Controls */
+.continuous-interactions .controls-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-md);
+  align-items: center;
+  justify-content: center;
+  margin: var(--spacing-lg) 0;
+}
+
+.continuous-interactions .control-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+  align-items: center;
+}
+
+.continuous-interactions .control-group label {
+  font-size: 0.8125rem;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.continuous-interactions .control-group input[type="range"] {
+  width: 160px;
+}
+
+.continuous-interactions .control-value {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  min-width: 50px;
+  text-align: center;
+}
+
+/* Result cards */
+.continuous-interactions .results-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-md);
+  justify-content: center;
+  margin: var(--spacing-lg) 0;
+}
+
+.continuous-interactions .result-card {
+  padding: var(--spacing-md);
+  background: var(--bg-primary);
+  border-radius: var(--border-radius-md);
+  border: 1px solid var(--border);
+  min-width: 180px;
+  text-align: center;
+}
+
+.continuous-interactions .result-card h5 {
+  margin: 0 0 var(--spacing-xs) 0;
+  font-size: 0.8125rem;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.continuous-interactions .result-card .result-value {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.continuous-interactions .result-card .result-detail {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  margin-top: var(--spacing-xs);
+}
+
+.continuous-interactions .result-card.significant {
+  border-color: #10b981;
+  background: rgba(16, 185, 129, 0.05);
+}
+
+.continuous-interactions .result-card.not-significant {
+  border-color: var(--border);
+  opacity: 0.7;
+}
+
+/* Coefficient table */
+.continuous-interactions .coeff-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9375rem;
+  margin: var(--spacing-md) 0;
+}
+
+.continuous-interactions .coeff-table th,
+.continuous-interactions .coeff-table td {
+  padding: var(--spacing-sm) var(--spacing-md);
+  text-align: center;
+  border: 1px solid var(--border);
+}
+
+.continuous-interactions .coeff-table thead th {
+  background: var(--bg-secondary);
+  font-weight: 600;
+}
+
+.continuous-interactions .coeff-table tbody td:first-child {
+  text-align: left;
+  font-weight: 500;
+}
+
+.continuous-interactions .coeff-table .highlight-row {
+  background: rgba(67, 97, 238, 0.05);
+}
+
+/* Formula box */
+.continuous-interactions .formula-box {
+  background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-primary) 100%);
+  border: 1px solid var(--border);
+  border-radius: var(--border-radius-lg);
+  padding: var(--spacing-xl);
+  margin: var(--spacing-lg) 0;
+}
+
+.continuous-interactions .formula-box h3 {
+  margin: 0 0 var(--spacing-md) 0;
+  font-size: 1rem;
+  color: var(--text-primary);
+  text-align: center;
+}
+
+.continuous-interactions .formula {
+  text-align: center;
+  margin-bottom: var(--spacing-lg);
+}
+
+.continuous-interactions .formula-main {
+  font-size: 1.25rem;
+  font-family: 'Times New Roman', serif;
+  color: var(--text-primary);
+}
+
+.continuous-interactions .formula-parts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-md);
+  justify-content: center;
+}
+
+.continuous-interactions .formula-part {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-xs);
+  padding: var(--spacing-sm) var(--spacing-md);
+  background: var(--bg-primary);
+  border-radius: var(--border-radius-sm);
+  min-width: 140px;
+}
+
+.continuous-interactions .formula-part .symbol {
+  font-family: 'Times New Roman', serif;
+  font-size: 1rem;
+  color: var(--primary);
+  font-weight: 600;
+}
+
+.continuous-interactions .formula-part .explanation {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  text-align: center;
+}
+
+/* Key insight */
+.continuous-interactions .key-insight {
+  background: linear-gradient(135deg, rgba(67, 97, 238, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%);
+  border-left: 4px solid var(--primary);
+  border-radius: 0 var(--border-radius-md) var(--border-radius-md) 0;
+  padding: var(--spacing-lg);
+  margin: var(--spacing-lg) 0;
+}
+
+.continuous-interactions .key-insight h4 {
+  margin: 0 0 var(--spacing-sm) 0;
+  color: var(--primary);
+  font-size: 1rem;
+}
+
+.continuous-interactions .key-insight p {
+  margin: 0;
+  color: var(--text-secondary);
+  line-height: 1.7;
+}
+
+/* Toggle buttons */
+.continuous-interactions .toggle-group {
+  display: flex;
+  justify-content: center;
+  margin: var(--spacing-md) 0;
+}
+
+.continuous-interactions .toggle-button {
+  padding: var(--spacing-sm) var(--spacing-lg);
+  border: 2px solid var(--border);
+  background: var(--bg-primary);
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.continuous-interactions .toggle-button:first-child {
+  border-radius: var(--border-radius-md) 0 0 var(--border-radius-md);
+  border-right: none;
+}
+
+.continuous-interactions .toggle-button:last-child {
+  border-radius: 0 var(--border-radius-md) var(--border-radius-md) 0;
+}
+
+.continuous-interactions .toggle-button:only-child {
+  border-radius: var(--border-radius-md);
+}
+
+.continuous-interactions .toggle-button.active {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: white;
+}
+
+.continuous-interactions .toggle-button:hover:not(.active) {
+  background: var(--bg-secondary);
+}
+
+/* Sandbox grid */
+.continuous-interactions .sandbox-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--spacing-md);
+  margin: var(--spacing-lg) 0;
+}
+
+.continuous-interactions .sandbox-panel {
+  background: var(--bg-secondary);
+  border-radius: var(--border-radius-md);
+  padding: var(--spacing-md);
+  border: 1px solid var(--border);
+}
+
+.continuous-interactions .sandbox-panel h5 {
+  margin: 0 0 var(--spacing-sm) 0;
+  font-size: 0.875rem;
+  color: var(--text-primary);
+  text-align: center;
+}
+
+/* Generate button */
+.continuous-interactions .generate-button {
+  padding: var(--spacing-sm) var(--spacing-xl);
+  background: var(--primary);
+  color: white;
+  border: none;
+  border-radius: var(--border-radius-md);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.continuous-interactions .generate-button:hover {
+  background: var(--primary-dark, #3451c7);
+}
+
+/* Navigation pane styles */
+.continuous-interactions .navigation-pane {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 220px;
+  height: 100vh;
+  background: var(--bg-secondary);
+  border-right: 1px solid var(--border);
+  padding: var(--spacing-lg);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+  transform: translateX(-100%);
+  transition: transform 0.3s ease;
+  z-index: 100;
+}
+
+.continuous-interactions .navigation-pane.open {
+  transform: translateX(0);
+}
+
+.continuous-interactions .nav-toggle {
+  position: fixed;
+  left: var(--spacing-md);
+  top: var(--spacing-md);
+  width: 40px;
+  height: 40px;
+  border: 1px solid var(--border);
+  border-radius: var(--border-radius-md);
+  background: var(--bg-primary);
+  cursor: pointer;
+  z-index: 101;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.continuous-interactions .nav-toggle-icon {
+  width: 20px;
+  height: 2px;
+  background: var(--text-primary);
+  position: relative;
+}
+
+.continuous-interactions .nav-toggle-icon::before,
+.continuous-interactions .nav-toggle-icon::after {
+  content: '';
+  position: absolute;
+  width: 20px;
+  height: 2px;
+  background: var(--text-primary);
+  left: 0;
+}
+
+.continuous-interactions .nav-toggle-icon::before {
+  top: -6px;
+}
+
+.continuous-interactions .nav-toggle-icon::after {
+  top: 6px;
+}
+
+.continuous-interactions .nav-overlay-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.3);
+  z-index: 99;
+}
+
+.continuous-interactions .back-to-home {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  color: var(--text-secondary);
+  text-decoration: none;
+  font-size: 0.875rem;
+  padding: var(--spacing-sm) 0;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: var(--spacing-sm);
+}
+
+.continuous-interactions .back-to-home:hover {
+  color: var(--primary);
+}
+
+.continuous-interactions .back-icon {
+  width: 16px;
+  height: 16px;
+}
+
+.continuous-interactions .navigation-pane ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+}
+
+.continuous-interactions .navigation-pane button {
+  width: 100%;
+  text-align: left;
+  padding: var(--spacing-sm) var(--spacing-md);
+  border: none;
+  border-radius: var(--border-radius-sm);
+  background: transparent;
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.continuous-interactions .navigation-pane button:hover {
+  background: var(--bg-primary);
+  color: var(--text-primary);
+}
+
+.continuous-interactions .navigation-pane button.active {
+  background: var(--primary);
+  color: white;
+}
+
+/* Footer */
+.continuous-interactions .narrative-footer {
+  margin-top: var(--spacing-2xl);
+  padding-top: var(--spacing-xl);
+  border-top: 1px solid var(--border);
+  text-align: center;
+}
+
+.continuous-interactions .narrative-footer p {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+}
+
+.continuous-interactions .narrative-footer a {
+  color: var(--primary);
+  text-decoration: none;
+}
+
+.continuous-interactions .narrative-footer a:hover {
+  text-decoration: underline;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .continuous-interactions {
+    padding-left: var(--spacing-lg);
+  }
+
+  .continuous-interactions-header h1 {
+    font-size: 1.75rem;
+  }
+
+  .continuous-interactions .dual-panel {
+    grid-template-columns: 1fr;
+  }
+
+  .continuous-interactions .sandbox-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .continuous-interactions .formula-parts {
+    flex-direction: column;
+    align-items: center;
+  }
+}

@@ -76,6 +76,15 @@ const moduleIcons: Record<string, React.ReactNode> = {
       <rect x="26" y="26" width="16" height="16" fill="currentColor" rx="2" />
     </svg>
   ),
+  'continuous-interactions': (
+    <svg viewBox="0 0 48 48" className="module-icon" aria-hidden="true">
+      <line x1="6" y1="38" x2="42" y2="38" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+      <line x1="6" y1="38" x2="6" y2="6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+      <line x1="8" y1="34" x2="40" y2="12" stroke="#4361ee" strokeWidth="3" strokeLinecap="round" />
+      <line x1="8" y1="26" x2="40" y2="20" stroke="#f4a261" strokeWidth="3" strokeLinecap="round" />
+      <line x1="26" y1="10" x2="26" y2="38" stroke="var(--accent)" strokeWidth="2" strokeDasharray="4,3" strokeLinecap="round" />
+    </svg>
+  ),
   'within-subjects': (
     <svg viewBox="0 0 48 48" className="module-icon" aria-hidden="true">
       <circle cx="10" cy="12" r="4" fill="currentColor" />

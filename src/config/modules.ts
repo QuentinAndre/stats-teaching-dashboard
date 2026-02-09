@@ -67,6 +67,13 @@ export const modules: ModuleDefinition[] = [
       'Explore how multiple factors combine in experimental designs. Understand main effects, interactions, and variance partitioning in 2\u00D72 designs.',
   },
   {
+    id: 'continuous-interactions',
+    path: '/continuous-interactions',
+    title: 'Continuous Moderators',
+    description:
+      'Learn to probe interactions with continuous predictors. Understand spotlight analysis, floodlight analysis (Johnson-Neyman), marginal effects, and the "magic number zero."',
+  },
+  {
     id: 'within-subjects',
     path: '/within-subjects',
     title: 'Within-Subject Designs',

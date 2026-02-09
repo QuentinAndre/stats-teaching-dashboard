@@ -9,6 +9,7 @@ import EffectSizesPower from './components/EffectSizesPower';
 import FactorialANOVA from './components/FactorialANOVA';
 import WithinSubjects from './components/WithinSubjects';
 import MixedDesigns from './components/MixedDesigns';
+import ContinuousInteractions from './components/ContinuousInteractions';
 import PHacking from './components/PHacking';
 import PRIAD from './components/PRIAD';
 
@@ -37,6 +38,7 @@ function App() {
           <Route path="/anova" element={<ANOVA />} />
           <Route path="/effect-sizes-power" element={<EffectSizesPower />} />
           <Route path="/factorial-anova" element={<FactorialANOVA />} />
+          <Route path="/continuous-interactions" element={<ContinuousInteractions />} />
           <Route path="/within-subjects" element={<WithinSubjects />} />
           <Route path="/mixed-designs" element={<MixedDesigns />} />
           <Route path="/outlier-exclusions" element={<OutlierExclusions />} />
