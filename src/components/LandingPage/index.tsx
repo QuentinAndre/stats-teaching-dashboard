@@ -76,6 +76,18 @@ const moduleIcons: Record<string, React.ReactNode> = {
       <rect x="26" y="26" width="16" height="16" fill="currentColor" rx="2" />
     </svg>
   ),
+  'planned-contrasts': (
+    <svg viewBox="0 0 48 48" className="module-icon" aria-hidden="true">
+      {/* Three bars representing groups */}
+      <rect x="6" y="14" width="10" height="28" fill="currentColor" rx="2" opacity="0.5" />
+      <rect x="19" y="20" width="10" height="22" fill="currentColor" rx="2" opacity="0.5" />
+      <rect x="32" y="28" width="10" height="14" fill="currentColor" rx="2" opacity="0.5" />
+      {/* Contrast bracket connecting first two bars */}
+      <path d="M11 10 L11 7 L24 7 L24 10" fill="none" stroke="var(--accent)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+      {/* Contrast bracket connecting to third */}
+      <line x1="17.5" y1="7" x2="37" y2="7" stroke="var(--accent)" strokeWidth="2.5" strokeLinecap="round" strokeDasharray="3,3" />
+    </svg>
+  ),
   'continuous-interactions': (
     <svg viewBox="0 0 48 48" className="module-icon" aria-hidden="true">
       <line x1="6" y1="38" x2="42" y2="38" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
@@ -113,6 +125,47 @@ const moduleIcons: Record<string, React.ReactNode> = {
       <circle cx="10" cy="42" r="4" fill="var(--accent)" />
       <circle cx="38" cy="42" r="4" fill="var(--accent)" />
       <line x1="14" y1="42" x2="34" y2="42" stroke="var(--accent)" strokeWidth="3" strokeLinecap="round" />
+    </svg>
+  ),
+  'mediation': (
+    <svg viewBox="0 0 48 48" className="module-icon" aria-hidden="true">
+      {/* X → M → Y path diagram */}
+      <rect x="2" y="18" width="12" height="12" rx="2" fill="currentColor" />
+      <rect x="18" y="4" width="12" height="12" rx="2" fill="var(--accent)" />
+      <rect x="34" y="18" width="12" height="12" rx="2" fill="currentColor" />
+      <line x1="13" y1="20" x2="19" y2="14" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+      <line x1="29" y1="14" x2="35" y2="20" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+      <line x1="14" y1="24" x2="34" y2="24" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeDasharray="3,2" />
+    </svg>
+  ),
+  'causal-pitfalls': (
+    <svg viewBox="0 0 48 48" className="module-icon" aria-hidden="true">
+      {/* Warning triangle with path arrows */}
+      <path d="M24 6 L42 38 H6 Z" fill="none" stroke="var(--accent)" strokeWidth="3" strokeLinejoin="round" />
+      <line x1="24" y1="18" x2="24" y2="28" stroke="var(--accent)" strokeWidth="3" strokeLinecap="round" />
+      <circle cx="24" cy="33" r="2" fill="var(--accent)" />
+    </svg>
+  ),
+  'beyond-mediation': (
+    <svg viewBox="0 0 48 48" className="module-icon" aria-hidden="true">
+      {/* Multiple paths branching out */}
+      <rect x="2" y="18" width="10" height="10" rx="2" fill="currentColor" />
+      <rect x="19" y="4" width="10" height="10" rx="2" fill="var(--accent)" />
+      <rect x="19" y="32" width="10" height="10" rx="2" fill="var(--accent)" />
+      <rect x="36" y="18" width="10" height="10" rx="2" fill="currentColor" />
+      <line x1="12" y1="21" x2="19" y2="12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+      <line x1="12" y1="25" x2="19" y2="34" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+      <line x1="29" y1="12" x2="36" y2="21" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+      <line x1="29" y1="34" x2="36" y2="25" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+    </svg>
+  ),
+  'ancova': (
+    <svg viewBox="0 0 48 48" className="module-icon" aria-hidden="true">
+      {/* Three bars representing groups with a diagonal regression line */}
+      <rect x="6" y="28" width="8" height="14" rx="1" fill="currentColor" opacity="0.6" />
+      <rect x="20" y="22" width="8" height="20" rx="1" fill="currentColor" opacity="0.6" />
+      <rect x="34" y="16" width="8" height="26" rx="1" fill="currentColor" opacity="0.6" />
+      <line x1="6" y1="36" x2="42" y2="12" stroke="var(--accent)" strokeWidth="3" strokeLinecap="round" />
     </svg>
   ),
 };

@@ -67,6 +67,20 @@ export const modules: ModuleDefinition[] = [
       'Explore how multiple factors combine in experimental designs. Understand main effects, interactions, and variance partitioning in 2\u00D72 designs.',
   },
   {
+    id: 'planned-contrasts',
+    path: '/planned-contrasts',
+    title: 'Planned Contrasts',
+    description:
+      'Learn to ask specific, theory-driven questions about group differences. Understand contrast weights, orthogonality, and why focused comparisons are more powerful than the omnibus F.',
+  },
+  {
+    id: 'ancova',
+    path: '/ancova',
+    title: 'Analysis of Covariance (ANCOVA)',
+    description:
+      'Learn how adding a covariate to ANOVA reduces error variance, increases power, and adjusts group means. Understand when and why ANCOVA is appropriate.',
+  },
+  {
     id: 'continuous-interactions',
     path: '/continuous-interactions',
     title: 'Continuous Moderators',
@@ -86,5 +100,26 @@ export const modules: ModuleDefinition[] = [
     title: 'Mixed Designs',
     description:
       'Explore split-plot designs that combine between-subjects and within-subjects factors. Understand different error terms and interaction effects.',
+  },
+  {
+    id: 'mediation',
+    path: '/mediation',
+    title: 'Mediation Analysis',
+    description:
+      'Understand simple mediation (X\u2192M\u2192Y) and the bootstrap test of the indirect effect.',
+  },
+  {
+    id: 'causal-pitfalls',
+    path: '/causal-pitfalls',
+    title: 'Causal Pitfalls of Mediation',
+    description:
+      'Why a significant indirect effect does not establish causal mediation. Explore confounding, equivalent models, and the gap between statistics and causation.',
+  },
+  {
+    id: 'beyond-mediation',
+    path: '/beyond-mediation',
+    title: 'Beyond Simple Mediation',
+    description:
+      'Parallel mediation, serial mediation, and moderated mediation (conditional indirect effects).',
   },
 ];

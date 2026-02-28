@@ -2413,3 +2413,793 @@ export function marginalEffectWithCI(
     };
   });
 }
+
+
+/* =====================================================
+   MEDIATION ANALYSIS UTILITIES
+   ===================================================== */
+
+/**
+ * Seeded pseudo-random number generator (mulberry32).
+ * Returns a function that produces uniform [0, 1) values
+ * in a deterministic sequence from the given seed.
+ *
+ * @param seed - Integer seed value
+ * @returns A function that returns the next pseudo-random number
+ */
+export function mulberry32(seed: number): () => number {
+  let s = seed | 0;
+  return function () {
+    let t = (s += 0x6d2b79f5);
+    t = Math.imul(t ^ (t >>> 15), t | 1);
+    t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
+/**
+ * Generates a standard-normal random variate using Box-Muller transform.
+ * Consumes two uniform draws from the provided RNG.
+ *
+ * @param rng - A uniform [0, 1) random number generator
+ * @returns A single N(0, 1) draw
+ */
+export function seededNormalRandom(rng: () => number): number {
+  const u1 = rng() + 1e-10; // avoid log(0)
+  const u2 = rng();
+  return Math.sqrt(-2 * Math.log(u1)) * Math.cos(2 * Math.PI * u2);
+}
+
+/**
+ * Ordinary least-squares regression with a single predictor.
+ *
+ * Model: Y = intercept + slope * X + error
+ *
+ * @param y - Dependent variable array (length n)
+ * @param x - Independent variable array (length n)
+ * @returns OLS regression results
+ */
+export function fitSimpleRegression(
+  y: number[],
+  x: number[]
+): {
+  intercept: number;
+  slope: number;
+  seSlope: number;
+  seIntercept: number;
+  t: number;
+  p: number;
+  rSquared: number;
+  residualSE: number;
+  df: number;
+} {
+  const n = y.length;
+  let sumX = 0, sumY = 0, sumXY = 0, sumXX = 0;
+  for (let i = 0; i < n; i++) {
+    sumX += x[i];
+    sumY += y[i];
+    sumXY += x[i] * y[i];
+    sumXX += x[i] * x[i];
+  }
+  const xBar = sumX / n;
+  const yBar = sumY / n;
+  const sXX = sumXX - n * xBar * xBar;
+  const sXY = sumXY - n * xBar * yBar;
+
+  const slope = sXY / sXX;
+  const intercept = yBar - slope * xBar;
+
+  // Residuals
+  let ssRes = 0, ssTot = 0;
+  for (let i = 0; i < n; i++) {
+    const yHat = intercept + slope * x[i];
+    ssRes += (y[i] - yHat) ** 2;
+    ssTot += (y[i] - yBar) ** 2;
+  }
+
+  const df = n - 2;
+  const mse = ssRes / df;
+  const residualSE = Math.sqrt(mse);
+  const seSlope = Math.sqrt(mse / sXX);
+  const seIntercept = Math.sqrt(mse * (1 / n + (xBar * xBar) / sXX));
+  const t = slope / seSlope;
+  const p = 2 * (1 - tDistributionCDF(Math.abs(t), df));
+  const rSquared = ssTot > 0 ? 1 - ssRes / ssTot : 0;
+
+  return { intercept, slope, seSlope, seIntercept, t, p, rSquared, residualSE, df };
+}
+
+/**
+ * Ordinary least-squares regression with two predictors.
+ *
+ * Model: Y = intercept + b1 * X1 + b2 * X2 + error
+ *
+ * Solves the 3×3 normal equations analytically via Cramer's rule.
+ *
+ * @param y - Dependent variable array (length n)
+ * @param x1 - First predictor array (length n)
+ * @param x2 - Second predictor array (length n)
+ * @returns OLS regression results with coefficients, SEs, t-stats, and p-values
+ */
+export function fitMultipleRegression2(
+  y: number[],
+  x1: number[],
+  x2: number[]
+): {
+  intercept: number;
+  b1: number;
+  b2: number;
+  seB1: number;
+  seB2: number;
+  seIntercept: number;
+  t1: number;
+  t2: number;
+  p1: number;
+  p2: number;
+  rSquared: number;
+  residualSE: number;
+  df: number;
+} {
+  const n = y.length;
+
+  // Build X'X and X'Y for design matrix [1, x1, x2]
+  let s1 = 0, s2 = 0, sY = 0;
+  let s11 = 0, s22 = 0, s12 = 0;
+  let s1Y = 0, s2Y = 0;
+
+  for (let i = 0; i < n; i++) {
+    s1 += x1[i];
+    s2 += x2[i];
+    sY += y[i];
+    s11 += x1[i] * x1[i];
+    s22 += x2[i] * x2[i];
+    s12 += x1[i] * x2[i];
+    s1Y += x1[i] * y[i];
+    s2Y += x2[i] * y[i];
+  }
+
+  // X'X matrix:
+  // [ n    s1   s2  ]
+  // [ s1   s11  s12 ]
+  // [ s2   s12  s22 ]
+  // X'Y vector: [sY, s1Y, s2Y]
+
+  // Solve via Cramer's rule
+  const detA =
+    n * (s11 * s22 - s12 * s12) -
+    s1 * (s1 * s22 - s12 * s2) +
+    s2 * (s1 * s12 - s11 * s2);
+
+  const detB0 =
+    sY * (s11 * s22 - s12 * s12) -
+    s1 * (s1Y * s22 - s12 * s2Y) +
+    s2 * (s1Y * s12 - s11 * s2Y);
+
+  const detB1 =
+    n * (s1Y * s22 - s12 * s2Y) -
+    sY * (s1 * s22 - s12 * s2) +
+    s2 * (s1 * s2Y - s1Y * s2);
+
+  const detB2 =
+    n * (s11 * s2Y - s1Y * s12) -
+    s1 * (s1 * s2Y - s1Y * s2) +
+    sY * (s1 * s12 - s11 * s2);
+
+  const intercept = detB0 / detA;
+  const b1 = detB1 / detA;
+  const b2 = detB2 / detA;
+
+  // Residuals and R²
+  let ssRes = 0, ssTot = 0;
+  const yBar = sY / n;
+  for (let i = 0; i < n; i++) {
+    const yHat = intercept + b1 * x1[i] + b2 * x2[i];
+    ssRes += (y[i] - yHat) ** 2;
+    ssTot += (y[i] - yBar) ** 2;
+  }
+
+  const df = n - 3;
+  const mse = ssRes / df;
+  const residualSE = Math.sqrt(mse);
+
+  // Compute (X'X)^{-1} for standard errors
+  // The inverse of a 3×3 symmetric matrix using cofactors
+  const invScale = 1 / detA;
+  const c00 = (s11 * s22 - s12 * s12) * invScale;
+  const c11 = (n * s22 - s2 * s2) * invScale;
+  const c22 = (n * s11 - s1 * s1) * invScale;
+
+  const seIntercept = Math.sqrt(mse * c00);
+  const seB1 = Math.sqrt(mse * c11);
+  const seB2 = Math.sqrt(mse * c22);
+
+  const t1 = b1 / seB1;
+  const t2 = b2 / seB2;
+  const p1 = 2 * (1 - tDistributionCDF(Math.abs(t1), df));
+  const p2 = 2 * (1 - tDistributionCDF(Math.abs(t2), df));
+  const rSquared = ssTot > 0 ? 1 - ssRes / ssTot : 0;
+
+  return { intercept, b1, b2, seB1, seB2, seIntercept, t1, t2, p1, p2, rSquared, residualSE, df };
+}
+
+/**
+ * Generates data from a simple mediation model: X → M → Y.
+ *
+ * M = interceptM + a * X + ε_M,   ε_M ~ N(0, sdM²)
+ * Y = interceptY + c' * X + b * M + ε_Y,   ε_Y ~ N(0, sdY²)
+ *
+ * X is binary (0/1) with n/2 per condition.
+ *
+ * @param seed - RNG seed for reproducibility
+ * @param n - Total sample size (split evenly between X=0 and X=1)
+ * @param a - Path coefficient X → M
+ * @param b - Path coefficient M → Y (controlling for X)
+ * @param cPrime - Direct effect X → Y (controlling for M)
+ * @param interceptM - Intercept for the M model
+ * @param interceptY - Intercept for the Y model
+ * @param sdM - Residual SD for the M model
+ * @param sdY - Residual SD for the Y model
+ */
+export function generateMediationData(
+  seed: number,
+  n: number,
+  a: number,
+  b: number,
+  cPrime: number,
+  interceptM: number,
+  interceptY: number,
+  sdM: number,
+  sdY: number
+): { x: number[]; m: number[]; y: number[] } {
+  const rng = mulberry32(seed);
+  const x: number[] = [];
+  const m: number[] = [];
+  const yArr: number[] = [];
+
+  for (let i = 0; i < n; i++) {
+    const xi = i < n / 2 ? 0 : 1;
+    const mi = interceptM + a * xi + sdM * seededNormalRandom(rng);
+    const yi = interceptY + cPrime * xi + b * mi + sdY * seededNormalRandom(rng);
+    x.push(xi);
+    m.push(mi);
+    yArr.push(yi);
+  }
+
+  return { x, m, y: yArr };
+}
+
+/**
+ * Generates data from a mediation model with an unmeasured confounder U
+ * that affects both M and Y.
+ *
+ * U ~ N(0, 1)
+ * M = interceptM + a * X + uToM * U + ε_M
+ * Y = interceptY + cPrime * X + bTrue * M + uToY * U + ε_Y
+ *
+ * The researcher observes only X, M, Y — not U.
+ */
+export function generateConfoundedMediationData(
+  seed: number,
+  n: number,
+  params: {
+    a: number;
+    bTrue: number;
+    cPrime: number;
+    uToM: number;
+    uToY: number;
+    interceptM: number;
+    interceptY: number;
+    sdM?: number;
+    sdY?: number;
+  }
+): { x: number[]; m: number[]; y: number[]; u: number[] } {
+  const { a, bTrue, cPrime, uToM, uToY, interceptM, interceptY } = params;
+  const sdM = params.sdM ?? 0.8;
+  const sdY = params.sdY ?? 0.8;
+  const rng = mulberry32(seed);
+  const x: number[] = [];
+  const m: number[] = [];
+  const yArr: number[] = [];
+  const u: number[] = [];
+
+  for (let i = 0; i < n; i++) {
+    const xi = i < n / 2 ? 0 : 1;
+    const ui = seededNormalRandom(rng);
+    const mi = interceptM + a * xi + uToM * ui + sdM * seededNormalRandom(rng);
+    const yi = interceptY + cPrime * xi + bTrue * mi + uToY * ui + sdY * seededNormalRandom(rng);
+    x.push(xi);
+    u.push(ui);
+    m.push(mi);
+    yArr.push(yi);
+  }
+
+  return { x, m, y: yArr, u };
+}
+
+/**
+ * Sobel test for the indirect effect a * b.
+ *
+ * SE_Sobel = √(a² · SE_b² + b² · SE_a²)
+ * Z = (a · b) / SE_Sobel
+ *
+ * @param a - Estimated a-path coefficient
+ * @param b - Estimated b-path coefficient
+ * @param seA - Standard error of a
+ * @param seB - Standard error of b
+ */
+export function sobelTest(
+  a: number,
+  b: number,
+  seA: number,
+  seB: number
+): { z: number; se: number; p: number; ab: number } {
+  const ab = a * b;
+  const se = Math.sqrt(a * a * seB * seB + b * b * seA * seA);
+  const z = se > 0 ? ab / se : 0;
+  const p = 2 * (1 - normalCDF(Math.abs(z)));
+  return { z, se, p, ab };
+}
+
+/**
+ * Simulates the sampling distribution of the product a * b
+ * by drawing â ~ N(aMean, seA) and b̂ ~ N(bMean, seB) independently.
+ *
+ * Used to demonstrate that the product of two normals is non-normal
+ * (motivating the bootstrap approach over the Sobel test).
+ *
+ * @param aMean - Population/true value of a
+ * @param bMean - Population/true value of b
+ * @param seA - Standard error of â
+ * @param seB - Standard error of b̂
+ * @param nSim - Number of simulation draws
+ * @param seed - RNG seed
+ * @returns Array of nSim simulated a*b products
+ */
+export function simulateProductDistribution(
+  aMean: number,
+  bMean: number,
+  seA: number,
+  seB: number,
+  nSim: number,
+  seed: number
+): number[] {
+  const rng = mulberry32(seed);
+  const products: number[] = [];
+  for (let i = 0; i < nSim; i++) {
+    const aHat = aMean + seA * seededNormalRandom(rng);
+    const bHat = bMean + seB * seededNormalRandom(rng);
+    products.push(aHat * bHat);
+  }
+  return products;
+}
+
+/**
+ * Computes a batch of bootstrap indirect effects (a * b) for a mediation model.
+ *
+ * For each bootstrap iteration:
+ * 1. Resample n observations with replacement
+ * 2. Fit M = i + a*X (simple regression)
+ * 3. Fit Y = i + c'*X + b*M (multiple regression)
+ * 4. Record a_boot * b_boot
+ *
+ * @param x - Original X data
+ * @param m - Original M data
+ * @param y - Original Y data
+ * @param nBoot - Number of bootstrap samples in this batch
+ * @param seed - RNG seed for this batch
+ * @returns Array of nBoot bootstrap indirect effect estimates
+ */
+export function bootstrapIndirectEffectBatch(
+  x: number[],
+  m: number[],
+  y: number[],
+  nBoot: number,
+  seed: number
+): number[] {
+  const n = x.length;
+  const rng = mulberry32(seed);
+  const results: number[] = [];
+
+  for (let b = 0; b < nBoot; b++) {
+    // Resample indices with replacement
+    const xBoot: number[] = [];
+    const mBoot: number[] = [];
+    const yBoot: number[] = [];
+    for (let i = 0; i < n; i++) {
+      const idx = Math.floor(rng() * n);
+      xBoot.push(x[idx]);
+      mBoot.push(m[idx]);
+      yBoot.push(y[idx]);
+    }
+
+    // Fit M ~ X
+    const regM = fitSimpleRegression(mBoot, xBoot);
+    // Fit Y ~ X + M
+    const regY = fitMultipleRegression2(yBoot, xBoot, mBoot);
+
+    // a_boot * b_boot (a = slope of M~X, b = b2 of Y~X+M where M is x2)
+    results.push(regM.slope * regY.b2);
+  }
+
+  return results;
+}
+
+/**
+ * Extracts a percentile confidence interval from a sorted distribution.
+ *
+ * @param distribution - Array of values (will be sorted internally)
+ * @param alpha - Significance level (default 0.05 for a 95% CI)
+ * @returns [lower, upper] bounds of the (1 - alpha) CI
+ */
+export function percentileCI(
+  distribution: number[],
+  alpha: number = 0.05
+): [number, number] {
+  const sorted = [...distribution].sort((a, b) => a - b);
+  const n = sorted.length;
+  const lowerIdx = Math.floor((alpha / 2) * n);
+  const upperIdx = Math.floor((1 - alpha / 2) * n) - 1;
+  return [sorted[Math.max(0, lowerIdx)], sorted[Math.min(n - 1, upperIdx)]];
+}
+
+/* ==========================================================================
+   Planned Contrast Functions
+   ========================================================================== */
+
+/**
+ * Computes a planned contrast: ψ̂ = Σ(c_j × Ȳ_j)
+ *
+ * A contrast is a weighted sum of group means where the weights sum to zero,
+ * encoding a specific research question about group differences.
+ *
+ * @param weights - Contrast coefficients (c_j), must sum to 0
+ * @param groupMeans - Observed group means (Ȳ_j)
+ * @returns The contrast estimate ψ̂
+ */
+export function computeContrast(weights: number[], groupMeans: number[]): number {
+  let psiHat = 0;
+  for (let j = 0; j < weights.length; j++) {
+    psiHat += weights[j] * groupMeans[j];
+  }
+  return psiHat;
+}
+
+/**
+ * Computes the sum of squares for a planned contrast.
+ *
+ * For equal n: SS_ψ = n × ψ̂² / Σ(c_j²)
+ * For unequal n: SS_ψ = ψ̂² / Σ(c_j² / n_j)
+ *
+ * A contrast always has df = 1, so MS_ψ = SS_ψ.
+ *
+ * @param weights - Contrast coefficients (c_j)
+ * @param groupMeans - Observed group means (Ȳ_j)
+ * @param ns - Sample size per group (single number for equal n, or array)
+ * @returns SS_ψ
+ */
+export function contrastSumOfSquares(
+  weights: number[],
+  groupMeans: number[],
+  ns: number | number[]
+): number {
+  const psiHat = computeContrast(weights, groupMeans);
+
+  if (typeof ns === 'number') {
+    // Equal n: SS_ψ = n × ψ̂² / Σ(c_j²)
+    const sumC2 = weights.reduce((s, c) => s + c * c, 0);
+    return sumC2 > 0 ? (ns * psiHat * psiHat) / sumC2 : 0;
+  } else {
+    // Unequal n: SS_ψ = ψ̂² / Σ(c_j² / n_j)
+    const sumC2overN = weights.reduce((s, c, j) => s + (c * c) / ns[j], 0);
+    return sumC2overN > 0 ? (psiHat * psiHat) / sumC2overN : 0;
+  }
+}
+
+/**
+ * Performs an F-test for a planned contrast.
+ *
+ * F_ψ = MS_ψ / MS_{S/A}
+ *
+ * Because a single contrast has df = 1, F_ψ is tested against F(1, df_within).
+ * This concentrates the variance into a single degree of freedom, making it
+ * more powerful than the omnibus F when the contrast matches the true pattern.
+ *
+ * @param weights - Contrast coefficients (c_j)
+ * @param groupMeans - Observed group means (Ȳ_j)
+ * @param ns - Sample size per group (single number or array)
+ * @param msWithin - Mean square within (MS_{S/A}) from the omnibus ANOVA
+ * @param dfWithin - Degrees of freedom within (N - k)
+ * @returns Contrast test results
+ */
+export function contrastFTest(
+  weights: number[],
+  groupMeans: number[],
+  ns: number | number[],
+  msWithin: number,
+  dfWithin: number
+): {
+  psiHat: number;
+  ssContrast: number;
+  msContrast: number;
+  fStatistic: number;
+  pValue: number;
+  standardError: number;
+} {
+  const psiHat = computeContrast(weights, groupMeans);
+  const ssContrast = contrastSumOfSquares(weights, groupMeans, ns);
+  const msContrast = ssContrast; // df = 1
+
+  const fStatistic = msWithin > 0 ? msContrast / msWithin : 0;
+  const pValue = dfWithin > 0 ? 1 - fDistributionCDF(fStatistic, 1, dfWithin) : 1;
+
+  // Standard error of the contrast
+  let se: number;
+  if (typeof ns === 'number') {
+    const sumC2 = weights.reduce((s, c) => s + c * c, 0);
+    se = Math.sqrt(msWithin * sumC2 / ns);
+  } else {
+    const sumC2overN = weights.reduce((s, c, j) => s + (c * c) / ns[j], 0);
+    se = Math.sqrt(msWithin * sumC2overN);
+  }
+
+  return { psiHat, ssContrast, msContrast, fStatistic, pValue, standardError: se };
+}
+
+/**
+ * Checks whether two sets of contrast weights are orthogonal.
+ *
+ * For equal n: two contrasts are orthogonal when Σ(c_j × d_j) = 0.
+ * For unequal n: orthogonality requires Σ(c_j × d_j / n_j) = 0.
+ *
+ * Orthogonal contrasts partition SS_A into non-overlapping components,
+ * each with df = 1, that sum exactly to SS_A.
+ *
+ * @param weights1 - First contrast coefficients
+ * @param weights2 - Second contrast coefficients
+ * @param ns - Sample sizes per group (optional; assumes equal n if omitted)
+ * @returns Dot product and orthogonality verdict
+ */
+export function areContrastsOrthogonal(
+  weights1: number[],
+  weights2: number[],
+  ns?: number[]
+): { dotProduct: number; isOrthogonal: boolean } {
+  let dotProduct = 0;
+  if (ns) {
+    for (let j = 0; j < weights1.length; j++) {
+      dotProduct += (weights1[j] * weights2[j]) / ns[j];
+    }
+  } else {
+    for (let j = 0; j < weights1.length; j++) {
+      dotProduct += weights1[j] * weights2[j];
+    }
+  }
+  return { dotProduct, isOrthogonal: Math.abs(dotProduct) < 1e-10 };
+}
+
+/**
+ * Validates that contrast weights sum to zero.
+ *
+ * The zero-sum constraint ensures the weights define a *comparison*
+ * among group means rather than a weighted average.
+ *
+ * @param weights - Contrast coefficients
+ * @returns The sum and whether it is (approximately) zero
+ */
+export function validateContrastWeights(
+  weights: number[]
+): { sum: number; isValid: boolean } {
+  const sum = weights.reduce((s, c) => s + c, 0);
+  return { sum, isValid: Math.abs(sum) < 1e-10 };
+}
+
+// ============================================================
+// ANCOVA Functions
+// ============================================================
+
+/**
+ * Computes the pooled within-group regression slope for ANCOVA.
+ *
+ * b_within = Σ_j SP_j / Σ_j SS_{X,j}
+ *
+ * where SP_j = Σ_i (X_{ij} - X̄_j)(Y_{ij} - Ȳ_j)
+ * and   SS_{X,j} = Σ_i (X_{ij} - X̄_j)²
+ *
+ * @param groups - Array of groups, each an array of {x, y} pairs
+ *   where x is the covariate and y is the dependent variable
+ * @returns Pooled within-group regression slope
+ */
+export function pooledWithinGroupSlope(
+  groups: Array<Array<{ x: number; y: number }>>
+): number {
+  let totalSP = 0;
+  let totalSSx = 0;
+
+  for (const group of groups) {
+    const n = group.length;
+    const xBar = group.reduce((s, p) => s + p.x, 0) / n;
+    const yBar = group.reduce((s, p) => s + p.y, 0) / n;
+
+    let sp = 0;
+    let ssx = 0;
+    for (const p of group) {
+      const dx = p.x - xBar;
+      sp += dx * (p.y - yBar);
+      ssx += dx * dx;
+    }
+    totalSP += sp;
+    totalSSx += ssx;
+  }
+
+  return totalSSx > 0 ? totalSP / totalSSx : 0;
+}
+
+/**
+ * Computes within-group regression slopes for each group separately.
+ * Used for testing the homogeneity of regression slopes assumption.
+ *
+ * @param groups - Array of groups, each an array of {x, y} pairs
+ * @returns Array of slopes, one per group
+ */
+export function withinGroupSlopes(
+  groups: Array<Array<{ x: number; y: number }>>
+): number[] {
+  return groups.map((group) => {
+    const n = group.length;
+    const xBar = group.reduce((s, p) => s + p.x, 0) / n;
+    const yBar = group.reduce((s, p) => s + p.y, 0) / n;
+
+    let sp = 0;
+    let ssx = 0;
+    for (const p of group) {
+      const dx = p.x - xBar;
+      sp += dx * (p.y - yBar);
+      ssx += dx * dx;
+    }
+    return ssx > 0 ? sp / ssx : 0;
+  });
+}
+
+/**
+ * Performs one-way ANCOVA with a single covariate.
+ *
+ * Partitions SS_Total into SS_Covariate, SS_AdjustedGroups, and SS_Residual.
+ * Computes adjusted group means, the F-statistic for the adjusted group
+ * effect, and p-values.
+ *
+ * The approach:
+ * 1. Compute the pooled within-group regression slope b
+ * 2. Compute adjusted Y values: Y'_{ij} = Y_{ij} - b(X_{ij} - X̄..)
+ * 3. SS_Residual = within-group SS of residuals from within-group regression
+ * 4. SS_Covariate = SS_Within(Y) - SS_Residual
+ * 5. SS_AdjustedGroups = SS_Total - SS_Covariate - SS_Residual
+ *
+ * @param groups - Array of groups, each an array of {x, y} pairs
+ * @returns Full ANCOVA results
+ */
+export function oneWayANCOVA(
+  groups: Array<Array<{ x: number; y: number }>>
+): {
+  ssTotal: number;
+  ssCovariate: number;
+  ssAdjustedGroups: number;
+  ssResidual: number;
+  dfCovariate: number;
+  dfAdjustedGroups: number;
+  dfResidual: number;
+  dfTotal: number;
+  msCovariate: number;
+  msAdjustedGroups: number;
+  msResidual: number;
+  fStatistic: number;
+  pValue: number;
+  fCovariate: number;
+  pCovariate: number;
+  pooledSlope: number;
+  adjustedMeans: number[];
+  rawMeans: number[];
+  covariateMeans: number[];
+  grandMeanY: number;
+  grandMeanX: number;
+} {
+  const a = groups.length; // number of groups
+  const allPoints = groups.flat();
+  const N = allPoints.length;
+
+  // Grand means
+  const grandMeanY = allPoints.reduce((s, p) => s + p.y, 0) / N;
+  const grandMeanX = allPoints.reduce((s, p) => s + p.x, 0) / N;
+
+  // Group means
+  const rawMeans = groups.map((g) => g.reduce((s, p) => s + p.y, 0) / g.length);
+  const covariateMeans = groups.map((g) => g.reduce((s, p) => s + p.x, 0) / g.length);
+
+  // Pooled within-group slope
+  const b = pooledWithinGroupSlope(groups);
+
+  // Adjusted means: Ȳ'_j = Ȳ_j - b(X̄_j - X̄..)
+  const adjustedMeans = rawMeans.map(
+    (yBar, j) => yBar - b * (covariateMeans[j] - grandMeanX)
+  );
+
+  // SS_Total (Y)
+  let ssTotal = 0;
+  for (const p of allPoints) {
+    ssTotal += (p.y - grandMeanY) ** 2;
+  }
+
+  // SS_Within(Y) — within-group SS before covariate adjustment
+  let ssWithinY = 0;
+  for (let j = 0; j < a; j++) {
+    const yBar = rawMeans[j];
+    for (const p of groups[j]) {
+      ssWithinY += (p.y - yBar) ** 2;
+    }
+  }
+
+  // SS_Residual — within-group SS after removing covariate effect
+  // Residual = Y_{ij} - [Ȳ_j + b(X_{ij} - X̄_j)]
+  let ssResidual = 0;
+  for (let j = 0; j < a; j++) {
+    const yBar = rawMeans[j];
+    const xBar = covariateMeans[j];
+    for (const p of groups[j]) {
+      const predicted = yBar + b * (p.x - xBar);
+      ssResidual += (p.y - predicted) ** 2;
+    }
+  }
+
+  // SS_Covariate = SS_Within(Y) - SS_Residual
+  const ssCovariate = ssWithinY - ssResidual;
+
+  // SS_AdjustedGroups = SS_Total - SS_Covariate - SS_Residual
+  const ssAdjustedGroups = ssTotal - ssCovariate - ssResidual;
+
+  // Degrees of freedom
+  const dfTotal = N - 1;
+  const dfCovariate = 1;
+  const dfAdjustedGroups = a - 1;
+  const dfResidual = N - a - 1; // loses 1 df for slope estimation
+
+  // Mean squares
+  const msCovariate = dfCovariate > 0 ? ssCovariate / dfCovariate : 0;
+  const msAdjustedGroups = dfAdjustedGroups > 0 ? ssAdjustedGroups / dfAdjustedGroups : 0;
+  const msResidual = dfResidual > 0 ? ssResidual / dfResidual : 0;
+
+  // F-tests
+  const fStatistic = msResidual > 0 ? msAdjustedGroups / msResidual : 0;
+  const pValue =
+    dfAdjustedGroups > 0 && dfResidual > 0
+      ? 1 - fDistributionCDF(fStatistic, dfAdjustedGroups, dfResidual)
+      : 1;
+
+  const fCovariate = msResidual > 0 ? msCovariate / msResidual : 0;
+  const pCovariate =
+    dfResidual > 0
+      ? 1 - fDistributionCDF(fCovariate, dfCovariate, dfResidual)
+      : 1;
+
+  return {
+    ssTotal,
+    ssCovariate,
+    ssAdjustedGroups,
+    ssResidual,
+    dfCovariate,
+    dfAdjustedGroups,
+    dfResidual,
+    dfTotal,
+    msCovariate,
+    msAdjustedGroups,
+    msResidual,
+    fStatistic,
+    pValue,
+    fCovariate,
+    pCovariate,
+    pooledSlope: b,
+    adjustedMeans,
+    rawMeans,
+    covariateMeans,
+    grandMeanY,
+    grandMeanX,
+  };
+}
