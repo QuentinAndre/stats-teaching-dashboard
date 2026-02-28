@@ -7,15 +7,12 @@ interface NavSection {
 }
 
 const sections: NavSection[] = [
-  { id: 'continuous-intro', label: 'Why Continuous Moderators?' },
-  { id: 'regression-model', label: 'The Regression Model' },
-  { id: 'spotlight', label: 'Spotlight Analysis' },
-  { id: 'floodlight', label: 'Floodlight Analysis' },
-  { id: 'centering', label: 'Centering Predictors' },
+  { id: 'beyond-simple', label: 'Multiple Mediator Models' },
+  { id: 'moderated-mediation', label: 'Moderated Mediation' },
 ];
 
 export default function NavigationPane() {
-  const [activeSection, setActiveSection] = useState<string>('continuous-intro');
+  const [activeSection, setActiveSection] = useState<string>('beyond-simple');
   const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {

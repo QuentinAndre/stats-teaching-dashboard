@@ -329,10 +329,10 @@ export default function MarginalEffects() {
               </text>
 
               {/* Legend */}
-              <line x1={lInnerW - 110} y1={12} x2={lInnerW - 90} y2={12} stroke="#4361ee" strokeWidth="2.5" />
-              <text x={lInnerW - 86} y={16} fontSize="10" fill="var(--text-secondary)">Z = 1 (strong)</text>
-              <line x1={lInnerW - 110} y1={28} x2={lInnerW - 90} y2={28} stroke="#f4a261" strokeWidth="2.5" />
-              <text x={lInnerW - 86} y={32} fontSize="10" fill="var(--text-secondary)">Z = 0 (weak)</text>
+              <line x1={4} y1={12} x2={24} y2={12} stroke="#4361ee" strokeWidth="2.5" />
+              <text x={28} y={16} fontSize="10" fill="var(--text-secondary)">Strong args (Z = 1)</text>
+              <line x1={4} y1={28} x2={24} y2={28} stroke="#f4a261" strokeWidth="2.5" />
+              <text x={28} y={32} fontSize="10" fill="var(--text-secondary)">Weak args (Z = 0)</text>
             </g>
           </svg>
         </div>

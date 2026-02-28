@@ -421,11 +421,11 @@ export default function TheRegressionModel() {
                 {gap.toFixed(2)} pts
               </text>
 
-              {/* Legend — top-right, above the plot area */}
-              <line x1={lInnerW - 170} y1={-10} x2={lInnerW - 150} y2={-10} stroke="#4361ee" strokeWidth="2.5" />
-              <text x={lInnerW - 146} y={-6} fontSize="10" fill="var(--text-secondary)">Strong Argument (Z = 1)</text>
-              <line x1={lInnerW - 170} y1={6} x2={lInnerW - 150} y2={6} stroke="#f4a261" strokeWidth="2.5" />
-              <text x={lInnerW - 146} y={10} fontSize="10" fill="var(--text-secondary)">Weak Argument (Z = 0)</text>
+              {/* Legend — top-left, above the plot area */}
+              <line x1={4} y1={-10} x2={24} y2={-10} stroke="#4361ee" strokeWidth="2.5" />
+              <text x={28} y={-6} fontSize="10" fill="var(--text-secondary)">Strong args (Z = 1)</text>
+              <line x1={4} y1={6} x2={24} y2={6} stroke="#f4a261" strokeWidth="2.5" />
+              <text x={28} y={10} fontSize="10" fill="var(--text-secondary)">Weak args (Z = 0)</text>
             </g>
           </svg>
         </div>

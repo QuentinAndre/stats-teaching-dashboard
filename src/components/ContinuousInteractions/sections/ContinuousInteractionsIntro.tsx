@@ -329,17 +329,17 @@ export default function ContinuousInteractionsIntro() {
               </text>
 
               {/* Legend */}
-              <g transform={`translate(${catPlotW + 8}, 10)`}>
+              <g transform={`translate(8, 10)`}>
                 <line x1={0} y1={0} x2={20} y2={0} stroke={colorStrong} strokeWidth={2.5} />
                 <circle cx={10} cy={0} r={4} fill={colorStrong} />
                 <text x={26} y={4} fontSize={10} fill="var(--text-primary)">
-                  Strong args
+                  Strong args (Z = 1)
                 </text>
 
                 <line x1={0} y1={22} x2={20} y2={22} stroke={colorWeak} strokeWidth={2.5} />
                 <circle cx={10} cy={22} r={4} fill={colorWeak} />
                 <text x={26} y={26} fontSize={10} fill="var(--text-primary)">
-                  Weak args
+                  Weak args (Z = 0)
                 </text>
               </g>
             </g>
@@ -457,14 +457,14 @@ export default function ContinuousInteractionsIntro() {
               />
 
               {/* Inline legend */}
-              <g transform={`translate(${scatPlotW - 100}, 4)`}>
+              <g transform={`translate(4, 4)`}>
                 <circle cx={0} cy={0} r={4} fill={colorStrong} opacity={0.8} />
                 <text x={8} y={4} fontSize={10} fill="var(--text-primary)">
-                  Strong args
+                  Strong args (Z = 1)
                 </text>
                 <circle cx={0} cy={16} r={4} fill={colorWeak} opacity={0.8} />
                 <text x={8} y={20} fontSize={10} fill="var(--text-primary)">
-                  Weak args
+                  Weak args (Z = 0)
                 </text>
               </g>
             </g>

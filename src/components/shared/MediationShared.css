@@ -1,29 +1,29 @@
 /* =====================================================
-   CONTINUOUS INTERACTIONS MODULE STYLES
+   MEDIATION ANALYSIS MODULE STYLES
    ===================================================== */
 @import '../ScrollingNarrative/NavigationPane.css';
 
 /* Layout */
-.continuous-interactions {
+.mediation-analysis {
   max-width: 900px;
   margin: 0 auto;
   padding: var(--spacing-xl) var(--spacing-lg);
 }
 
-.continuous-interactions-header {
+.mediation-analysis-header {
   text-align: center;
   margin-bottom: var(--spacing-2xl);
   padding-bottom: var(--spacing-xl);
   border-bottom: 1px solid var(--border);
 }
 
-.continuous-interactions-header h1 {
+.mediation-analysis-header h1 {
   font-size: 2.5rem;
   color: var(--text-primary);
   margin-bottom: var(--spacing-md);
 }
 
-.continuous-interactions-header .subtitle {
+.mediation-analysis-header .subtitle {
   font-size: 1.125rem;
   color: var(--text-secondary);
   max-width: 600px;
@@ -31,22 +31,22 @@
   line-height: 1.6;
 }
 
-.continuous-interactions-content {
+.mediation-analysis-content {
   display: flex;
   flex-direction: column;
   gap: var(--spacing-2xl);
 }
 
 /* Section styling */
-.continuous-interactions .narrative-section {
+.mediation-analysis .narrative-section {
   scroll-margin-top: 2rem;
 }
 
-.continuous-interactions .section-intro {
+.mediation-analysis .section-intro {
   max-width: 100%;
 }
 
-.continuous-interactions .section-intro h2 {
+.mediation-analysis .section-intro h2 {
   font-size: 1.75rem;
   color: var(--text-primary);
   margin-bottom: var(--spacing-lg);
@@ -54,14 +54,14 @@
   border-bottom: 2px solid var(--primary);
 }
 
-.continuous-interactions .section-intro h3 {
+.mediation-analysis .section-intro h3 {
   font-size: 1.25rem;
   color: var(--text-primary);
   margin-top: var(--spacing-xl);
   margin-bottom: var(--spacing-md);
 }
 
-.continuous-interactions .intro-text {
+.mediation-analysis .intro-text {
   font-size: 1rem;
   line-height: 1.7;
   color: var(--text-secondary);
@@ -69,7 +69,7 @@
 }
 
 /* Viz container */
-.continuous-interactions .viz-container {
+.mediation-analysis .viz-container {
   background: var(--bg-secondary);
   border-radius: var(--border-radius-lg);
   padding: var(--spacing-lg);
@@ -77,7 +77,7 @@
   border: 1px solid var(--border);
 }
 
-.continuous-interactions .viz-container h4 {
+.mediation-analysis .viz-container h4 {
   margin: 0 0 var(--spacing-md) 0;
   font-size: 1rem;
   color: var(--text-primary);
@@ -85,15 +85,23 @@
 }
 
 /* Dual panel layout */
-.continuous-interactions .dual-panel {
+.mediation-analysis .dual-panel {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: var(--spacing-lg);
   margin: var(--spacing-lg) 0;
 }
 
+/* Triple panel layout (for equivalent models) */
+.mediation-analysis .triple-panel {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: var(--spacing-md);
+  margin: var(--spacing-lg) 0;
+}
+
 /* Controls */
-.continuous-interactions .controls-row {
+.mediation-analysis .controls-row {
   display: flex;
   flex-wrap: wrap;
   gap: var(--spacing-md);
@@ -102,24 +110,24 @@
   margin: var(--spacing-lg) 0;
 }
 
-.continuous-interactions .control-group {
+.mediation-analysis .control-group {
   display: flex;
   flex-direction: column;
   gap: var(--spacing-xs);
   align-items: center;
 }
 
-.continuous-interactions .control-group label {
+.mediation-analysis .control-group label {
   font-size: 0.8125rem;
   color: var(--text-secondary);
   font-weight: 500;
 }
 
-.continuous-interactions .control-group input[type="range"] {
+.mediation-analysis .control-group input[type="range"] {
   width: 160px;
 }
 
-.continuous-interactions .control-value {
+.mediation-analysis .control-value {
   font-size: 0.875rem;
   font-weight: 600;
   color: var(--text-primary);
@@ -128,7 +136,7 @@
 }
 
 /* Result cards */
-.continuous-interactions .results-row {
+.mediation-analysis .results-row {
   display: flex;
   flex-wrap: wrap;
   gap: var(--spacing-md);
@@ -136,7 +144,7 @@
   margin: var(--spacing-lg) 0;
 }
 
-.continuous-interactions .result-card {
+.mediation-analysis .result-card {
   padding: var(--spacing-md);
   background: var(--bg-primary);
   border-radius: var(--border-radius-md);
@@ -145,66 +153,66 @@
   text-align: center;
 }
 
-.continuous-interactions .result-card h5 {
+.mediation-analysis .result-card h5 {
   margin: 0 0 var(--spacing-xs) 0;
   font-size: 0.8125rem;
   color: var(--text-secondary);
   font-weight: 500;
 }
 
-.continuous-interactions .result-card .result-value {
+.mediation-analysis .result-card .result-value {
   font-size: 1.25rem;
   font-weight: 700;
   color: var(--text-primary);
 }
 
-.continuous-interactions .result-card .result-detail {
+.mediation-analysis .result-card .result-detail {
   font-size: 0.75rem;
   color: var(--text-secondary);
   margin-top: var(--spacing-xs);
 }
 
-.continuous-interactions .result-card.significant {
+.mediation-analysis .result-card.significant {
   border-color: #10b981;
   background: rgba(16, 185, 129, 0.05);
 }
 
-.continuous-interactions .result-card.not-significant {
+.mediation-analysis .result-card.not-significant {
   border-color: var(--border);
   opacity: 0.7;
 }
 
 /* Coefficient table */
-.continuous-interactions .coeff-table {
+.mediation-analysis .coeff-table {
   width: 100%;
   border-collapse: collapse;
   font-size: 0.9375rem;
   margin: var(--spacing-md) 0;
 }
 
-.continuous-interactions .coeff-table th,
-.continuous-interactions .coeff-table td {
+.mediation-analysis .coeff-table th,
+.mediation-analysis .coeff-table td {
   padding: var(--spacing-sm) var(--spacing-md);
   text-align: center;
   border: 1px solid var(--border);
 }
 
-.continuous-interactions .coeff-table thead th {
+.mediation-analysis .coeff-table thead th {
   background: var(--bg-secondary);
   font-weight: 600;
 }
 
-.continuous-interactions .coeff-table tbody td:first-child {
+.mediation-analysis .coeff-table tbody td:first-child {
   text-align: left;
   font-weight: 500;
 }
 
-.continuous-interactions .coeff-table .highlight-row {
+.mediation-analysis .coeff-table .highlight-row {
   background: rgba(67, 97, 238, 0.05);
 }
 
 /* Formula box */
-.continuous-interactions .formula-box {
+.mediation-analysis .formula-box {
   background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-primary) 100%);
   border: 1px solid var(--border);
   border-radius: var(--border-radius-lg);
@@ -212,32 +220,32 @@
   margin: var(--spacing-lg) 0;
 }
 
-.continuous-interactions .formula-box h3 {
+.mediation-analysis .formula-box h3 {
   margin: 0 0 var(--spacing-md) 0;
   font-size: 1rem;
   color: var(--text-primary);
   text-align: center;
 }
 
-.continuous-interactions .formula {
+.mediation-analysis .formula {
   text-align: center;
   margin-bottom: var(--spacing-lg);
 }
 
-.continuous-interactions .formula-main {
+.mediation-analysis .formula-main {
   font-size: 1.25rem;
   font-family: 'Times New Roman', serif;
   color: var(--text-primary);
 }
 
-.continuous-interactions .formula-parts {
+.mediation-analysis .formula-parts {
   display: flex;
   flex-wrap: wrap;
   gap: var(--spacing-md);
   justify-content: center;
 }
 
-.continuous-interactions .formula-part {
+.mediation-analysis .formula-part {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -248,21 +256,21 @@
   min-width: 140px;
 }
 
-.continuous-interactions .formula-part .symbol {
+.mediation-analysis .formula-part .symbol {
   font-family: 'Times New Roman', serif;
   font-size: 1rem;
   color: var(--primary);
   font-weight: 600;
 }
 
-.continuous-interactions .formula-part .explanation {
+.mediation-analysis .formula-part .explanation {
   font-size: 0.75rem;
   color: var(--text-secondary);
   text-align: center;
 }
 
 /* Key insight */
-.continuous-interactions .key-insight {
+.mediation-analysis .key-insight {
   background: linear-gradient(135deg, rgba(67, 97, 238, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%);
   border-left: 4px solid var(--primary);
   border-radius: 0 var(--border-radius-md) var(--border-radius-md) 0;
@@ -270,26 +278,47 @@
   margin: var(--spacing-lg) 0;
 }
 
-.continuous-interactions .key-insight h4 {
+.mediation-analysis .key-insight h4 {
   margin: 0 0 var(--spacing-sm) 0;
   color: var(--primary);
   font-size: 1rem;
 }
 
-.continuous-interactions .key-insight p {
+.mediation-analysis .key-insight p {
+  margin: 0;
+  color: var(--text-secondary);
+  line-height: 1.7;
+}
+
+/* Warning insight (for pitfalls) */
+.mediation-analysis .warning-insight {
+  background: linear-gradient(135deg, rgba(234, 88, 12, 0.08) 0%, rgba(234, 88, 12, 0.04) 100%);
+  border-left: 4px solid #ea580c;
+  border-radius: 0 var(--border-radius-md) var(--border-radius-md) 0;
+  padding: var(--spacing-lg);
+  margin: var(--spacing-lg) 0;
+}
+
+.mediation-analysis .warning-insight h4 {
+  margin: 0 0 var(--spacing-sm) 0;
+  color: #ea580c;
+  font-size: 1rem;
+}
+
+.mediation-analysis .warning-insight p {
   margin: 0;
   color: var(--text-secondary);
   line-height: 1.7;
 }
 
 /* Toggle buttons */
-.continuous-interactions .toggle-group {
+.mediation-analysis .toggle-group {
   display: flex;
   justify-content: center;
   margin: var(--spacing-md) 0;
 }
 
-.continuous-interactions .toggle-button {
+.mediation-analysis .toggle-button {
   padding: var(--spacing-sm) var(--spacing-lg);
   border: 2px solid var(--border);
   background: var(--bg-primary);
@@ -299,53 +328,31 @@
   transition: all 0.2s ease;
 }
 
-.continuous-interactions .toggle-button:first-child {
+.mediation-analysis .toggle-button:first-child {
   border-radius: var(--border-radius-md) 0 0 var(--border-radius-md);
   border-right: none;
 }
 
-.continuous-interactions .toggle-button:last-child {
+.mediation-analysis .toggle-button:last-child {
   border-radius: 0 var(--border-radius-md) var(--border-radius-md) 0;
 }
 
-.continuous-interactions .toggle-button:only-child {
+.mediation-analysis .toggle-button:only-child {
   border-radius: var(--border-radius-md);
 }
 
-.continuous-interactions .toggle-button.active {
+.mediation-analysis .toggle-button.active {
   background: var(--primary);
   border-color: var(--primary);
   color: white;
 }
 
-.continuous-interactions .toggle-button:hover:not(.active) {
+.mediation-analysis .toggle-button:hover:not(.active) {
   background: var(--bg-secondary);
 }
 
-/* Sandbox grid */
-.continuous-interactions .sandbox-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: var(--spacing-md);
-  margin: var(--spacing-lg) 0;
-}
-
-.continuous-interactions .sandbox-panel {
-  background: var(--bg-secondary);
-  border-radius: var(--border-radius-md);
-  padding: var(--spacing-md);
-  border: 1px solid var(--border);
-}
-
-.continuous-interactions .sandbox-panel h5 {
-  margin: 0 0 var(--spacing-sm) 0;
-  font-size: 0.875rem;
-  color: var(--text-primary);
-  text-align: center;
-}
-
-/* Generate button */
-.continuous-interactions .generate-button {
+/* Generate / action buttons */
+.mediation-analysis .generate-button {
   padding: var(--spacing-sm) var(--spacing-xl);
   background: var(--primary);
   color: white;
@@ -357,52 +364,131 @@
   transition: background 0.2s ease;
 }
 
-.continuous-interactions .generate-button:hover {
+.mediation-analysis .generate-button:hover {
   background: var(--primary-dark, #3451c7);
 }
 
+.mediation-analysis .generate-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.mediation-analysis .generate-button.secondary {
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  border: 1px solid var(--border);
+}
+
+.mediation-analysis .generate-button.secondary:hover {
+  background: var(--bg-primary);
+}
+
+/* Bootstrap progress */
+.mediation-analysis .bootstrap-progress {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  justify-content: center;
+  margin: var(--spacing-sm) 0;
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+}
+
+.mediation-analysis .progress-bar {
+  width: 200px;
+  height: 6px;
+  background: var(--bg-secondary);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.mediation-analysis .progress-bar-fill {
+  height: 100%;
+  background: var(--primary);
+  transition: width 0.1s ease;
+  border-radius: 3px;
+}
+
+/* Comparison panel */
+.mediation-analysis .comparison-panel {
+  background: var(--bg-secondary);
+  border-radius: var(--border-radius-md);
+  padding: var(--spacing-md);
+  border: 1px solid var(--border);
+}
+
+.mediation-analysis .comparison-panel h5 {
+  margin: 0 0 var(--spacing-sm) 0;
+  font-size: 0.875rem;
+  color: var(--text-primary);
+  text-align: center;
+}
+
+/* Path diagram container */
+.mediation-analysis .path-diagram-container {
+  display: flex;
+  justify-content: center;
+  margin: var(--spacing-md) 0;
+}
+
+/* Pitfalls numbered list */
+.mediation-analysis .pitfall-item {
+  margin-bottom: var(--spacing-lg);
+}
+
+.mediation-analysis .pitfall-item h4 {
+  font-size: 1rem;
+  color: var(--text-primary);
+  margin-bottom: var(--spacing-xs);
+}
+
+.mediation-analysis .pitfall-item p {
+  color: var(--text-secondary);
+  line-height: 1.7;
+  margin: 0;
+}
 
 /* Footer */
-.continuous-interactions .narrative-footer {
+.mediation-analysis .narrative-footer {
   margin-top: var(--spacing-2xl);
   padding-top: var(--spacing-xl);
   border-top: 1px solid var(--border);
   text-align: center;
 }
 
-.continuous-interactions .narrative-footer p {
+.mediation-analysis .narrative-footer p {
   font-size: 0.875rem;
   color: var(--text-secondary);
 }
 
-.continuous-interactions .narrative-footer a {
+.mediation-analysis .narrative-footer a {
   color: var(--primary);
   text-decoration: none;
 }
 
-.continuous-interactions .narrative-footer a:hover {
+.mediation-analysis .narrative-footer a:hover {
   text-decoration: underline;
 }
 
 /* Responsive */
 @media (max-width: 768px) {
-  .continuous-interactions {
+  .mediation-analysis {
     padding-left: var(--spacing-lg);
   }
 
-  .continuous-interactions-header h1 {
+  .mediation-analysis-header h1 {
     font-size: 1.75rem;
   }
 
-  .continuous-interactions .dual-panel {
+  .mediation-analysis .dual-panel {
     grid-template-columns: 1fr;
   }
 
-  .continuous-interactions .sandbox-grid {
+  .mediation-analysis .triple-panel {
     grid-template-columns: 1fr;
   }
 
-  .continuous-interactions .formula-parts {
+  .mediation-analysis .formula-parts {
     flex-direction: column;
     align-items: center;
   }

@@ -405,8 +405,8 @@ export default function FloodlightAnalysis() {
         NFC above{' '}
         <strong>{jnBoundary !== null ? jnBoundary.toFixed(2) : '---'}</strong>. Below this
         boundary, the confidence interval includes zero and the effect is no longer
-        significant at alpha = {alpha.toFixed(2)}. People low in Need for Cognition do not
-        distinguish between strong and weak arguments.
+        significant at alpha = {alpha.toFixed(2)}. At low levels of Need for Cognition,
+        we do not estimate a significant difference between strong and weak arguments.
       </p>
 
       <p className="intro-text">

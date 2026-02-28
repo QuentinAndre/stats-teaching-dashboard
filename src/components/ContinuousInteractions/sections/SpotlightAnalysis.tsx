@@ -258,7 +258,7 @@ export default function SpotlightAnalysis() {
           <path
             d={lineZ0}
             fill="none"
-            stroke="#f97316"
+            stroke="#f4a261"
             strokeWidth={2.5}
             opacity={0.85}
           />
@@ -267,7 +267,7 @@ export default function SpotlightAnalysis() {
           <path
             d={lineZ1}
             fill="none"
-            stroke="#3b82f6"
+            stroke="#4361ee"
             strokeWidth={2.5}
             opacity={0.85}
           />
@@ -284,8 +284,8 @@ export default function SpotlightAnalysis() {
             return (
               <g key={`bracket-${i}`}>
                 {/* Dots on each line */}
-                <circle cx={cx} cy={y0} r={4} fill="#f97316" />
-                <circle cx={cx} cy={y1} r={4} fill="#3b82f6" />
+                <circle cx={cx} cy={y0} r={4} fill="#f4a261" />
+                <circle cx={cx} cy={y1} r={4} fill="#4361ee" />
 
                 {/* Bracket line */}
                 <line
@@ -415,13 +415,13 @@ export default function SpotlightAnalysis() {
 
           {/* Legend */}
           <g transform={`translate(${MARGIN.left + 12}, ${MARGIN.top + 10})`}>
-            <line x1={0} x2={20} y1={0} y2={0} stroke="#3b82f6" strokeWidth={2.5} />
+            <line x1={0} x2={20} y1={0} y2={0} stroke="#4361ee" strokeWidth={2.5} />
             <text x={26} y={0} dy="0.35em" fontSize={12} fill="#374151">
-              Z = 1 (strong args)
+              Strong args (Z = 1)
             </text>
-            <line x1={0} x2={20} y1={20} y2={20} stroke="#f97316" strokeWidth={2.5} />
+            <line x1={0} x2={20} y1={20} y2={20} stroke="#f4a261" strokeWidth={2.5} />
             <text x={26} y={20} dy="0.35em" fontSize={12} fill="#374151">
-              Z = 0 (weak args)
+              Weak args (Z = 0)
             </text>
           </g>
         </svg>

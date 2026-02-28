@@ -130,58 +130,122 @@ export default function CenteringPredictors() {
       <h2>Centering Predictors</h2>
 
       <p className="intro-text">
-        The central message from the previous sections is this: <em>b</em> is the
-        effect of Z when X = 0. If X = 0 is impossible — nobody scores 0 on the
-        NFC scale, which runs from 1 to 5 — then <em>b</em> is uninterpretable.
-        This is the "magic number zero" problem. The coefficient <em>b</em> = {B_RAW.toFixed(2)} does
-        not describe any real person's response. It describes what the model
-        predicts at a point that lies far outside the data.
+        Now let's return to our interpretation of the coefficients in the
+        regression table.
+      </p>
+
+      {/* ---- Regression table (reproduced from The Regression Model) ---- */}
+      <div className="viz-container">
+        <table className="coeff-table" style={{ margin: '0 auto' }}>
+          <thead>
+            <tr>
+              <th style={{ textAlign: 'left' }}>Term</th>
+              <th>Estimate</th>
+              <th>SE</th>
+              <th><em>t</em>(96)</th>
+              <th><em>p</em></th>
+            </tr>
+          </thead>
+          <tbody>
+            {[
+              { term: '(Intercept)', label: 'a', estimate: A_RAW, se: 0.92, t: 6.30, p: '<.001' },
+              { term: 'Quality', label: 'b', estimate: B_RAW, se: 1.10, t: -2.18, p: '.032' },
+              { term: 'NFC', label: 'c', estimate: C_RAW, se: 0.27, t: -0.81, p: '.418' },
+              { term: 'Quality × NFC', label: 'd', estimate: D_RAW, se: 0.33, t: 3.56, p: '<.001' },
+            ].map((row) => (
+              <tr key={row.term}>
+                <td style={{ textAlign: 'left' }}>
+                  {row.term}{' '}
+                  <span style={{ color: 'var(--text-secondary)', fontSize: '0.8rem' }}>
+                    ({row.label})
+                  </span>
+                </td>
+                <td>{row.estimate.toFixed(2)}</td>
+                <td>{row.se.toFixed(2)}</td>
+                <td>{row.t.toFixed(2)}</td>
+                <td>{row.p}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      <p className="intro-text">
+        We mentioned before that the coefficient <em>b</em> is the estimated
+        impact of switching from Weak Argument to Strong Argument when NFC is
+        equal to zero. A problem you might have spotted earlier is that no one
+        in the data has an NFC of zero: the scores range between 1 and 5!
+      </p>
+
+      <p className="intro-text">
+        A common solution to this issue is "re-centering": re-calculating the
+        value of the moderator in the data such that zero now takes a meaningful
+        value. Let's see how it works.
       </p>
 
       <h3>What Recentering Does</h3>
 
       <p className="intro-text">
-        Recentering replaces the original predictor X with a shifted version
-        X' = X &minus; <em>center</em>, where <em>center</em> is a meaningful reference
-        value. After substitution, the model becomes Y = <em>a'</em> + <em>b'</em>Z
-        + <em>c'</em>X' + <em>d'</em>ZX', with new lower-order coefficients:
+        Recentering replaces an original predictor X (here, NFC) with a shifted
+        version (X' = X &minus; center), where <em>center</em> is a meaningful
+        reference value. After substitution, the model becomes
+        Y = <em>a'</em> + <em>b'</em>(Quality) + <em>c'</em>(Centered NFC)
+        + <em>d'</em>(Quality &times; Centered NFC), with new coefficients.
+        Let's see what the model coefficients would become if we
+        "mean-centered" NFC, such that a value of zero would now reflect a
+        participant who is exactly at the mean NFC in the data.
       </p>
 
-      <div className="formula-box">
-        <div className="formula-parts">
-          <div className="formula-part">
-            <span className="symbol"><em>a'</em> = a + c &times; center</span>
-            <span className="explanation">
-              New intercept: predicted Y when Z = 0 and X = center
-            </span>
-          </div>
-          <div className="formula-part">
-            <span className="symbol"><em>b'</em> = b + d &times; center</span>
-            <span className="explanation">
-              New simple effect of Z at X = center
-            </span>
-          </div>
-          <div className="formula-part">
-            <span className="symbol"><em>c'</em> = c</span>
-            <span className="explanation">Unchanged</span>
-          </div>
-          <div className="formula-part">
-            <span className="symbol"><em>d'</em> = d</span>
-            <span className="explanation">Unchanged</span>
-          </div>
-        </div>
+      {/* ---- Centered regression table ---- */}
+      <div className="viz-container">
+        <table className="coeff-table" style={{ margin: '0 auto' }}>
+          <thead>
+            <tr>
+              <th style={{ textAlign: 'left' }}>Term</th>
+              <th>Estimate</th>
+              <th>SE</th>
+              <th><em>t</em>(96)</th>
+              <th><em>p</em></th>
+            </tr>
+          </thead>
+          <tbody>
+            {[
+              { term: '(Intercept)', label: "a'", estimate: COEFF_MEAN.a, se: 0.22, t: COEFF_MEAN.a / 0.22, p: '<.001' },
+              { term: 'Quality', label: "b'", estimate: COEFF_MEAN.b, se: 0.30, t: COEFF_MEAN.b / 0.30, p: '<.001' },
+              { term: 'Centered NFC', label: "c'", estimate: C_RAW, se: 0.27, t: -0.81, p: '.418' },
+              { term: 'Quality × Centered NFC', label: "d'", estimate: D_RAW, se: 0.33, t: 3.56, p: '<.001' },
+            ].map((row) => (
+              <tr key={row.term}>
+                <td style={{ textAlign: 'left' }}>
+                  {row.term}{' '}
+                  <span style={{ color: 'var(--text-secondary)', fontSize: '0.8rem' }}>
+                    ({row.label})
+                  </span>
+                </td>
+                <td>{row.estimate.toFixed(2)}</td>
+                <td>{row.se.toFixed(2)}</td>
+                <td>{typeof row.t === 'string' ? row.t : row.t.toFixed(2)}</td>
+                <td>{row.p}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
 
       <p className="intro-text">
-        The predictions are identical. Every participant gets the same predicted Y
-        before and after centering. The model has not changed — it has been
-        re-parameterized. The interaction coefficient <em>d</em> and the NFC slope
-        for Z = 0 (<em>c</em>) never change. Only <em>a</em> and <em>b</em> shift,
-        because they describe the model at the zero point, and centering moves
-        where that zero point falls.
+        Note that the interpretation of this regression table does not change:
+        Quality still shows the estimated impact of switching from Weak Argument
+        to Strong Argument when Centered NFC is equal to zero — but now that is
+        a meaningful quantity! Here, "Centered NFC = 0" signifies
+        "NFC = Mean NFC".
       </p>
 
       <h3>Choosing the Zero Point</h3>
+
+      <p className="intro-text">
+        Note that we can center a moderator to something else than its mean (the
+        midpoint of the scale for instance).
+      </p>
 
       <p className="intro-text">
         Use the toggle below to switch between three parameterizations: the raw
@@ -459,11 +523,11 @@ export default function CenteringPredictors() {
           )}
 
           {/* Legend */}
-          <g transform={`translate(${MARGIN.left + PLOT_W - 175}, ${MARGIN.top + 10})`}>
+          <g transform={`translate(${MARGIN.left + 10}, ${MARGIN.top + 10})`}>
             <rect
               x={0}
               y={0}
-              width={165}
+              width={175}
               height={48}
               rx={4}
               fill="var(--bg-primary, #fff)"
@@ -473,11 +537,11 @@ export default function CenteringPredictors() {
             />
             <line x1={10} y1={16} x2={30} y2={16} stroke="#4361ee" strokeWidth={2.5} />
             <text x={36} y={16} dominantBaseline="middle" fontSize={11} fill="var(--text-primary, #333)">
-              Z = 1 (strong args)
+              Strong args (Z = 1)
             </text>
             <line x1={10} y1={34} x2={30} y2={34} stroke="#f4a261" strokeWidth={2.5} />
             <text x={36} y={34} dominantBaseline="middle" fontSize={11} fill="var(--text-primary, #333)">
-              Z = 0 (weak args)
+              Weak args (Z = 0)
             </text>
           </g>
         </svg>

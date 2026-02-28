@@ -4,7 +4,6 @@ import TheRegressionModel from './sections/TheRegressionModel';
 import SpotlightAnalysis from './sections/SpotlightAnalysis';
 import FloodlightAnalysis from './sections/FloodlightAnalysis';
 import CenteringPredictors from './sections/CenteringPredictors';
-import PuttingItAllTogether from './sections/PuttingItAllTogether';
 import ModuleNavigation from '../ModuleNavigation';
 import './ContinuousInteractions.css';
 
@@ -42,9 +41,6 @@ export default function ContinuousInteractions() {
           <CenteringPredictors />
         </section>
 
-        <section id="putting-together" className="narrative-section">
-          <PuttingItAllTogether />
-        </section>
       </main>
 
       <footer className="narrative-footer">

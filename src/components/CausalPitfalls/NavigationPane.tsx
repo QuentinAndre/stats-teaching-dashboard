@@ -7,15 +7,13 @@ interface NavSection {
 }
 
 const sections: NavSection[] = [
-  { id: 'continuous-intro', label: 'Why Continuous Moderators?' },
-  { id: 'regression-model', label: 'The Regression Model' },
-  { id: 'spotlight', label: 'Spotlight Analysis' },
-  { id: 'floodlight', label: 'Floodlight Analysis' },
-  { id: 'centering', label: 'Centering Predictors' },
+  { id: 'causal-pitfalls', label: 'Causal Pitfalls' },
+  { id: 'confounding-demo', label: 'Confounding the M\u2192Y Path' },
+  { id: 'equivalent-models', label: 'Equivalent Models' },
 ];
 
 export default function NavigationPane() {
-  const [activeSection, setActiveSection] = useState<string>('continuous-intro');
+  const [activeSection, setActiveSection] = useState<string>('causal-pitfalls');
   const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
